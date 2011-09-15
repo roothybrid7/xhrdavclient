@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>テストページ - XHR</title>
+  <script src="../closure-library/closure/goog/base.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    // Testing Framework
+    goog.require('goog.testing.AsyncTestCase');
+    goog.require('goog.testing.jsunit');
+    goog.require('goog.debug.Logger');
+    goog.require('goog.debug.Console');
+
+//    goog.request('goog.string');
+    goog.require('goog.object');
+    goog.require('goog.events');
+    goog.require('goog.Uri');
+    goog.require('goog.net.XhrIo');
+    goog.require('goog.net.XhrManager');
+  </script>
+</head>
+<body>
+  <script type="text/javascript">
+    // Debug
+    goog.debug.Console.autoInstall();
+    goog.debug.Console.instance.setCapturing(true);
+
+    // Prepare AsyncTest
+    var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall();
+
+    function testGetFile() {
+      asyncTestCase.waitForAsync('GetFile');  // 非同期
+      var logger = goog.debug.Logger.getLogger('GetFile');
+
+      var request = new goog.net.XhrIo();
+
+      goog.events.listen(request, goog.net.EventType.COMPLETE, function(e) {
+        var xhr = e.target;
+        if (xhr.isSuccess()) {
+          logger.info("Status: " + xhr.getStatus() + " - " + xhr.getStatusText());
+          logger.info(xhr.getResponseText());
+          logger.info(goog.debug.deepExpose(xhr));
+        } else {
+          logger.info("ERROR: " + xhr.getLastErrorCode() + " - " + xhr.getLastError());
+          logger.info("Trace");
+          logger.info(goog.debug.deepExpose(xhr));
+        }
+        asyncTestCase.continueTesting();  // 終了待ち状態を終了
+      });
+      var url = goog.Uri.parse('/mydav/spam/bookmarks.xml');
+//      var url = goog.Uri.parse('http://localhost:8001/spam/bookmarks.xml');
+      var headers = {};
+      headers['Content-Type'] = 'application/xml';
+      request.send(url);
+    }
+
+    function testCreateDir() {
+      asyncTestCase.waitForAsync('CreateDir');
+      var logger = goog.debug.Logger.getLogger('CreateDir');
+
+      var request = new goog.net.XhrIo();
+
+      goog.events.listen(request, goog.net.EventType.COMPLETE, function(e) {
+        var xhr = e.target;
+        if (xhr.isSuccess()) {
+          logger.info("Status: " + xhr.getStatus() + " - " + xhr.getStatusText());
+          logger.info(xhr.getResponseText());
+          logger.info(goog.debug.deepExpose(xhr));
+        } else {
+          logger.info("ERROR: " + xhr.getLastErrorCode() + " - " + xhr.getLastError());
+          logger.info("Trace");
+          logger.info(goog.debug.deepExpose(xhr));
+        }
+        asyncTestCase.continueTesting();  // 終了待ち状態を終了
+      });
+      var url = goog.Uri.parse('/mydav/foo/');
+//      var url = goog.Uri.parse('http://localhost:8001/foo/');
+      request.send(url, 'MKCOL', null);
+    }
+
+    function testDeleteDir() {
+      asyncTestCase.waitForAsync('DeleteDir');  // 非同期
+      var logger = goog.debug.Logger.getLogger('DeleteDir');
+
+      var request = new goog.net.XhrIo();
+
+      goog.events.listen(request, goog.net.EventType.COMPLETE, function(e) {
+        var xhr = e.target;
+        if (xhr.isSuccess()) {
+          logger.info("Status: " + xhr.getStatus() + " - " + xhr.getStatusText());
+          logger.info(xhr.getResponseText());
+          logger.info(goog.debug.deepExpose(xhr));
+        } else {
+          logger.info("ERROR: " + xhr.getLastErrorCode() + " - " + xhr.getLastError());
+          logger.info("Trace");
+          logger.info(goog.debug.deepExpose(xhr));
+        }
+        asyncTestCase.continueTesting();  // 終了待ち状態を終了
+      });
+      var url = goog.Uri.parse('/mydav/foo/');
+//      var url = goog.Uri.parse('http://localhost:8001/foo/');
+      request.send(url, 'DELETE');
+    }
+
+    function /*test*/List() {
+      asyncTestCase.waitForAsync('List');  // 非同期
+
+      var request = new goog.net.XhrIo();
+
+      goog.events.listen(request, goog.net.EventType.COMPLETE, function(e) {
+        var xhr = e.target;
+        if (xhr.isSuccess()) {
+          logger.info("Status: ");
+          logger.info(xhr.getStatus());
+          logger.info(xhr.getStatusText());
+          logger.info(goog.debug.expose(xhr));
+        } else {
+          logger.info("ERROR", goog.debug.Expose(xhr));
+          logger.info("Trace");
+          logger.info(xhr.getLastErrorCode());
+          logger.info(xhr.getLastError());
+        }
+        asyncTestCase.continueTesting();  // 終了待ち状態を終了
+      });
+
+      var url = goog.Uri.parse('/mydav/spam');
+//      var url = goog.Uri.parse('http://localhost:8001/spam');
+      var headers = {};
+      headers['Content-Type'] = 'application/xml';
+      url.setParameterValue('Depth', 1);
+      request.send(url, 'PROPFIND', '<?xml version="1.0" ?><propfind xmlns="DAV:"><allprop/></propfind>', headers);
+    }
+
+  </script>
+</body>
+</html>
