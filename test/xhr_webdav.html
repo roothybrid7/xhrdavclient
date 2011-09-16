@@ -4,26 +4,74 @@
   <meta charset="UTF-8" />
   <title>TestXHR</title>
   <script src="../closure-library/closure/goog/base.js" type="text/javascript"></script>
-  <script src="deps.js" type="text/javascript"></script>
   <script type="text/javascript">
     goog.require('goog.testing.AsyncTestCase');
     goog.require('goog.testing.jsunit');
+    goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
+
+    goog.require('goog.net.XhrIo');
+    goog.require('goog.object');
+    goog.require('goog.events');
+    goog.require('goog.Uri');
+    goog.require('goog.net.XhrIo');
+    goog.require('goog.net.XhrManager');
   </script>
 </head>
 <body>
   <script type="text/javascript">
-    goog.require('webdav.TestApp');
-  </script>
-  <script type="text/javascript">
+    goog.debug.Console.autoInstall();
+    goog.debug.Console.instance.setCapturing(true);
     // Prepare AsyncTest
     var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall();
+
+    function requestAndListen(request, logger, callback, handler) {
+      goog.events.listen(request, goog.net.EventType.COMPLETE, function(e) {
+        var xhr = e.target;
+        logger.info("Status: " + xhr.getStatus() + " - " + xhr.getStatusText());
+        if (xhr.isSuccess()) {
+          logger.info("ResponseType: " + xhr.getResponseType());
+          logger.info("Response: " + xhr.getResponse());
+    //          logger.info(goog.debug.deepExpose(xhr));
+        } else {
+          logger.info(xhr.getLastErrorCode() + " - " + xhr.getLastError());
+          logger.info("Trace");
+          logger.info(goog.debug.deepExpose(xhr));
+        }
+        callback(xhr.getStatus(), xhr.getStatusText());
+        if (handler) {
+          handler();
+        }
+      });
+    };
+
+    function listDir(request, directory, depth) {
+      var url = goog.Uri.parse(directory);
+      var headers = {};
+      headers['Content-Type'] = 'application/xml';
+      headers['Depth'] = depth || 1;
+      var body = '<?xml version="1.0" encoding="UTF-8"?>' +
+        '<D:propfind xmlns:D="DAV:"><D:allprop /></D:propfind>';
+      request.send(url, 'PROPFIND', body, headers);
+    };
+
+    function createDir(request, directory) {
+      var url = goog.Uri.parse(directory);
+    //      var url = goog.Uri.parse('http://localhost:8001/foo/');
+      request.send(url, 'MKCOL');
+    };
+
+    function deleteDir(request, directory) {
+      var url = goog.Uri.parse(directory);
+      request.send(url, 'DELETE');
+    };
 
     function testList() {
       var testId = 'List';
 
       var dir = '/mydav/';
       var logger = goog.debug.Logger.getLogger(testId);
+      var request = new goog.net.XhrIo();
       var asyncContinue = function() { asyncTestCase.continueTesting(); };
       var assertList = function(statusCode, statusText) {
         assertEquals('StatusCode?', statusCode, 207);
@@ -32,9 +80,9 @@
       };
 
       asyncTestCase.waitForAsync(testId);
-      var request = webdav.TestApp.requestAndListen(
-        logger, assertList, asyncContinue);
-      webdav.TestApp.listDir(request, dir);
+      requestAndListen(
+        request, logger, assertList, asyncContinue);
+      listDir(request, dir);
     }
 
     function testCreateAndDeleteDir() {
@@ -53,13 +101,13 @@
       };
 
       asyncTestCase.waitForAsync(testId + 'Prepare');
-      var request = webdav.TestApp.requestAndListen(
-        logger, assertCreate);
-      webdav.TestApp.createDir(request, dir);
+      var request = new goog.net.XhrIo();
+      requestAndListen(request, logger, assertCreate, asyncContinue);
+      createDir(request, dir);
       asyncTestCase.waitForAsync(testId);
-      request = webdav.TestApp.requestAndListen(
-        logger, assertDelete, asyncContinue);
-      webdav.TestApp.deleteDir(request, dir);
+      request = new goog.net.XhrIo();
+      requestAndListen(request, logger, assertDelete, asyncContinue);
+      deleteDir(request, dir);
     }
   </script>
 </body>

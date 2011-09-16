@@ -22,16 +22,16 @@ webdav.TestApp.initialize = function() {
   goog.debug.Console.instance.setCapturing(true);
 };
 
-webdav.TestApp.requestAndListen = function(logger, callback, handler) {
-  request = new goog.net.XhrIo();
+webdav.TestApp.requestAndListen = function(request, logger, callback, handler) {
   goog.events.listen(request, goog.net.EventType.COMPLETE, function(e) {
     var xhr = e.target;
+    logger.info("Status: " + xhr.getStatus() + " - " + xhr.getStatusText());
     if (xhr.isSuccess()) {
-      logger.info("Status: " + xhr.getStatus() + " - " + xhr.getStatusText());
+      logger.info("ResponseType: " + xhr.getResponseType());
       logger.info("Response: " + xhr.getResponse());
 //          logger.info(goog.debug.deepExpose(xhr));
     } else {
-      logger.info("ERROR: " + xhr.getLastErrorCode() + " - " + xhr.getLastError());
+      logger.info(xhr.getLastErrorCode() + " - " + xhr.getLastError());
       logger.info("Trace");
       logger.info(goog.debug.deepExpose(xhr));
     }
@@ -40,7 +40,6 @@ webdav.TestApp.requestAndListen = function(logger, callback, handler) {
       handler();
     }
   });
-  return request;
 };
 
 webdav.TestApp.listDir = function(request, directory, depth) {
