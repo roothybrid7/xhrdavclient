@@ -149,7 +149,7 @@ webdav.Client.prototype.copy = function(xhrId, request, dir, dstDir, callback) {
   this.copyOrMoveDir_(xhrId, request, 'COPY', dir, dstDir, callback);
 };
 
-/* Entry Point for closure compiler ADVANCED_OPTIMIZATIONS option */
+/* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
 goog.exportSymbol('webdav.Client', webdav.Client);
 goog.exportProperty(webdav.Client.prototype, 'propfind', webdav.Client.prototype.propfind);
 goog.exportProperty(webdav.Client.prototype, 'mkcol', webdav.Client.prototype.mkcol);
