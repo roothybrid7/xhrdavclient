@@ -10,11 +10,8 @@
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
 
-    goog.require('goog.net.XhrIo');
     goog.require('goog.object');
-    goog.require('goog.events');
     goog.require('goog.Uri');
-    goog.require('goog.net.XhrIo');
     goog.require('goog.net.XhrManager');
   </script>
 </head>
@@ -23,7 +20,20 @@
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
 
-    var locationUrl = goog.Uri.parse(location);
+    /**
+     * Logging for XHR
+     *
+     * <pre><code>
+     * goog.net.XhrIo.send('/foo', function() {
+     *   var xhr = e.target;
+     *   logging('foo1', xhr);
+     * });
+     * </code></pre>
+     *
+     * @param {string} id Logger ID.
+     * @param {Object} req XHTTPRequest object.
+     * @param {Function} callback Callback function.
+     */
     var logging = function(id, req, callback) {
       var logger = goog.debug.Logger.getLogger(id);
       logger.info("ID: " + id);
@@ -43,70 +53,119 @@
       asyncTestCase.continueTesting();
     };
 
-    var processRequest = function(callback, e) {
-      var xhr = e.target;
-      callback(xhr);
-    };
-
-    function requestAndListen(id, request, callback) {
-      goog.events.listen(request, goog.net.EventType.COMPLETE, function(e) {
-        var xhr = e.xhrIo;
-        callback(id, xhr);
-      });
-    };
-
-    function generateUrl(path) {
-      // scheme, userinfo, domain, port, path, query, fragment
-      return goog.Uri.create(
-        locationUrl.getScheme(),
-        null, // username:password(Basic認証?)
-        locationUrl.getDomain(),
-        locationUrl.getPort() || 80,
-        path,
-        null, // query(a=1&b2)
-        null);
-    }
-
-    function listDir(xhrId, request, path, callback, depth) {
-      var url = generateUrl(path);
-      var headers = {};
-      headers['Content-Type'] = 'application/xml';
-      // 0(path only) or 1(current directory)
-      headers['Depth'] = goog.isDefAndNotNull(depth) ? depth : 1;
-      var body = '<?xml version="1.0" encoding="UTF-8"?>' +
-        '<D:propfind xmlns:D="DAV:"><D:allprop /></D:propfind>';
-      request.send(xhrId, url, 'PROPFIND', body, headers, 0,
-        goog.partial(processRequest, callback));
-    };
-
-    function createDir(xhrId, request, path, callback) {
-      var url = generateUrl(path);
-    //      var url = goog.Uri.parse('http://localhost:8001/foo/');
-      request.send(xhrId, url, 'MKCOL', null, null, 0,
-        goog.partial(processRequest, callback));
-    };
-
-    function deleteDir(xhrId, request, path, callback) {
-      var url = generateUrl(path);
-      request.send(xhrId, url, 'DELETE', null, null, 0,
-        goog.partial(processRequest, callback));
-    };
-
-    function _copyOrMoveDir(xhrId, request, method, path, dstPath, callback) {
-      var url = generateUrl(path);
-      var headers = {};
-      headers['Content-Type'] = 'application/xml';
-      headers['Destination'] = generateUrl(dstPath);
-      request.send(xhrId, url, method, null, headers, 0,
-        goog.partial(processRequest, callback));
-    };
-
-    function moveDir(xhrId, request, dir, dstDir, callback) {
-      _copyOrMoveDir(xhrId, request, 'MOVE', dir, dstDir, callback);
-    };
-
-    function copyDir(xhrId, request, dir, dstDir, callback) {
-      _copyOrMoveDir(xhrId, request, 'COPY', dir, dstDir, callback);
+    var davclient = {
+      /**
+       * Callback XHTTPRequest Processing
+       *
+       * @private
+       * @param {Function} callback Callback chain method
+       * @param {Object} e XHR Event Object
+       */
+      processRequest_: function(callback, e) {
+        var xhr = e.target;
+        callback(xhr);
+      },
+      /**
+       * Generate URL from path and location
+       *
+       * @private
+       * @param {string} path Path(<code>/foo</code>, <code>/foo/bar.txt</code>).
+       */
+      generateUrl_: function(path) {
+        var locationUrl = goog.Uri.parse(location);
+        // scheme, userinfo, domain, port, path, query, fragment
+        return goog.Uri.create(
+          locationUrl.getScheme(),
+          null, // username:password(Basic認証?)
+          locationUrl.getDomain(),
+          locationUrl.getPort() || 80,
+          path,
+          null, // query(a=1&b2)
+          null);
+      },
+      /**
+       * Get Collection list and Resource property(WebDAV: PROPFIND)
+       *
+       * @param {string} xhrId XHTTPRequest unique ID(disposal).
+       * @param {goog.net.XhrManager} request XHTTPRequest Manager.
+       * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
+       * @param {Function=} callback Callback chain after request processing.
+       * @param {Object=} options Option params(depth, etc);
+       */
+      listDir: function(xhrId, request, path, callback, options) {
+        var url = this.generateUrl_(path);
+        var headers = {};
+        headers['Content-Type'] = 'application/xml';
+        // 0(path only) or 1(current directory)
+        headers['Depth'] =
+          options && goog.isDefAndNotNull(options.depth) ? options.depth : 1;
+        var body = '<?xml version="1.0" encoding="UTF-8"?>' +
+          '<D:propfind xmlns:D="DAV:"><D:allprop /></D:propfind>';
+        request.send(xhrId, url, 'PROPFIND', body, headers, 0,
+          goog.bind(this.processRequest_, this, callback));
+      },
+      /**
+       * Create Collection(WebDAV: MKCOL)
+       *
+       * @param {string} xhrId XHTTPRequest unique ID(disposal).
+       * @param {goog.net.XhrManager} request XHTTPRequest Manager.
+       * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar/</code>).
+       * @param {Function=} callback Callback chain after request processing.
+       */
+      createDir: function(xhrId, request, path, callback) {
+        var url = this.generateUrl_(path);
+      //      var url = goog.Uri.parse('http://localhost:8001/foo/');
+        request.send(xhrId, url, 'MKCOL', null, null, 0,
+          goog.bind(this.processRequest_, this, callback));
+      },
+      /**
+       * Delete Collection or Resource(WebDAV: DELETE)
+       *
+       * @param {string} xhrId XHTTPRequest unique ID(disposal).
+       * @param {goog.net.XhrManager} request XHTTPRequest Manager.
+       * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
+       * @param {Function=} callback Callback chain after request processing.
+       */
+      deleteDir: function(xhrId, request, path, callback) {
+        var url = this.generateUrl_(path);
+        request.send(xhrId, url, 'DELETE', null, null, 0,
+          goog.bind(this.processRequest_, this, callback));
+      },
+      /**
+       * Private method of Copy or Move Collection(WebDAV: COPY/MOVE)
+       *
+       * @private
+       * @param {string} xhrId XHTTPRequest unique ID(disposal)
+       * @param {goog.net.XhrManager} request XHTTPRequest Manager.
+       * @param {string} method HTTP method of WebDAV.
+       * @param {string} path Source Path(<code>/foo/</code>).
+       * @param {string} dstPath Destination Path(<code>/bar/</code>).
+       * @param {Function} callback Callback chain after request processing.
+       */
+      copyOrMoveDir_: function(xhrId, request, method, path, dstPath, callback) {
+        var url = this.generateUrl_(path);
+        var headers = {};
+        headers['Content-Type'] = 'application/xml';
+        headers['Destination'] = this.generateUrl_(dstPath);
+        request.send(xhrId, url, method, null, headers, 0,
+          goog.bind(this.processRequest_, this, callback));
+      },
+      /**
+       * Move Collection(WebDAV: MOVE)
+       *
+       * @see #copyOrMoveDir_
+       */
+      moveDir: function(xhrId, request, dir, dstDir, callback) {
+        this.copyOrMoveDir_(xhrId, request, 'MOVE', dir, dstDir, callback);
+      },
+      /**
+       * Copy Collection(WebDAV: COPY)
+       *
+       * @see #copyOrMoveDir_
+       */
+      copyDir: function(xhrId, request, dir, dstDir, callback) {
+        this.copyOrMoveDir_(xhrId, request, 'COPY', dir, dstDir, callback);
+      },
     };
 
     function testList() {
@@ -125,7 +184,7 @@
         asyncContinue();
       };
 
-      listDir(goog.string.createUniqueString(), mgr, dir, assertList);
+      davclient.listDir(goog.string.createUniqueString(), mgr, dir, assertList);
     }
 
     function testCreateAndDeleteDir() {
@@ -149,10 +208,10 @@
           goog.string.trim(req.getStatusText()), 'Created');
         logging(testId + '-prepare', req);
 
-        deleteDir(goog.string.createUniqueString(), mgr, dir, assertDelete);
+        davclient.deleteDir(goog.string.createUniqueString(), mgr, dir, assertDelete);
       };
 
-      createDir(goog.string.createUniqueString(), mgr, dir, assertCreate);
+      davclient.createDir(goog.string.createUniqueString(), mgr, dir, assertCreate);
     }
 
     function testRenameDir() {
@@ -168,13 +227,13 @@
         assertEquals('StatusText?',
           goog.string.trim(req.getStatusText()), 'Created');
         logging(testId, req);
-        deleteDir(goog.string.createUniqueString(), mgr, dstDir, asyncContinue);
+        davclient.deleteDir(goog.string.createUniqueString(), mgr, dstDir, asyncContinue);
       };
       var callbackCreate = function(req) {
-        moveDir(goog.string.createUniqueString(), mgr, dir, dstDir, assertRename);
+        davclient.moveDir(goog.string.createUniqueString(), mgr, dir, dstDir, assertRename);
       };
 
-      createDir(goog.string.createUniqueString(), mgr, dir, callbackCreate);
+      davclient.createDir(goog.string.createUniqueString(), mgr, dir, callbackCreate);
     }
 
     function testMoveDir() {
@@ -191,16 +250,16 @@
         assertEquals('StatusText?',
           goog.string.trim(req.getStatusText()), 'Created');
         logging(testId, req);
-        deleteDir(goog.string.createUniqueString(), mgr, parentDir, asyncContinue);
+        davclient.deleteDir(goog.string.createUniqueString(), mgr, parentDir, asyncContinue);
       };
       var callbackRequest2 = function(req) {
-        moveDir(goog.string.createUniqueString(), mgr, dir, dstDir, assertMove);
+        davclient.moveDir(goog.string.createUniqueString(), mgr, dir, dstDir, assertMove);
       };
       var callbackRequest1 = function(req) {
-        createDir(goog.string.createUniqueString(), mgr, dir, callbackRequest2);
+        davclient.createDir(goog.string.createUniqueString(), mgr, dir, callbackRequest2);
       };
 
-      createDir(goog.string.createUniqueString(), mgr, parentDir, callbackRequest1);
+      davclient.createDir(goog.string.createUniqueString(), mgr, parentDir, callbackRequest1);
     }
 
     function testCopyDir() {
@@ -217,16 +276,24 @@
         assertEquals('StatusText?',
           goog.string.trim(req.getStatusText()), 'Created');
         logging(testId, req);
-        deleteDir(goog.string.createUniqueString(), mgr, parentDir, asyncContinue);
+        davclient.deleteDir(goog.string.createUniqueString(), mgr, parentDir, asyncContinue);
       };
       var callbackRequest2 = function(req) {
-        copyDir(goog.string.createUniqueString(), mgr, dir, dstDir, assertCopy);
+        davclient.copyDir(goog.string.createUniqueString(), mgr, dir, dstDir, assertCopy);
       };
       var callbackRequest1 = function(req) {
-        createDir(goog.string.createUniqueString(), mgr, dir, callbackRequest2);
+        davclient.createDir(goog.string.createUniqueString(), mgr, dir, callbackRequest2);
       };
 
-      createDir(goog.string.createUniqueString(), mgr, parentDir, callbackRequest1);
+      davclient.createDir(goog.string.createUniqueString(), mgr, parentDir, callbackRequest1);
+    }
+
+    function testUploadNew() {
+      var testId = 'UploadNew';
+
+      asyncTestCase.waitForAsync(testId);
+      var mgr = new goog.net.XhrManager();
+      asyncContinue();
     }
   </script>
 </body>
