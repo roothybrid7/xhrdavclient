@@ -4,18 +4,16 @@
   <meta charset="UTF-8" />
   <title>TestXHR</title>
   <script src="../closure-library/closure/goog/base.js" type="text/javascript"></script>
+  <script src="../deps.js" type="text/javascript"></script>
   <script type="text/javascript">
     goog.require('goog.testing.AsyncTestCase');
     goog.require('goog.testing.jsunit');
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
 
-    goog.require('goog.net.XhrIo');
     goog.require('goog.object');
-    goog.require('goog.events');
-    goog.require('goog.Uri');
-    goog.require('goog.net.XhrIo');
     goog.require('goog.net.XhrManager');
+    goog.require('webdav.Client');
   </script>
 </head>
 <body>
@@ -23,7 +21,20 @@
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
 
-    var locationUrl = goog.Uri.parse(location);
+    /**
+     * Logging for XHR
+     *
+     * <pre><code>
+     * goog.net.XhrIo.send('/foo', function() {
+     *   var xhr = e.target;
+     *   logging('foo1', xhr);
+     * });
+     * </code></pre>
+     *
+     * @param {string} id Logger ID.
+     * @param {Object} req XHTTPRequest object.
+     * @param {Function} callback Callback function.
+     */
     var logging = function(id, req, callback) {
       var logger = goog.debug.Logger.getLogger(id);
       logger.info("ID: " + id);
@@ -43,72 +54,6 @@
       asyncTestCase.continueTesting();
     };
 
-    var processRequest = function(callback, e) {
-      var xhr = e.target;
-      callback(xhr);
-    };
-
-    function requestAndListen(id, request, callback) {
-      goog.events.listen(request, goog.net.EventType.COMPLETE, function(e) {
-        var xhr = e.xhrIo;
-        callback(id, xhr);
-      });
-    };
-
-    function generateUrl(path) {
-      // scheme, userinfo, domain, port, path, query, fragment
-      return goog.Uri.create(
-        locationUrl.getScheme(),
-        null, // username:password(Basic認証?)
-        locationUrl.getDomain(),
-        locationUrl.getPort() || 80,
-        path,
-        null, // query(a=1&b2)
-        null);
-    }
-
-    function listDir(xhrId, request, path, callback, depth) {
-      var url = generateUrl(path);
-      var headers = {};
-      headers['Content-Type'] = 'application/xml';
-      // 0(path only) or 1(current directory)
-      headers['Depth'] = goog.isDefAndNotNull(depth) ? depth : 1;
-      var body = '<?xml version="1.0" encoding="UTF-8"?>' +
-        '<D:propfind xmlns:D="DAV:"><D:allprop /></D:propfind>';
-      request.send(xhrId, url, 'PROPFIND', body, headers, 0,
-        goog.partial(processRequest, callback));
-    };
-
-    function createDir(xhrId, request, path, callback) {
-      var url = generateUrl(path);
-    //      var url = goog.Uri.parse('http://localhost:8001/foo/');
-      request.send(xhrId, url, 'MKCOL', null, null, 0,
-        goog.partial(processRequest, callback));
-    };
-
-    function deleteDir(xhrId, request, path, callback) {
-      var url = generateUrl(path);
-      request.send(xhrId, url, 'DELETE', null, null, 0,
-        goog.partial(processRequest, callback));
-    };
-
-    function _copyOrMoveDir(xhrId, request, method, path, dstPath, callback) {
-      var url = generateUrl(path);
-      var headers = {};
-      headers['Content-Type'] = 'application/xml';
-      headers['Destination'] = generateUrl(dstPath);
-      request.send(xhrId, url, method, null, headers, 0,
-        goog.partial(processRequest, callback));
-    };
-
-    function moveDir(xhrId, request, dir, dstDir, callback) {
-      _copyOrMoveDir(xhrId, request, 'MOVE', dir, dstDir, callback);
-    };
-
-    function copyDir(xhrId, request, dir, dstDir, callback) {
-      _copyOrMoveDir(xhrId, request, 'COPY', dir, dstDir, callback);
-    };
-
     function testList() {
       var testId = 'List';
 
@@ -116,6 +61,7 @@
 
       var dir = '/mydav/';
       var mgr = new goog.net.XhrManager();
+      var dav = new webdav.Client();
 
       var assertList = function(req) {
         assertEquals('StatusCode?', req.getStatus(), 207);
@@ -125,7 +71,7 @@
         asyncContinue();
       };
 
-      listDir(goog.string.createUniqueString(), mgr, dir, assertList);
+      dav.propfind(goog.string.createUniqueString(), mgr, dir, assertList);
     }
 
     function testCreateAndDeleteDir() {
@@ -135,6 +81,7 @@
 
       var dir = '/mydav/foo/';
       var mgr = new goog.net.XhrManager();
+      var dav = new webdav.Client();
 
       var assertDelete = function(req) {
         assertEquals('StatusCode?', req.getStatus(), 204);
@@ -149,10 +96,10 @@
           goog.string.trim(req.getStatusText()), 'Created');
         logging(testId + '-prepare', req);
 
-        deleteDir(goog.string.createUniqueString(), mgr, dir, assertDelete);
+        dav.delete(goog.string.createUniqueString(), mgr, dir, assertDelete);
       };
 
-      createDir(goog.string.createUniqueString(), mgr, dir, assertCreate);
+      dav.mkcol(goog.string.createUniqueString(), mgr, dir, assertCreate);
     }
 
     function testRenameDir() {
@@ -163,18 +110,19 @@
       var dir = '/mydav/bar/';
       var dstDir = '/mydav/buz/';
       var mgr = new goog.net.XhrManager();
+      var dav = new webdav.Client();
       var assertRename = function(req) {
         assertEquals('StatusCode?', req.getStatus(), 201);
         assertEquals('StatusText?',
           goog.string.trim(req.getStatusText()), 'Created');
         logging(testId, req);
-        deleteDir(goog.string.createUniqueString(), mgr, dstDir, asyncContinue);
+        dav.delete(goog.string.createUniqueString(), mgr, dstDir, asyncContinue);
       };
       var callbackCreate = function(req) {
-        moveDir(goog.string.createUniqueString(), mgr, dir, dstDir, assertRename);
+        dav.move(goog.string.createUniqueString(), mgr, dir, dstDir, assertRename);
       };
 
-      createDir(goog.string.createUniqueString(), mgr, dir, callbackCreate);
+      dav.mkcol(goog.string.createUniqueString(), mgr, dir, callbackCreate);
     }
 
     function testMoveDir() {
@@ -186,21 +134,22 @@
       var dir = '/mydav/move/';
       var dstDir = '/mydav/parent/move/';
       var mgr = new goog.net.XhrManager();
+      var dav = new webdav.Client();
       var assertMove = function(req) {
         assertEquals('StatusCode?', req.getStatus(), 201);
         assertEquals('StatusText?',
           goog.string.trim(req.getStatusText()), 'Created');
         logging(testId, req);
-        deleteDir(goog.string.createUniqueString(), mgr, parentDir, asyncContinue);
+        dav.delete(goog.string.createUniqueString(), mgr, parentDir, asyncContinue);
       };
       var callbackRequest2 = function(req) {
-        moveDir(goog.string.createUniqueString(), mgr, dir, dstDir, assertMove);
+        dav.move(goog.string.createUniqueString(), mgr, dir, dstDir, assertMove);
       };
       var callbackRequest1 = function(req) {
-        createDir(goog.string.createUniqueString(), mgr, dir, callbackRequest2);
+        dav.mkcol(goog.string.createUniqueString(), mgr, dir, callbackRequest2);
       };
 
-      createDir(goog.string.createUniqueString(), mgr, parentDir, callbackRequest1);
+      dav.mkcol(goog.string.createUniqueString(), mgr, parentDir, callbackRequest1);
     }
 
     function testCopyDir() {
@@ -212,22 +161,31 @@
       var dir = '/mydav/parent/copySrc/';
       var dstDir = '/mydav/parent/copyDst/';
       var mgr = new goog.net.XhrManager();
+      var dav = new webdav.Client();
       var assertCopy = function(req) {
         assertEquals('StatusCode?', req.getStatus(), 201);
         assertEquals('StatusText?',
           goog.string.trim(req.getStatusText()), 'Created');
         logging(testId, req);
-        deleteDir(goog.string.createUniqueString(), mgr, parentDir, asyncContinue);
+        dav.delete(goog.string.createUniqueString(), mgr, parentDir, asyncContinue);
       };
       var callbackRequest2 = function(req) {
-        copyDir(goog.string.createUniqueString(), mgr, dir, dstDir, assertCopy);
+        dav.copy(goog.string.createUniqueString(), mgr, dir, dstDir, assertCopy);
       };
       var callbackRequest1 = function(req) {
-        createDir(goog.string.createUniqueString(), mgr, dir, callbackRequest2);
+        dav.mkcol(goog.string.createUniqueString(), mgr, dir, callbackRequest2);
       };
 
-      createDir(goog.string.createUniqueString(), mgr, parentDir, callbackRequest1);
+      dav.mkcol(goog.string.createUniqueString(), mgr, parentDir, callbackRequest1);
     }
+
+//    function testUploadNew() {
+//      var testId = 'UploadNew';
+//
+//      asyncTestCase.waitForAsync(testId);
+//      var mgr = new goog.net.XhrManager();
+//      asyncContinue();
+//    }
   </script>
 </body>
 </html>
