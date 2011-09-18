@@ -71,7 +71,7 @@ webdav.Client.prototype.generateUrl_ = function(path) {
 webdav.Client.prototype.propfind = function(xhrId, request, path, callback, options) {
   var url = this.generateUrl_(path);
   var headers = {};
-  headers['Content-Type'] = 'application/xml';
+  headers['Content-Type'] = 'text/xml';
   // 0(path only) or 1(current directory)
   headers['Depth'] =
     options && goog.isDefAndNotNull(options.depth) ? options.depth : 1;
@@ -125,7 +125,7 @@ webdav.Client.prototype.copyOrMoveDir_ =  function(
   xhrId, request, method, path, dstPath, callback) {
   var url = this.generateUrl_(path);
   var headers = {};
-  headers['Content-Type'] = 'application/xml';
+  headers['Content-Type'] = 'text/xml';
   headers['Destination'] = this.generateUrl_(dstPath);
   request.send(xhrId, url, method, null, headers, 0,
     goog.bind(this.processRequest_, this, callback));
