@@ -1,6 +1,11 @@
+/**
+ * @fileoverview XHTTPRequest Low-level WebDAV Client API.
+ */
+
 goog.provide('webdav.Client');
 goog.require('goog.object');
 goog.require('goog.Uri');
+goog.require('goog.net.XhrIo');
 goog.require('goog.net.XhrManager');
 //goog.require('goog.debug');
 
@@ -8,7 +13,7 @@ goog.require('goog.net.XhrManager');
  * WebDAV Client library by Google Closure library.
  *
  * @constructor
- * @param {{scheme, domain, port}} options URI Parameters(options)
+ * @param {Object=} options URI Parameters(options: scheme, domain, port)
  * @see #initialize_
  */
 webdav.Client = function(options) {
@@ -18,7 +23,8 @@ webdav.Client = function(options) {
 /**
  * WebDAV Client initialize
  *
- * @param {{scheme, domain, port}} options URI Parameters(options)
+ * @private
+ * @param {Object=} options URI Parameters(options: scheme, domain, port)
  */
 webdav.Client.prototype.initialize_ = function(options) {
   if (!goog.isDefAndNotNull(options)) {
@@ -36,6 +42,7 @@ webdav.Client.prototype.initialize_ = function(options) {
  * @private
  * @param {Function} callback Callback chain method
  * @param {Object} e XHR Event Object
+ * @deprecated UNFIXED Logic
  */
 webdav.Client.prototype.processRequest_ = function(callback, event) {
   var xhr = event.target;
@@ -94,11 +101,25 @@ webdav.Client.prototype.request_ = function(method, url, opt_callback, options) 
 };
 
 /**
+ * Find out which HTTP methods are understood by the server.(WebDAV: OPTIONS)
+ *
+ * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
+ * @param {Function=} opt_callback Callback chain after request processing.
+ * @param {Object=} options Option params(headers, etc);
+ */
+webdav.Client.prototype.options = function(path, opt_callback, options) {
+  if (!goog.isDefAndNotNull(options)) options = {};
+  var url = this.generateUrl_(path);
+  this.request_('OPTIONS', url, opt_callback, options);
+};
+
+/**
  * Check Resource(WebDAV: HEAD)
  *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
  * @param {Function=} opt_callback Callback chain after request processing.
  * @param {Object=} options Option params(headers, etc);
+ * @deprecated UNFIXED Testing!!
  */
 webdav.Client.prototype.head = function(path, opt_callback, options) {
   if (!goog.isDefAndNotNull(options)) options = {};
@@ -126,7 +147,7 @@ webdav.Client.prototype.get = function(path, opt_callback, options) {
 };
 
 /**
- * Upload Resource(WebDAV: POST)
+ * Upload Resource(WebDAV: PUT)
  *
  * @param {string} path Path(<code>/foo/bar.xml</code>, <code>/foo/bar.txt</code>).
  * @param {Function=} opt_callback Callback chain after request processing.
@@ -162,6 +183,49 @@ webdav.Client.prototype.propfind = function(path, opt_callback, options) {
       '<D:propfind xmlns:D="DAV:"><D:allprop /></D:propfind>',
   });
   this.request_('PROPFIND', url, opt_callback, options);
+};
+
+/**
+ * Set Collection list and Resource property(WebDAV: PROPPATCH)
+ *
+ * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
+ * @param {Function=} opt_callback Callback chain after request processing.
+ * @param {Object=} options Option params(depth, etc);
+ * @deprecated UNFIXED Testing!!
+ */
+webdav.Client.prototype.proppatch = function(path, opt_callback, options) {
+  if (!goog.isDefAndNotNull(options)) options = {};
+  var url = this.generateUrl_(path);
+  goog.object.extend(options, {
+    headers: {'Content-Type': 'text/xml'},
+    body: {}
+  });
+};
+
+/**
+ * Lock resource(WebDAV: LOCK)
+ *
+ * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
+ * @param {Function=} opt_callback Callback chain after request processing.
+ * @param {Object=} options Option params(depth, etc);
+ * @deprecated UNFIXED Testing!!
+ */
+webdav.Client.prototype.lock = function(path, opt_callback, options) {
+  if (!goog.isDefAndNotNull(options)) options = {};
+  var url = this.generateUrl_(path);
+  goog.object.extend(options, {
+    headers: {
+      'Content-Type': 'text/xml',
+      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0,
+    },
+    body: '<?xml version="1.0" encoding="UTF-8"?>' +
+      '<D:lockinfo xmlns:D="DAV:">\n'+
+      '<D:lockscope><D:' + (options.scope || 'exclusive') + ' /></D:lockscope>\n' +
+      '<D:locktype><D:' + (options.type || 'write') + ' /></D:locktype>\n' +
+      '<D:owner></D:owner>\n</D:lockinfo>\n',
+  });
+alert(options.body);
+  this.request_('LOCK', url, opt_callback, options);
 };
 
 /**
@@ -241,6 +305,10 @@ webdav.Client.prototype.copy = function(dir, dstDir, opt_callback, options) {
 
 /* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
 goog.exportSymbol('webdav.Client', webdav.Client);
+goog.exportProperty(webdav.Client.prototype, 'options', webdav.Client.prototype.options);
+goog.exportProperty(webdav.Client.prototype, 'head', webdav.Client.prototype.head);
+goog.exportProperty(webdav.Client.prototype, 'get', webdav.Client.prototype.get);
+goog.exportProperty(webdav.Client.prototype, 'put', webdav.Client.prototype.put);
 goog.exportProperty(webdav.Client.prototype, 'propfind', webdav.Client.prototype.propfind);
 goog.exportProperty(webdav.Client.prototype, 'mkcol', webdav.Client.prototype.mkcol);
 goog.exportProperty(webdav.Client.prototype, 'delete', webdav.Client.prototype.delete);
