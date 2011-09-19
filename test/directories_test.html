@@ -124,8 +124,10 @@
         assertEquals('StatusText?',
           httpStatusText[httpStatus.CREATED],
           goog.string.trim(req.getStatusText()));
-        logging(testId + '-prepare', req);
-
+        var loc = req.getResponseHeader('Location');
+        assertNotNullNorUndefined('Location?', loc);
+        assertTrue('Location match:', goog.string.endsWith(loc, dir));
+        logging(testId, req);
         dav.delete(dir, assertDelete, {
           xhrId: goog.string.createUniqueString(), request: mgr});
       };
@@ -151,6 +153,9 @@
         assertEquals('StatusText?',
           httpStatusText[httpStatus.CREATED],
           goog.string.trim(req.getStatusText()));
+        var loc = req.getResponseHeader('Location');
+        assertNotNullNorUndefined('Location?', loc);
+        assertTrue('Location match:', goog.string.endsWith(loc, dstDir));
         logging(testId, req);
         dav.delete(dstDir, asyncContinue, {
           xhrId: goog.string.createUniqueString(), request: mgr});
@@ -200,6 +205,9 @@
         assertEquals('StatusText?',
           httpStatusText[httpStatus.CREATED],
           goog.string.trim(req.getStatusText()));
+        var loc = req.getResponseHeader('Location');
+        assertNotNullNorUndefined('Location?', loc);
+        assertTrue('Location match:', goog.string.endsWith(loc, dstDir));
         logging(testId, req);
         dav.move(dstDir, parentDir2, assertMoveAnotherTreeFalse, {
           xhrId: goog.string.createUniqueString(), request: mgr,
@@ -253,6 +261,9 @@
         assertEquals('StatusText?',
           httpStatusText[httpStatus.CREATED],
           goog.string.trim(req.getStatusText()));
+        var loc = req.getResponseHeader('Location');
+        assertNotNullNorUndefined('Location?', loc);
+        assertTrue('Location match:', goog.string.endsWith(loc, dstDir));
         logging(testId, req);
         dav.copy(dstDir, dir, assertCopyOverWrite, {
           xhrId: goog.string.createUniqueString(), request: mgr,
