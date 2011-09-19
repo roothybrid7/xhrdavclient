@@ -181,6 +181,13 @@ webdav.Client.prototype.copyOrMoveDir_ = function(
       'Destination': this.generateUrl_(dstPath),
     }
   });
+  if (goog.isBoolean(options.overwrite)) {
+    if (options.overwrite) {
+      options.headers['Overwrite'] = 'T';
+    } else {
+      options.headers['Overwrite'] = 'F';
+    }
+  }
   this.request_(method, url, opt_callback, options);
 };
 

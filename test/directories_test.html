@@ -14,6 +14,7 @@
     goog.require('goog.object');
     goog.require('goog.net.XhrManager');
     goog.require('webdav.Client');
+    goog.require('webdav.HttpStatus');
   </script>
 </head>
 <body>
@@ -55,23 +56,6 @@
       asyncTestCase.continueTesting();
     };
 
-    function testListNotFound() {
-      var testId = 'ListNotFound';
-
-      asyncTestCase.waitForAsync(testId);
-
-      var dir = '/foo/';
-      var dav = new webdav.Client();
-
-      var assertList = function(req) {
-        assertNotEquals('StatusCode?', 207, req.getStatus());
-        logging(testId, req);
-        asyncContinue();
-      };
-
-      dav.propfind(dir, assertList);
-    }
-
     function testListDepth0() {
       var testId = 'ListDepth0';
 
@@ -79,11 +63,14 @@
 
       var dir = '/mydav/';
       var dav = new webdav.Client();
+      var httpStatus = webdav.HttpStatus;
+      var httpStatusText = webdav.HttpStatus.text;
 
       var assertList = function(req) {
-        assertEquals('StatusCode?', 207, req.getStatus());
+        assertEquals('StatusCode?', httpStatus.MULTI_STATUS, req.getStatus());
         assertEquals('StatusText?',
-          'Multi-Status', goog.string.trim(req.getStatusText()));
+          httpStatusText[httpStatus.MULTI_STATUS],
+          goog.string.trim(req.getStatusText()));
         logging(testId, req);
         asyncContinue();
       };
@@ -98,11 +85,14 @@
 
       var dir = '/mydav/';
       var dav = new webdav.Client();
+      var httpStatus = webdav.HttpStatus;
+      var httpStatusText = webdav.HttpStatus.text;
 
       var assertList = function(req) {
-        assertEquals('StatusCode?', 207, req.getStatus());
+        assertEquals('StatusCode?', httpStatus.MULTI_STATUS, req.getStatus());
         assertEquals('StatusText?',
-          'Multi-Status', goog.string.trim(req.getStatusText()));
+          httpStatusText[httpStatus.MULTI_STATUS],
+          goog.string.trim(req.getStatusText()));
         logging(testId, req);
         asyncContinue();
       };
@@ -118,18 +108,22 @@
       var dir = '/mydav/foo/';
       var mgr = new goog.net.XhrManager();
       var dav = new webdav.Client();
+      var httpStatus = webdav.HttpStatus;
+      var httpStatusText = webdav.HttpStatus.text;
 
       var assertDelete = function(req) {
-        assertEquals('StatusCode?', 204, req.getStatus());
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
         assertEquals('StatusText?',
-          'No Content', goog.string.trim(req.getStatusText()));
+          httpStatusText[httpStatus.NO_CONTENT],
+          goog.string.trim(req.getStatusText()));
         logging(testId, req);
         asyncContinue();
       };
       var assertCreate = function(req) {
-        assertEquals('StatusCode?', 201, req.getStatus());
+        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
         assertEquals('StatusText?',
-          'Created', goog.string.trim(req.getStatusText()));
+          httpStatusText[httpStatus.CREATED],
+          goog.string.trim(req.getStatusText()));
         logging(testId + '-prepare', req);
 
         dav.delete(dir, assertDelete, {
@@ -149,10 +143,14 @@
       var dstDir = '/mydav/buz/';
       var mgr = new goog.net.XhrManager();
       var dav = new webdav.Client();
+      var httpStatus = webdav.HttpStatus;
+      var httpStatusText = webdav.HttpStatus.text;
+
       var assertRename = function(req) {
-        assertEquals('StatusCode?', 201, req.getStatus());
+        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
         assertEquals('StatusText?',
-          'Created', goog.string.trim(req.getStatusText()));
+          httpStatusText[httpStatus.CREATED],
+          goog.string.trim(req.getStatusText()));
         logging(testId, req);
         dav.delete(dstDir, asyncContinue, {
           xhrId: goog.string.createUniqueString(), request: mgr});
@@ -172,28 +170,55 @@
       asyncTestCase.waitForAsync(testId);
 
       var parentDir = '/mydav/parent/';
+      var parentDir2 = '/mydav/parent2/';
       var dir = '/mydav/move/';
       var dstDir = '/mydav/parent/move/';
       var mgr = new goog.net.XhrManager();
       var dav = new webdav.Client();
-      var assertMove = function(req) {
-        assertEquals('StatusCode?', 201, req.getStatus());
+      var httpStatus = webdav.HttpStatus;
+      var httpStatusText = webdav.HttpStatus.text;
+
+      var assertMoveAnotherTreeOverWrite = function(req) {
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
         assertEquals('StatusText?',
-          'Created', goog.string.trim(req.getStatusText()));
+          httpStatusText[httpStatus.NO_CONTENT],
+          goog.string.trim(req.getStatusText()));
         logging(testId, req);
         dav.delete(parentDir, asyncContinue, {
           xhrId: goog.string.createUniqueString(), request: mgr});
       };
-      var callbackRequest2 = function(req) {
+      var assertMoveAnotherTreeFalse = function(req) {
+        assertNotContains('StatusCode?', req.getStatus(),
+          [httpStatus.CREATED, httpStatus.NO_CONTENT]);
+        logging(testId, req);
+        dav.move(parentDir2, dstDir, assertMoveAnotherTreeOverWrite, {
+          xhrId: goog.string.createUniqueString(), request: mgr,
+          overwrite: true});
+      };
+      var assertMove = function(req) {
+        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
+        assertEquals('StatusText?',
+          httpStatusText[httpStatus.CREATED],
+          goog.string.trim(req.getStatusText()));
+        logging(testId, req);
+        dav.move(dstDir, parentDir2, assertMoveAnotherTreeFalse, {
+          xhrId: goog.string.createUniqueString(), request: mgr,
+          overwrite: false});
+      };
+      var executeMove = function(req) {
         dav.move(dir, dstDir, assertMove, {
           xhrId: goog.string.createUniqueString(), request: mgr});
       };
-      var callbackRequest1 = function(req) {
-        dav.mkcol(dir, callbackRequest2, {
+      var createMoveDir = function(req) {
+        dav.mkcol(dir, executeMove, {
+          xhrId: goog.string.createUniqueString(), request: mgr});
+      };
+      var createAnotherParentDir = function(req) {
+        dav.mkcol(parentDir2, createMoveDir, {
           xhrId: goog.string.createUniqueString(), request: mgr});
       };
 
-      dav.mkcol(parentDir, callbackRequest1, {
+      dav.mkcol(parentDir, createAnotherParentDir, {
         xhrId: goog.string.createUniqueString(), request: mgr});
     }
 
@@ -207,13 +232,31 @@
       var dstDir = '/mydav/parent/copyDst/';
       var mgr = new goog.net.XhrManager();
       var dav = new webdav.Client();
-      var assertCopy = function(req) {
-        assertEquals('StatusCode?', 201, req.getStatus());
-        assertEquals('StatusText?',
-          'Created', goog.string.trim(req.getStatusText()));
+      var httpStatus = webdav.HttpStatus;
+      var httpStatusText = webdav.HttpStatus.text;
+
+      var assertCopyOverWriteFalse = function(req) {
+        assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
         logging(testId, req);
         dav.delete(parentDir, asyncContinue, {
           xhrId: goog.string.createUniqueString(), request: mgr});
+      };
+      var assertCopyOverWrite = function(req) {
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
+        logging(testId, req);
+        dav.copy(dir, dstDir, assertCopyOverWriteFalse, {
+          xhrId: goog.string.createUniqueString(), request: mgr,
+          overwrite: false});
+      };
+      var assertCopy = function(req) {
+        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
+        assertEquals('StatusText?',
+          httpStatusText[httpStatus.CREATED],
+          goog.string.trim(req.getStatusText()));
+        logging(testId, req);
+        dav.copy(dstDir, dir, assertCopyOverWrite, {
+          xhrId: goog.string.createUniqueString(), request: mgr,
+          overwrite: true});
       };
       var callbackRequest2 = function(req) {
         dav.copy(dir, dstDir, assertCopy, {
