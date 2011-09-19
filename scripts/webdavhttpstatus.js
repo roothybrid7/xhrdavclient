@@ -141,3 +141,8 @@ webdav.HttpStatus.text = {
    */
   1223: 'Unknown'
 }
+
+/* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
+goog.exportSymbol('webdav.HttpStatus', webdav.HttpStatus);
+goog.exportSymbol('webdav.HttpStatus.text', webdav.HttpStatus.text);
+
