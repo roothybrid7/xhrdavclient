@@ -13,7 +13,9 @@
   <div id="runner"></div>
   <script type="text/javascript">
     var testRunner = new goog.testing.MultiTestRunner();
-    testRunner.addTests(['test/directories_test.html']);
+    testRunner.addTests([
+      'test/directories_test.html',
+      'test/files_test.html']);
     testRunner.render(document.getElementById('runner'));
   </script>
 </body>

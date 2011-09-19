@@ -113,6 +113,36 @@ webdav.Client.prototype.head = function(path, opt_callback, options) {
 };
 
 /**
+ * Get Resource(WebDAV: GET)
+ *
+ * @param {string} path Path(<code>/foo/bar.xml</code>, <code>/foo/bar.txt</code>).
+ * @param {Function=} opt_callback Callback chain after request processing.
+ * @param {Object=} options Option params(headers, etc);
+ */
+webdav.Client.prototype.get = function(path, opt_callback, options) {
+  if (!goog.isDefAndNotNull(options)) options = {};
+  var url = this.generateUrl_(path);
+  this.request_('GET', url, opt_callback, options);
+};
+
+/**
+ * Upload Resource(WebDAV: POST)
+ *
+ * @param {string} path Path(<code>/foo/bar.xml</code>, <code>/foo/bar.txt</code>).
+ * @param {Function=} opt_callback Callback chain after request processing.
+ * @param {Object=} options Option params(xhrId, xhrManager, etc);
+ */
+webdav.Client.prototype.put = function(path, data, opt_callback, options) {
+  if (!goog.isDefAndNotNull(options)) options = {};
+  var url = this.generateUrl_(path);
+  goog.object.extend(options, {
+    headers: {'Content-Type': 'text/xml'},
+    body: data,
+  });
+  this.request_('PUT', url, opt_callback, options);
+};
+
+/**
  * Get Collection list and Resource property(WebDAV: PROPFIND)
  *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
@@ -181,6 +211,13 @@ webdav.Client.prototype.copyOrMoveDir_ = function(
       'Destination': this.generateUrl_(dstPath),
     }
   });
+  if (goog.isBoolean(options.overwrite)) {
+    if (options.overwrite) {
+      options.headers['Overwrite'] = 'T';
+    } else {
+      options.headers['Overwrite'] = 'F';
+    }
+  }
   this.request_(method, url, opt_callback, options);
 };
 
