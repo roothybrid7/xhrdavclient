@@ -176,7 +176,7 @@ webdav.Client.prototype.propfind = function(path, opt_callback, options) {
   goog.object.extend(options, {
     headers: {
       'Content-Type': 'text/xml',
-      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 1,
+      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0,
     },
     // 0(path only) or 1(current directory)
     body: '<?xml version="1.0" encoding="UTF-8"?>' +

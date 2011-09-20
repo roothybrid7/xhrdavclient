@@ -56,32 +56,10 @@
       asyncTestCase.continueTesting();
     };
 
-    function testListDepth0() {
-      var testId = 'ListDepth0';
+    function testPropfind() {
+      var testId = 'Propfind';
 
       asyncTestCase.waitForAsync();
-
-      var dir = '/mydav/';
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
-
-      var assertList = function(req) {
-        assertEquals('StatusCode?', httpStatus.MULTI_STATUS, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.MULTI_STATUS],
-          goog.string.trim(req.getStatusText()));
-        logging(testId, req);
-        asyncContinue();
-      };
-
-      dav.propfind(dir, assertList, {depth: 0});
-    }
-
-    function testList() {
-      var testId = 'List';
-
-      asyncTestCase.waitForAsync(testId);
 
       var dir = '/mydav/';
       var dav = new webdav.Client();
@@ -100,8 +78,30 @@
       dav.propfind(dir, assertList);
     }
 
-    function testCreateAndDeleteDir() {
-      var testId = 'CreateAndDeleteDir';
+    function testPropfindDepth1() {
+      var testId = 'PropfindDepth1';
+
+      asyncTestCase.waitForAsync(testId);
+
+      var dir = '/mydav/';
+      var dav = new webdav.Client();
+      var httpStatus = webdav.HttpStatus;
+      var httpStatusText = webdav.HttpStatus.text;
+
+      var assertList = function(req) {
+        assertEquals('StatusCode?', httpStatus.MULTI_STATUS, req.getStatus());
+        assertEquals('StatusText?',
+          httpStatusText[httpStatus.MULTI_STATUS],
+          goog.string.trim(req.getStatusText()));
+        logging(testId, req);
+        asyncContinue();
+      };
+
+      dav.propfind(dir, assertList, {depth: 0});
+    }
+
+    function testCreateAndDelete() {
+      var testId = 'CreateAndDelete';
 
       asyncTestCase.waitForAsync(testId);
 
@@ -136,8 +136,8 @@
         xhrId: goog.string.createUniqueString(), request: mgr});
     }
 
-    function testRenameDir() {
-      var testId = 'RenameDir';
+    function testRename() {
+      var testId = 'Rename';
 
       asyncTestCase.waitForAsync(testId);
 
@@ -169,8 +169,8 @@
         xhrId: goog.string.createUniqueString(), request: mgr});
     }
 
-    function testMoveDir() {
-      var testId = 'MoveDir';
+    function testMove() {
+      var testId = 'Move';
 
       asyncTestCase.waitForAsync(testId);
 
@@ -230,8 +230,8 @@
         xhrId: goog.string.createUniqueString(), request: mgr});
     }
 
-    function testCopyDir() {
-      var testId = 'CopyDir';
+    function testCopy() {
+      var testId = 'Copy';
 
       asyncTestCase.waitForAsync(testId);
 
