@@ -70,7 +70,8 @@
         assertEquals('StatusCode?', httpStatus.MULTI_STATUS, statusCode);
         assertTrue('Content-Type?',
           goog.string.startsWith(headers['Content-Type'], 'text/xml;'));
-        assertNonEmptyString('ResponseXML?', content);
+        assertNotNull('ResponseXML?', content);
+        assertTrue('ResposeType?', (content instanceof Document));
         asyncContinue();
       };
 
@@ -91,7 +92,8 @@
         assertEquals('StatusCode?', httpStatus.MULTI_STATUS, statusCode);
         assertTrue('Content-Type?',
           goog.string.startsWith(headers['Content-Type'], 'text/xml;'));
-        assertNonEmptyString('ResponseXML?', content);
+        assertNotNull('ResponseXML?', content);
+        assertTrue('ResposeType?', (content instanceof Document));
         asyncContinue();
       };
 

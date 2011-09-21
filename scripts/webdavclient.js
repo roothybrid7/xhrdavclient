@@ -76,7 +76,7 @@ webdav.Client.prototype.processRequest_ = function(
   var xssGuard = 'while(1);'
   var headers = this.parseHeaders_(xhr.getAllResponseHeaders());
   var content = xhr.getResponse(xssGuard);
-  if (xhr && xhr.getStatus == 207) {
+  if (xhr.getStatus() == 207) {
     content = xhr.getResponseXml(xssGuard);
   }
   handler(xhr.getStatus() || 500, content, headers);

@@ -16,6 +16,7 @@
     testRunner.addTests([
       'test/directories_test.html',
       'test/files_test.html']);
+    testRunner.setPoolSize(4);
     testRunner.render(document.getElementById('runner'));
   </script>
 </body>
