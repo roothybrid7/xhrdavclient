@@ -66,16 +66,15 @@
       var httpStatus = webdav.HttpStatus;
       var httpStatusText = webdav.HttpStatus.text;
 
-      var assertList = function(req) {
-        assertEquals('StatusCode?', httpStatus.MULTI_STATUS, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.MULTI_STATUS],
-          goog.string.trim(req.getStatusText()));
-        logging(testId, req);
+      var assertList = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.MULTI_STATUS, statusCode);
+        assertTrue('Content-Type?',
+          goog.string.startsWith(headers['Content-Type'], 'text/xml;'));
+        assertNonEmptyString('ResponseXML?', content);
         asyncContinue();
       };
 
-      dav.propfind(dir, assertList);
+      dav.propfind(dir, assertList, null, goog.partial(logging, testId));
     }
 
     function testPropfindDepth1() {
@@ -88,16 +87,15 @@
       var httpStatus = webdav.HttpStatus;
       var httpStatusText = webdav.HttpStatus.text;
 
-      var assertList = function(req) {
-        assertEquals('StatusCode?', httpStatus.MULTI_STATUS, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.MULTI_STATUS],
-          goog.string.trim(req.getStatusText()));
-        logging(testId, req);
+      var assertList = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.MULTI_STATUS, statusCode);
+        assertTrue('Content-Type?',
+          goog.string.startsWith(headers['Content-Type'], 'text/xml;'));
+        assertNonEmptyString('ResponseXML?', content);
         asyncContinue();
       };
 
-      dav.propfind(dir, assertList, {depth: 0});
+      dav.propfind(dir, assertList, {depth: 0}, goog.partial(logging, testId));
     }
 
     function testCreateAndDelete() {
@@ -111,29 +109,24 @@
       var httpStatus = webdav.HttpStatus;
       var httpStatusText = webdav.HttpStatus.text;
 
-      var assertDelete = function(req) {
-        assertEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.NO_CONTENT],
-          goog.string.trim(req.getStatusText()));
-        logging(testId, req);
+      var assertDelete = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        assertTrue('No Content?', goog.string.isEmptySafe(content));
         asyncContinue();
       };
-      var assertCreate = function(req) {
-        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.CREATED],
-          goog.string.trim(req.getStatusText()));
-        var loc = req.getResponseHeader('Location');
-        assertNotNullNorUndefined('Location?', loc);
-        assertTrue('Location match:', goog.string.endsWith(loc, dir));
-        logging(testId, req);
+      var assertCreate = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        assertTrue('Location match:',
+          goog.string.endsWith(headers['Location'], dir));
         dav.delete(dir, assertDelete, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
 
       dav.mkcol(dir, assertCreate, {
-        xhrId: goog.string.createUniqueString(), request: mgr});
+        xhrId: goog.string.createUniqueString(), request: mgr},
+        goog.partial(logging, testId));
     }
 
     function testRename() {
@@ -148,21 +141,19 @@
       var httpStatus = webdav.HttpStatus;
       var httpStatusText = webdav.HttpStatus.text;
 
-      var assertRename = function(req) {
-        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.CREATED],
-          goog.string.trim(req.getStatusText()));
-        var loc = req.getResponseHeader('Location');
-        assertNotNullNorUndefined('Location?', loc);
-        assertTrue('Location match:', goog.string.endsWith(loc, dstDir));
-        logging(testId, req);
+      var assertRename = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        assertTrue('Location match:',
+          goog.string.endsWith(headers['Location'], dstDir));
         dav.delete(dstDir, asyncContinue, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
-      var callbackCreate = function(req) {
+      var callbackCreate = function(statusCode, content, headers) {
         dav.move(dir, dstDir, assertRename, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
 
       dav.mkcol(dir, callbackCreate, {
@@ -183,45 +174,40 @@
       var httpStatus = webdav.HttpStatus;
       var httpStatusText = webdav.HttpStatus.text;
 
-      var assertMoveAnotherTreeOverWrite = function(req) {
-        assertEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.NO_CONTENT],
-          goog.string.trim(req.getStatusText()));
-        logging(testId, req);
+      var assertMoveAnotherTreeOverWrite = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        assertTrue('No Content?', goog.string.isEmptySafe(content));
         dav.delete(parentDir, asyncContinue, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
-      var assertMoveAnotherTreeFalse = function(req) {
-        assertNotContains('StatusCode?', req.getStatus(),
+      var assertMoveAnotherTreeFalse = function(statusCode, content, headers) {
+        assertNotContains('StatusCode?', statusCode,
           [httpStatus.CREATED, httpStatus.NO_CONTENT]);
-        logging(testId, req);
         dav.move(parentDir2, dstDir, assertMoveAnotherTreeOverWrite, {
           xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: true});
+          overwrite: true},
+          goog.partial(logging, testId));
       };
-      var assertMove = function(req) {
-        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.CREATED],
-          goog.string.trim(req.getStatusText()));
-        var loc = req.getResponseHeader('Location');
-        assertNotNullNorUndefined('Location?', loc);
-        assertTrue('Location match:', goog.string.endsWith(loc, dstDir));
-        logging(testId, req);
+      var assertMove = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        assertTrue('Location match:', goog.string.endsWith(headers['Location'], dstDir));
         dav.move(dstDir, parentDir2, assertMoveAnotherTreeFalse, {
           xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: false});
+          overwrite: false},
+          goog.partial(logging, testId));
       };
-      var executeMove = function(req) {
+      var executeMove = function(statusCode, content, headers) {
         dav.move(dir, dstDir, assertMove, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
-      var createMoveDir = function(req) {
+      var createMoveDir = function(statusCode, content, headers) {
         dav.mkcol(dir, executeMove, {
           xhrId: goog.string.createUniqueString(), request: mgr});
       };
-      var createAnotherParentDir = function(req) {
+      var createAnotherParentDir = function(StatusCode, content, headers) {
         dav.mkcol(parentDir2, createMoveDir, {
           xhrId: goog.string.createUniqueString(), request: mgr});
       };
@@ -243,37 +229,36 @@
       var httpStatus = webdav.HttpStatus;
       var httpStatusText = webdav.HttpStatus.text;
 
-      var assertCopyOverWriteFalse = function(req) {
-        assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
-        logging(testId, req);
+      var assertCopyOverWriteFalse = function(statusCode, content, headers) {
+        assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
         dav.delete(parentDir, asyncContinue, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
-      var assertCopyOverWrite = function(req) {
-        assertEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
-        logging(testId, req);
+      var assertCopyOverWrite = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        assertTrue('No Content?', goog.string.isEmptySafe(content));
         dav.copy(dir, dstDir, assertCopyOverWriteFalse, {
           xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: false});
+          overwrite: false},
+          goog.partial(logging, testId));
       };
-      var assertCopy = function(req) {
-        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.CREATED],
-          goog.string.trim(req.getStatusText()));
-        var loc = req.getResponseHeader('Location');
-        assertNotNullNorUndefined('Location?', loc);
-        assertTrue('Location match:', goog.string.endsWith(loc, dstDir));
-        logging(testId, req);
+      var assertCopy = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        assertTrue('Location match:',
+          goog.string.endsWith(headers['Location'], dstDir));
         dav.copy(dstDir, dir, assertCopyOverWrite, {
           xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: true});
+          overwrite: true},
+          goog.partial(logging, testId));
       };
-      var callbackRequest2 = function(req) {
+      var callbackRequest2 = function(statusCode, content, headers) {
         dav.copy(dir, dstDir, assertCopy, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
-      var callbackRequest1 = function(req) {
+      var callbackRequest1 = function(statusCode, content, headers) {
         dav.mkcol(dir, callbackRequest2, {
           xhrId: goog.string.createUniqueString(), request: mgr});
       };
