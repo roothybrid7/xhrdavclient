@@ -1,4 +1,7 @@
+# .gitignore
 *swp
 *~
 tags
 **/*.pyc
+# Build integrated script
+xhrdavclient.js

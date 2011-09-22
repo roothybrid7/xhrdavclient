@@ -14,8 +14,8 @@
     goog.require('goog.object');
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
-    goog.require('webdav.Client');
-    goog.require('webdav.HttpStatus');
+    goog.require('webdav.lib.Client');
+    goog.require('webdav.lib.HttpStatus');
   </script>
 </head>
 <body>
@@ -58,13 +58,13 @@
     };
 
     var initData;
-    var parentDir = '/mydav/parent/';
+    var parentDir = '/mydav/parentforfile/';
     var srcFile = './testwebdav.txt';
     var file = goog.string.path.join(parentDir, 'testwebdav.txt');
 
     function setUp() {
       asyncTestCase.waitForAsync('setUp');
-      var dav = new webdav.Client();
+      var dav = new webdav.lib.Client();
       var processRequest = function(e) {
         var xhr = e.target;
         initData = xhr.getResponse('while(1);');
@@ -75,8 +75,8 @@
 
     function tearDown() {
       asyncTestCase.waitForAsync('tearDown');
-      var dav = new webdav.Client();
-      dav.delete(parentDir, asyncContinue);
+      var dav = new webdav.lib.Client();
+      dav._delete(parentDir, asyncContinue);
     }
 
     function testFileNotFound() {
@@ -85,20 +85,16 @@
       asyncTestCase.waitForAsync(testId);
 
       var dummyFile = goog.string.path.join(parentDir,'foo.txt');
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
-      var assertNotFound = function(req) {
-        assertEquals('StatusCode?', httpStatus.NOT_FOUND, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.NOT_FOUND],
-          goog.string.trim(req.getStatusText()));
-        logging(testId, req);
+      var assertNotFound = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.NOT_FOUND, statusCode);
         asyncContinue();
       };
 
-      dav.get(dummyFile, assertNotFound);
+      dav.get(dummyFile, assertNotFound, null, goog.partial(logging, testId));
     }
 
     function testDeleteFile() {
@@ -107,24 +103,23 @@
       asyncTestCase.waitForAsync(testId);
 
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
-      var assertDeleteFile = function(req) {
-        assertEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.NO_CONTENT],
-          goog.string.trim(req.getStatusText()));
-        logging(testId, req);
+      var assertDeleteFile = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        assertTrue('No Content?', goog.string.isEmptySafe(content));
         asyncContinue();
       };
-      var callbackUploadFile = function(req) {
-        dav.delete(file, assertDeleteFile, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+      var callbackUploadFile = function(statusCode, content, headers) {
+        dav._delete(file, assertDeleteFile, {
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
       dav.put(file, initData, callbackUploadFile, {
-        xhrId: goog.string.createUniqueString(), request: mgr});
+        xhrId: goog.string.createUniqueString(), request: mgr},
+        goog.partial(logging, testId));
     }
 
     function testDownloadFile() {
@@ -133,26 +128,24 @@
       asyncTestCase.waitForAsync(testId);
 
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
-      var assertDownloadFile = function(req) {
-        assertEquals('StatusCode?', httpStatus.OK, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.OK],
-          goog.string.trim(req.getStatusText()));
-        var data = req.getResponse('while(1);');
-        assertEquals('ResponseData:', initData, data);
-        logging(testId, req);
-        dav.delete(file, asyncContinue, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+      var assertDownloadFile = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.OK, statusCode);
+        // TODO: assert Content-Type
+        assertEquals('ResponseData:', initData, content);
+        dav._delete(file, asyncContinue, {
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
-      var callbackUploadFile = function(req) {
-        dav.get(file, assertDownloadFile);
+      var callbackUploadFile = function(statusCode, content, headers) {
+        dav.get(file, assertDownloadFile, null, goog.partial(logging, testId));
       };
       dav.put(file, initData, callbackUploadFile, {
-        xhrId: goog.string.createUniqueString(), request: mgr});
+        xhrId: goog.string.createUniqueString(), request: mgr},
+        goog.partial(logging, testId));
     }
 
     function testUploadFile() {
@@ -161,32 +154,27 @@
       asyncTestCase.waitForAsync(testId);
 
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
-      var assertUploadFileOverWrite = function(req) {
-        assertEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.NO_CONTENT],
-          goog.string.trim(req.getStatusText()));
-        logging(testId, req);
+      var assertUploadFileOverWrite = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        assertTrue('No Content?', goog.string.isEmptySafe(content));
         asyncContinue();
       };
-      var assertUploadFile = function(req) {
-        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.CREATED],
-          goog.string.trim(req.getStatusText()));
-        var loc = req.getResponseHeader('Location');
-        assertNotNullNorUndefined('Location?', loc);
-        assertTrue('Location match:', goog.string.endsWith(loc, file));
-        logging(testId, req);
+      var assertUploadFile = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        assertTrue('Location match:',
+          goog.string.endsWith(headers['Location'], file));
         dav.put(file, initData + "<MODIFIED>", assertUploadFileOverWrite, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
       dav.put(file, initData, assertUploadFile, {
-        xhrId: goog.string.createUniqueString(), request: mgr});
+        xhrId: goog.string.createUniqueString(), request: mgr},
+        goog.partial(logging, testId));
     }
 
     function testRenameFile() {
@@ -196,27 +184,25 @@
 
       var newFile = goog.string.path.join(parentDir, 'rename.txt');
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
-      var assertRenameFile = function(req) {
-        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.CREATED],
-          goog.string.trim(req.getStatusText()));
-        var loc = req.getResponseHeader('Location');
-        assertNotNullNorUndefined('Location?', loc);
-        assertTrue('Location match:', goog.string.endsWith(loc, newFile));
-        logging(testId, req);
+      var assertRenameFile = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        assertTrue('Location match:',
+          goog.string.endsWith(headers['Location'], newFile));
         asyncContinue();
       };
-      var callbackUploadFile = function(req) {
+      var callbackUploadFile = function(statusCode, content, headers) {
         dav.move(file, newFile, assertRenameFile, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
       dav.put(file, initData, callbackUploadFile, {
-        xhrId: goog.string.createUniqueString(), request: mgr});
+        xhrId: goog.string.createUniqueString(), request: mgr},
+        goog.partial(logging, testId));
     }
 
     function testCopyFile() {
@@ -226,41 +212,36 @@
 
       var newFile = goog.string.path.join(parentDir, 'copy.txt');
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
-      var assertCopyFileOverWriteFalse = function(req) {
-        assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
-        logging(testId, req);
+      var assertCopyFileOverWriteFalse = function(statusCode, content, headers) {
+        assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
         asyncContinue();
       };
-      var assertCopyFileOverWrite = function(req) {
-        assertEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.NO_CONTENT],
-          goog.string.trim(req.getStatusText()));
-        logging(testId, req);
+      var assertCopyFileOverWrite = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        assertTrue('No Content?', goog.string.isEmptySafe(content));
         dav.copy(file, newFile, assertCopyFileOverWriteFalse, {
           xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: false});
+          overwrite: false},
+          goog.partial(logging, testId));
       };
-      var assertCopyFile = function(req) {
-        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.CREATED],
-          goog.string.trim(req.getStatusText()));
-        var loc = req.getResponseHeader('Location');
-        assertNotNullNorUndefined('Location?', loc);
-        assertTrue('Location match:', goog.string.endsWith(loc, newFile));
-        logging(testId, req);
+      var assertCopyFile = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        assertTrue('Location match:',
+          goog.string.endsWith(headers['Location'], newFile));
         dav.copy(newFile, file, assertCopyFileOverWrite, {
           xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: true});
+          overwrite: true},
+          goog.partial(logging, testId));
       };
-      var callbackUploadFile = function(req) {
+      var callbackUploadFile = function(statusCode, content, headers) {
         dav.copy(file, newFile, assertCopyFile, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+          xhrId: goog.string.createUniqueString(), request: mgr},
+          goog.partial(logging, testId));
       };
       dav.put(file, initData, callbackUploadFile, {
         xhrId: goog.string.createUniqueString(), request: mgr});
@@ -273,43 +254,37 @@
 
       var newFile = goog.string.path.join(parentDir, 'move.txt');
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
-      var assertMoveFileOverWrite = function(req) {
-        assertEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.NO_CONTENT],
-          goog.string.trim(req.getStatusText()));
-        logging(testId, req);
+      var assertMoveFileOverWrite = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        assertTrue('No Content?', goog.string.isEmptySafe(content));
         asyncContinue();
       };
-      var assertMoveFileOverWriteFalse = function(req) {
-        assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, req.getStatus());
-        logging(testId, req);
+      var assertMoveFileOverWriteFalse = function(statusCode, content, headers) {
+        assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
         dav.move(file, newFile, assertMoveFileOverWrite, {
           xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: true});
+          overwrite: true},
+          goog.partial(logging, testId));
       };
-      var callbackCopyFile = function(req) {
+      var callbackCopyFile = function(statusCode, content, headers) {
         dav.move(file, newFile, assertMoveFileOverWriteFalse, {
           xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: false});
+          overwrite: false},
+          goog.partial(logging, testId));
       };
-      var assertMoveFile = function(req) {
-        assertEquals('StatusCode?', httpStatus.CREATED, req.getStatus());
-        assertEquals('StatusText?',
-          httpStatusText[httpStatus.CREATED],
-          goog.string.trim(req.getStatusText()));
-        var loc = req.getResponseHeader('Location');
-        assertNotNullNorUndefined('Location?', loc);
-        assertTrue('Location match:', goog.string.endsWith(loc, newFile));
-        logging(testId, req);
+      var assertMoveFile = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        assertTrue('Location match:',
+          goog.string.endsWith(headers['Location'], newFile));
         dav.copy(newFile, file, callbackCopyFile, {
           xhrId: goog.string.createUniqueString(), request: mgr});
       };
-      var callbackUploadFile = function(req) {
+      var callbackUploadFile = function(statusCode, content, headers) {
         dav.move(file, newFile, assertMoveFile, {
           xhrId: goog.string.createUniqueString(), request: mgr});
       };
