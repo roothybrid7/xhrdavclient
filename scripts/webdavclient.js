@@ -1,5 +1,7 @@
 /**
- * @fileoverview XHTTPRequest Low-level WebDAV Client API.
+ * webdavclient.js - XHTTPRequest Low-level WebDAV Client API.
+ *
+ * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
 goog.provide('webdav.Client');

@@ -1,6 +1,7 @@
 /**
- * @fileoverview XHTTPRequest High-level WebDAV Client API.
+ * davfs.js - XHTTPRequest High-level WebDAV Client API.
  * @deprecated 未実装のため使用不可
+ * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
 goog.provide('webdav.fs.DavFs');
