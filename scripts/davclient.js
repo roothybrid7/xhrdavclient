@@ -76,7 +76,7 @@ xhrdav.lib.Client.prototype.processRequest_ = function(
 
   if (debugHandler && debugHandler instanceof Function) debugHandler(xhr);
 
-  var xssGuard = 'while(1);'
+  var xssGuard = 'while(1);';
   var headers = this.parseHeaders_(xhr.getAllResponseHeaders());
   var content = xhr.getResponse(xssGuard);
   if (xhr.getStatus() == 207) {
