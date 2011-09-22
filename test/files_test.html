@@ -14,8 +14,8 @@
     goog.require('goog.object');
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
-    goog.require('webdav.Client');
-    goog.require('webdav.HttpStatus');
+    goog.require('webdav.lib.Client');
+    goog.require('webdav.lib.HttpStatus');
   </script>
 </head>
 <body>
@@ -64,7 +64,7 @@
 
     function setUp() {
       asyncTestCase.waitForAsync('setUp');
-      var dav = new webdav.Client();
+      var dav = new webdav.lib.Client();
       var processRequest = function(e) {
         var xhr = e.target;
         initData = xhr.getResponse('while(1);');
@@ -75,7 +75,7 @@
 
     function tearDown() {
       asyncTestCase.waitForAsync('tearDown');
-      var dav = new webdav.Client();
+      var dav = new webdav.lib.Client();
       dav._delete(parentDir, asyncContinue);
     }
 
@@ -85,9 +85,9 @@
       asyncTestCase.waitForAsync(testId);
 
       var dummyFile = goog.string.path.join(parentDir,'foo.txt');
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
       var assertNotFound = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NOT_FOUND, statusCode);
@@ -103,9 +103,9 @@
       asyncTestCase.waitForAsync(testId);
 
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
       var assertDeleteFile = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
@@ -128,9 +128,9 @@
       asyncTestCase.waitForAsync(testId);
 
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
       var assertDownloadFile = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.OK, statusCode);
@@ -154,9 +154,9 @@
       asyncTestCase.waitForAsync(testId);
 
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
       var assertUploadFileOverWrite = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
@@ -184,9 +184,9 @@
 
       var newFile = goog.string.path.join(parentDir, 'rename.txt');
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
       var assertRenameFile = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
@@ -212,9 +212,9 @@
 
       var newFile = goog.string.path.join(parentDir, 'copy.txt');
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
       var assertCopyFileOverWriteFalse = function(statusCode, content, headers) {
         assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
@@ -254,9 +254,9 @@
 
       var newFile = goog.string.path.join(parentDir, 'move.txt');
       var mgr = new goog.net.XhrManager();
-      var dav = new webdav.Client();
-      var httpStatus = webdav.HttpStatus;
-      var httpStatusText = webdav.HttpStatus.text;
+      var dav = new webdav.lib.Client();
+      var httpStatus = webdav.lib.HttpStatus;
+      var httpStatusText = webdav.lib.HttpStatus.text;
 
       var assertMoveFileOverWrite = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
