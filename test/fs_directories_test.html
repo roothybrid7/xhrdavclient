@@ -17,6 +17,7 @@
     goog.require('webdav.fs.DavFs');
     goog.require('webdav.HttpStatus');
     goog.require('goog.ds.XmlDataSource');
+    goog.require('goog.ds.DataManager');
     goog.require('goog.array');
     goog.require('goog.dom.xml');
   </script>
@@ -72,28 +73,36 @@
       var httpStatus = webdav.HttpStatus;
       var httpStatusText = webdav.HttpStatus.text;
 
-      var assertList = function(req) {
-        var rootName = 'rootTree';
-        logging(testId, req);
-
-        var resp = req.getResponseXml('while(1);');
-//        var doc = goog.dom.xml.loadXml('<D:multistatus />');
-//        var ds = new goog.ds.XmlDataSource(resp, doc, rootName);
-        var ds = new goog.ds.XmlDataSource(resp, null, rootName); // RootTree
-        var childNode = ds.getChildNode('D:multistatus');
+      var assertList = function(statusCode, content, headers) {
+        var rootName = goog.string.path.normalizePath(dir);
         var l = goog.debug.Logger.getLogger('ds-debug');
-        l.info(ds.getChildNode('D:multistatus').getDataPath());
-        var nodeList = ds.getChildNode('D:multistatus').getChildNodes();
+
+        var rootDoc = content.documentElement;
+
+        var ds = new goog.ds.XmlDataSource(content, null, rootName); // RootTree
+        l.info("DataSourceName: " + ds.getDataName());
+        l.info("DataSourcePath: " + ds.getDataPath());
+//        var childNode = ds.getChildNode('D:multistatus');
+//        l.info(childNode.getDataPath());
+        var dm = goog.ds.DataManager.getInstance();
+        dm.addDataSource(ds);
+//        l.info("DM getDS: " +
+//          dm.getDataSource('$' + rootName)
+//            .getChildNode('D:multistatus')
+//            .getChildNodes().getCount());
+        var nodeList = dm.getChildNode('$' + rootName).getChildNode('D:multistatus').getChildNodes();
         var childValues = [], node;
-l.info("Count: " + nodeList.getCount());
+        l.info("Count: " + nodeList.getCount());
+
         for (var i = 0, cnt = nodeList.getCount(); i < cnt; i++) {
           node = nodeList.getByIndex(i);
-          childValues[i] = node.getDataName() + ' : ' + node.getDataPath();
-l.info(childValues[i]);
+          var href = node.getChildNode('D:href').get();
+          l.info(href);
+          l.info(goog.string.urlDecode(href));
         }
         asyncContinue();
       };
-      davFs.listDir(dir, assertList);
+      davFs.listDir(dir, assertList, null, goog.partial(logging, testId));
     };
   </script>
 </body>

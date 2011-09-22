@@ -1,3 +1,8 @@
+/**
+ * @fileoverview XHTTPRequest High-level WebDAV Client API.
+ * @deprecated 未実装のため使用不可
+ */
+
 goog.provide('webdav.fs.DavFs');
 goog.require('webdav.Client');
 goog.require('webdav.HttpStatus');
@@ -25,17 +30,18 @@ webdav.fs.DavFs.prototype.initialize = function(options) {
  * listing collection
  *
  * @param {string} path
- * @param {Function=} opt_callback
+ * @param {Function} handler
  * @param {Object=} options
+ * @param {Function=} debugHandler
  */
 // TODO: 結果をcacheに格納、cacheにあったらcacheを返す
 // TODO: Cacheはpathごとにもつ
 //    cache['/'] = goog.ds.XmlDataSource(response, null, 'root');
 //    cache['/foo'] = goog.ds.XmlDataSource(response, rootTree, name);
-webdav.fs.DavFs.prototype.listDir = function(path, opt_callback, options) {
+webdav.fs.DavFs.prototype.listDir = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
-  options.depth = 1;
-  this.client_.propfind(path, opt_callback, options);
+  options.depth = 1;  // listing directory
+  this.client_.propfind(path, handler, options, debugHandler);
 };
 
 /* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
