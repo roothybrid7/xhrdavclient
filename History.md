@@ -1,4 +1,11 @@
 
+0.0.3 / 2011-09-23 
+==================
+
+  * bugfixed tailing semicolon.
+  * Merge branch 'release/v0.0.2'
+  * update changelog
+
 0.0.2 / 2011-09-22 
 ==================
 
