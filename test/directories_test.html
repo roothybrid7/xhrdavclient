@@ -121,7 +121,7 @@
         assertNotNullNorUndefined('Location?', headers['Location']);
         assertTrue('Location match:',
           goog.string.endsWith(headers['Location'], dir));
-        dav.delete(dir, assertDelete, {
+        dav._delete(dir, assertDelete, {
           xhrId: goog.string.createUniqueString(), request: mgr},
           goog.partial(logging, testId));
       };
@@ -148,7 +148,7 @@
         assertNotNullNorUndefined('Location?', headers['Location']);
         assertTrue('Location match:',
           goog.string.endsWith(headers['Location'], dstDir));
-        dav.delete(dstDir, asyncContinue, {
+        dav._delete(dstDir, asyncContinue, {
           xhrId: goog.string.createUniqueString(), request: mgr},
           goog.partial(logging, testId));
       };
@@ -179,7 +179,7 @@
       var assertMoveAnotherTreeOverWrite = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
         assertTrue('No Content?', goog.string.isEmptySafe(content));
-        dav.delete(parentDir, asyncContinue, {
+        dav._delete(parentDir, asyncContinue, {
           xhrId: goog.string.createUniqueString(), request: mgr},
           goog.partial(logging, testId));
       };
@@ -233,7 +233,7 @@
 
       var assertCopyOverWriteFalse = function(statusCode, content, headers) {
         assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
-        dav.delete(parentDir, asyncContinue, {
+        dav._delete(parentDir, asyncContinue, {
           xhrId: goog.string.createUniqueString(), request: mgr},
           goog.partial(logging, testId));
       };

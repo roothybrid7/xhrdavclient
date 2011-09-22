@@ -76,7 +76,7 @@
     function tearDown() {
       asyncTestCase.waitForAsync('tearDown');
       var dav = new webdav.Client();
-      dav.delete(parentDir, asyncContinue);
+      dav._delete(parentDir, asyncContinue);
     }
 
     function testFileNotFound() {
@@ -113,7 +113,7 @@
         asyncContinue();
       };
       var callbackUploadFile = function(statusCode, content, headers) {
-        dav.delete(file, assertDeleteFile, {
+        dav._delete(file, assertDeleteFile, {
           xhrId: goog.string.createUniqueString(), request: mgr},
           goog.partial(logging, testId));
       };
@@ -136,7 +136,7 @@
         assertEquals('StatusCode?', httpStatus.OK, statusCode);
         // TODO: assert Content-Type
         assertEquals('ResponseData:', initData, content);
-        dav.delete(file, asyncContinue, {
+        dav._delete(file, asyncContinue, {
           xhrId: goog.string.createUniqueString(), request: mgr},
           goog.partial(logging, testId));
       };

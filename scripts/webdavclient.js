@@ -160,12 +160,17 @@ webdav.Client.prototype.options = function(
 webdav.Client.prototype.head = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
-  goog.object.extend(options, {
-    headers: {
+
+  if (goog.isDefAndNotNull(options.headers)) {
+    goog.object.extend(options.headers, {
       'Cache-Control': 'max-age=0',
-      'If-Modified-Since': 'Thu, 01 Jan 1970 00:00:00 GMT',
-    }
-  });
+      'If-Modified-Since': 'Thu, 01 Jan 1970 00:00:00 GMT'});
+  } else {
+    goog.object.extend(options, {headers: {
+      'Cache-Control': 'max-age=0',
+      'If-Modified-Since': 'Thu, 01 Jan 1970 00:00:00 GMT'}});
+  }
+
   this.request_('HEAD', url, handler, options, debugHandler);
 };
 
@@ -195,10 +200,14 @@ webdav.Client.prototype.put = function(
   path, data, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
-  goog.object.extend(options, {
-    headers: {'Content-Type': 'text/xml'},
-    body: data,
-  });
+
+  if (goog.isDefAndNotNull(options.headers)) {
+    goog.object.extend(options.headers, {'Content-Type': 'text/xml'});
+  } else {
+    goog.object.extend(options, {headers: {'Content-Type': 'text/xml'}});
+  }
+  goog.object.extend(options, {body: data});
+
   this.request_('PUT', url, handler, options, debugHandler);
 };
 
@@ -214,15 +223,21 @@ webdav.Client.prototype.propfind = function(
   path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
-  goog.object.extend(options, {
-    headers: {
+
+  // 0(path only) or 1(current directory)
+  if (goog.isDefAndNotNull(options.headers)) {
+    goog.object.extend(options.headers, {
       'Content-Type': 'text/xml',
-      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0,
-    },
-    // 0(path only) or 1(current directory)
-    body: '<?xml version="1.0" encoding="UTF-8"?>' +
-      '<D:propfind xmlns:D="DAV:"><D:allprop /></D:propfind>',
-  });
+      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0});
+  } else {
+    goog.object.extend(options, {headers: {
+      'Content-Type': 'text/xml',
+      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0}});
+  }
+  goog.object.extend(options, {body:
+    '<?xml version="1.0" encoding="UTF-8"?>' +
+    '<D:propfind xmlns:D="DAV:"><D:allprop /></D:propfind>'});
+
   this.request_('PROPFIND', url, handler, options, debugHandler);
 };
 
@@ -238,10 +253,12 @@ webdav.Client.prototype.propfind = function(
 webdav.Client.prototype.proppatch = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
-  goog.object.extend(options, {
-    headers: {'Content-Type': 'text/xml'},
-    body: {}
-  });
+
+  if (goog.isDefAndNotNull(options.headers)) {
+    goog.object.extend(options.headers, {'Content-Type': 'text/xml'});
+  } else {
+    goog.object.extend(options, {headers: {'Content-Type': 'text/xml'}});
+  }
 };
 
 /**
@@ -256,18 +273,23 @@ webdav.Client.prototype.proppatch = function(path, handler, options, debugHandle
 webdav.Client.prototype.lock = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
-  goog.object.extend(options, {
-    headers: {
+
+  if (goog.isDefAndNotNull(options.headers)) {
+    goog.object.extend(options.headers, {
       'Content-Type': 'text/xml',
-      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0,
-    },
-    body: '<?xml version="1.0" encoding="UTF-8"?>' +
-      '<D:lockinfo xmlns:D="DAV:">\n'+
-      '<D:lockscope><D:' + (options.scope || 'exclusive') + ' /></D:lockscope>\n' +
-      '<D:locktype><D:' + (options.type || 'write') + ' /></D:locktype>\n' +
-      '<D:owner></D:owner>\n</D:lockinfo>\n',
-  });
-alert(options.body);
+      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0});
+  } else {
+    goog.object.extend(options, {headers: {
+      'Content-Type': 'text/xml',
+      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0}});
+  }
+  goog.object.extend(options, {body:
+    '<?xml version="1.0" encoding="UTF-8"?>' +
+    '<D:lockinfo xmlns:D="DAV:">\n'+
+    '<D:lockscope><D:' + (options.scope || 'exclusive') + ' /></D:lockscope>\n' +
+    '<D:locktype><D:' + (options.type || 'write') + ' /></D:locktype>\n' +
+    '<D:owner></D:owner>\n</D:lockinfo>\n'});
+
   this.request_('LOCK', url, handler, options, debugHandler);
 };
 
@@ -294,7 +316,7 @@ webdav.Client.prototype.mkcol = function(path, handler, options, debugHandler) {
  * @param {Object=} options Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-webdav.Client.prototype.delete = function(
+webdav.Client.prototype._delete = function(
   path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
@@ -316,12 +338,16 @@ webdav.Client.prototype.copyOrMoveDir_ = function(
   method, path, dstPath, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
-  goog.object.extend(options, {
-    headers: {
+
+  if (goog.isDefAndNotNull(options.headers)) {
+    goog.object.extend(options.headers, {
       'Content-Type': 'text/xml',
-      'Destination': this.generateUrl_(dstPath),
-    }
-  });
+      'Destination': this.generateUrl_(dstPath)});
+  } else {
+    goog.object.extend(options, {headers: {
+      'Content-Type': 'text/xml',
+      'Destination': this.generateUrl_(dstPath)}});
+  }
   if (goog.isBoolean(options.overwrite)) {
     if (options.overwrite) {
       options.headers['Overwrite'] = 'T';
@@ -329,6 +355,7 @@ webdav.Client.prototype.copyOrMoveDir_ = function(
       options.headers['Overwrite'] = 'F';
     }
   }
+
   this.request_(method, url, handler, options, debugHandler);
 };
 
@@ -360,7 +387,7 @@ goog.exportProperty(webdav.Client.prototype, 'get', webdav.Client.prototype.get)
 goog.exportProperty(webdav.Client.prototype, 'put', webdav.Client.prototype.put);
 goog.exportProperty(webdav.Client.prototype, 'propfind', webdav.Client.prototype.propfind);
 goog.exportProperty(webdav.Client.prototype, 'mkcol', webdav.Client.prototype.mkcol);
-goog.exportProperty(webdav.Client.prototype, 'delete', webdav.Client.prototype.delete);
+goog.exportProperty(webdav.Client.prototype, '_delete', webdav.Client.prototype._delete);
 goog.exportProperty(webdav.Client.prototype, 'move', webdav.Client.prototype.move);
 goog.exportProperty(webdav.Client.prototype, 'copy', webdav.Client.prototype.copy);
 
