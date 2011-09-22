@@ -2,6 +2,14 @@
 0.0.1 / 2011-09-22 
 ==================
 
+  * Add sample
+  * add ignore compiled script file
+  * modified namespace
+  * Add copyright
+  * bugfix
+  * Merge branch 'release/v0.0.1' into develop
+  * Add closure compiler
+  * Add changelog
   * stash save
   * bugfixed in webdavclient
   * Modified returning value(status, content, headers)
