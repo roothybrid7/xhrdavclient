@@ -47,14 +47,16 @@ usage() {
   echo "  -g: Generate integrate scripts WITHOUT OPTIMIZATIONS [DEFAULT]"
   echo "  -s: Compiling scripts with 'SIMPLE_OPTIMIZATIONS' by closure compiler"
   echo "  -w: Compiling scripts with 'WHITESPACE_ONLY' by closure compiler"
+  echo "  -r: Release build(goog.DEBUG=false)"
 } 1>&2
 
-while getopts agsw OPT
+while getopts agrsw OPT
 do
   case $OPT in
   "a") FLG_ADVANCED="TRUE" ;;
   "g") FLG_GENERAGE="TRUE" ;;     # DEFAULT
   "s") FLG_SIMPLE="TRUE" ;;
+  "r") FLG_RELEASE="TRUE" ;;
   "w") FLG_WHITESPACE_ONLY="TRUE" ;;
   * ) usage
     exit 1 ;;
@@ -70,6 +72,14 @@ elif [ "$FLG_WHITESPACE_ONLY" = "TRUE" ]; then
 else
   options='-o script'
 fi
+
+# Release build with debug off
+if [ "$FLG_RELEASE" = "TRUE" ]; then
+  options+=' -f "--define=goog.DEBUG=false"'
+fi
+
+# Add optimized script debug option
+options+=' -f "--formatting=PRETTY_PRINT"'
 
 
 command="$PYTHON closure-library/closure/bin/build/closurebuilder.py --output_file=$OUTPUTFILE --root=closure-library --root=scripts"
