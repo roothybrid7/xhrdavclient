@@ -9,21 +9,21 @@
 -->
 </head>
 <body>
-  <div id="runner"></div>
+  <div id="sample"></div>
   <script type="text/javascript">
     goog.require('goog.net.XhrManager');
-    goog.require('webdav.lib.Client');
-    goog.require('webdav.lib.HttpStatus');
+    goog.require('xhrdav.lib.Client');
+    goog.require('xhrdav.lib.HttpStatus');
   </script>
   <script type="text/javascript">
     var dir = '/mydav/'
-    var dav = new webdav.lib.Client();
-    var httpStatus = webdav.lib.HttpStatus;
-    var httpStatusText = webdav.lib.HttpStatus.text;
+    var dav = new xhrdav.lib.Client();
+    var httpStatus = xhrdav.lib.HttpStatus;
+    var httpStatusText = xhrdav.lib.HttpStatus.text;
 
     dav.propfind(dir, function(statusCode, content, headers) {
-      alert("Status: " + httpStatusText[statusCode]);
-    });
+      document.getElementById('sample').innerHTML = 'Sample File ' + "Status: " + httpStatusText[statusCode];
+    }, null, function(e) { console.log(e); });
   </script>
 </body>
 </html>

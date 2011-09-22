@@ -1,12 +1,12 @@
 /**
- * webdavclient.js - XHTTPRequest Low-level WebDAV Client API.
+ * davclient.js - XHTTPRequest Low-level WebDAV Client API.
  *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('webdav.lib');
-goog.provide('webdav.lib.Client');
+goog.provide('xhrdav.lib.Client');
 goog.require('goog.object');
+goog.require('goog.dom');
 goog.require('goog.Uri');
 goog.require('goog.net.XhrIo');
 goog.require('goog.net.XhrManager');
@@ -19,7 +19,7 @@ goog.require('goog.net.XhrManager');
  * @param {Object=} options URI Parameters(options: scheme, domain, port)
  * @see #initialize_
  */
-webdav.lib.Client = function(options) {
+xhrdav.lib.Client = function(options) {
   this.initialize_(options);
 };
 
@@ -29,7 +29,7 @@ webdav.lib.Client = function(options) {
  * @private
  * @param {Object=} options URI Parameters(options: scheme, domain, port)
  */
-webdav.lib.Client.prototype.initialize_ = function(options) {
+xhrdav.lib.Client.prototype.initialize_ = function(options) {
   if (!goog.isDefAndNotNull(options)) {
     options = {};
   }
@@ -46,7 +46,7 @@ webdav.lib.Client.prototype.initialize_ = function(options) {
  * @param {string} headerStrings Response all header strings.
  * @return {Object} converted header object(associated array).
  */
-webdav.lib.Client.prototype.parseHeaders_ = function(headerStrings) {
+xhrdav.lib.Client.prototype.parseHeaders_ = function(headerStrings) {
   var headers = {};
   var headerListWithoutEmpty = goog.array.filter(
     headerStrings.split(/\n/), function(v, i) {
@@ -70,7 +70,7 @@ webdav.lib.Client.prototype.parseHeaders_ = function(headerStrings) {
  * @param {Object} event XHR Event Object.
  */
 // TODO: UNFIXED Logic
-webdav.lib.Client.prototype.processRequest_ = function(
+xhrdav.lib.Client.prototype.processRequest_ = function(
   handler, debugHandler, event) {
   var xhr = event.target;
 
@@ -91,7 +91,7 @@ webdav.lib.Client.prototype.processRequest_ = function(
  * @private
  * @param {string} path Path(<code>/foo</code>, <code>/foo/bar.txt</code>).
  */
-webdav.lib.Client.prototype.generateUrl_ = function(path) {
+xhrdav.lib.Client.prototype.generateUrl_ = function(path) {
   // scheme, userinfo, domain, port, path, query, fragment
   return goog.Uri.create(
     this.scheme_,
@@ -113,7 +113,7 @@ webdav.lib.Client.prototype.generateUrl_ = function(path) {
  * @param {Object=} options option parameters(xhrId, body, headers, etc).
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-webdav.lib.Client.prototype.request_ = function(
+xhrdav.lib.Client.prototype.request_ = function(
   method, url, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   if (goog.isDefAndNotNull(options.request)) {
@@ -144,7 +144,7 @@ webdav.lib.Client.prototype.request_ = function(
  * @param {Object=} options Option params(headers, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-webdav.lib.Client.prototype.options = function(
+xhrdav.lib.Client.prototype.options = function(
   path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
@@ -160,7 +160,7 @@ webdav.lib.Client.prototype.options = function(
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 // TODO: UNFIXED
-webdav.lib.Client.prototype.head = function(path, handler, options, debugHandler) {
+xhrdav.lib.Client.prototype.head = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
 
@@ -185,7 +185,7 @@ webdav.lib.Client.prototype.head = function(path, handler, options, debugHandler
  * @param {Object=} options Option params(headers, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-webdav.lib.Client.prototype.get = function(path, handler, options, debugHandler) {
+xhrdav.lib.Client.prototype.get = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
   this.request_('GET', url, handler, options, debugHandler);
@@ -199,7 +199,7 @@ webdav.lib.Client.prototype.get = function(path, handler, options, debugHandler)
  * @param {Object=} options Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-webdav.lib.Client.prototype.put = function(
+xhrdav.lib.Client.prototype.put = function(
   path, data, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
@@ -222,7 +222,7 @@ webdav.lib.Client.prototype.put = function(
  * @param {Object=} options Option params(depth, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-webdav.lib.Client.prototype.propfind = function(
+xhrdav.lib.Client.prototype.propfind = function(
   path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
@@ -253,7 +253,7 @@ webdav.lib.Client.prototype.propfind = function(
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 // TODO: UNFIXED
-webdav.lib.Client.prototype.proppatch = function(path, handler, options, debugHandler) {
+xhrdav.lib.Client.prototype.proppatch = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
 
@@ -273,7 +273,7 @@ webdav.lib.Client.prototype.proppatch = function(path, handler, options, debugHa
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 // TODO: UNFIXED
-webdav.lib.Client.prototype.lock = function(path, handler, options, debugHandler) {
+xhrdav.lib.Client.prototype.lock = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
 
@@ -304,7 +304,7 @@ webdav.lib.Client.prototype.lock = function(path, handler, options, debugHandler
  * @param {Object=} options Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-webdav.lib.Client.prototype.mkcol = function(path, handler, options, debugHandler) {
+xhrdav.lib.Client.prototype.mkcol = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
 //      var url = goog.Uri.parse('http://localhost:8001/foo/');
@@ -319,7 +319,7 @@ webdav.lib.Client.prototype.mkcol = function(path, handler, options, debugHandle
  * @param {Object=} options Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-webdav.lib.Client.prototype._delete = function(
+xhrdav.lib.Client.prototype._delete = function(
   path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
@@ -337,7 +337,7 @@ webdav.lib.Client.prototype._delete = function(
  * @param {Object=} options Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-webdav.lib.Client.prototype.copyOrMoveDir_ = function(
+xhrdav.lib.Client.prototype.copyOrMoveDir_ = function(
   method, path, dstPath, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
@@ -367,7 +367,7 @@ webdav.lib.Client.prototype.copyOrMoveDir_ = function(
  *
  * @see #copyOrMoveDir_
  */
-webdav.lib.Client.prototype.move = function(
+xhrdav.lib.Client.prototype.move = function(
   path, dstPath, handler, options, debugHandler) {
   this.copyOrMoveDir_('MOVE', path, dstPath, handler, options, debugHandler);
 };
@@ -377,20 +377,20 @@ webdav.lib.Client.prototype.move = function(
  *
  * @see #copyOrMoveDir_
  */
-webdav.lib.Client.prototype.copy = function(
+xhrdav.lib.Client.prototype.copy = function(
   path, dstPath, handler, options, debugHandler) {
   this.copyOrMoveDir_('COPY', path, dstPath, handler, options, debugHandler);
 };
 
 /* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
-goog.exportSymbol('webdav.lib.Client', webdav.lib.Client);
-goog.exportProperty(webdav.lib.Client.prototype, 'options', webdav.lib.Client.prototype.options);
-goog.exportProperty(webdav.lib.Client.prototype, 'head', webdav.lib.Client.prototype.head);
-goog.exportProperty(webdav.lib.Client.prototype, 'get', webdav.lib.Client.prototype.get);
-goog.exportProperty(webdav.lib.Client.prototype, 'put', webdav.lib.Client.prototype.put);
-goog.exportProperty(webdav.lib.Client.prototype, 'propfind', webdav.lib.Client.prototype.propfind);
-goog.exportProperty(webdav.lib.Client.prototype, 'mkcol', webdav.lib.Client.prototype.mkcol);
-goog.exportProperty(webdav.lib.Client.prototype, '_delete', webdav.lib.Client.prototype._delete);
-goog.exportProperty(webdav.lib.Client.prototype, 'move', webdav.lib.Client.prototype.move);
-goog.exportProperty(webdav.lib.Client.prototype, 'copy', webdav.lib.Client.prototype.copy);
+goog.exportSymbol('xhrdav.lib.Client', xhrdav.lib.Client);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'options', xhrdav.lib.Client.prototype.options);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'head', xhrdav.lib.Client.prototype.head);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'get', xhrdav.lib.Client.prototype.get);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'put', xhrdav.lib.Client.prototype.put);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'propfind', xhrdav.lib.Client.prototype.propfind);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'mkcol', xhrdav.lib.Client.prototype.mkcol);
+goog.exportProperty(xhrdav.lib.Client.prototype, '_delete', xhrdav.lib.Client.prototype._delete);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'move', xhrdav.lib.Client.prototype.move);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'copy', xhrdav.lib.Client.prototype.copy);
 

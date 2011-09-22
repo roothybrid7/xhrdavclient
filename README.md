@@ -10,9 +10,9 @@ This is a WebDAV Client Ajax API Library Using Google Closure library.
 Scripts
 --------
 
-* webdavclient.js (Low-level API)
-* webdavds.js (High-level API) NOT IMPLEMENTS
-* webdavhttpstatus.js (WebDAV HTTP Extensions Status Code enum)
+* davclient.js (Low-level API)
+* fsdav.js (High-level API) NOT IMPLEMENTS
+* httpstatus.js (WebDAV HTTP Extensions Status Code enum)
 
 How to settings
 -----------------
@@ -29,17 +29,17 @@ How to settings
       <script type="text/javascript">
         goog.require('goog.object');
         goog.require('goog.net.XhrManager');
-        goog.require('webdav.lib.Client');
-        goog.require('webdav.lib.HttpStatus');
+        goog.require('xhrdav.lib.Client');
+        goog.require('xhrdav.lib.HttpStatus');
       </script>
     </head>
     <body>
       <div id="runner"></div>
       <script type="text/javascript">
         var dir = '/mydav/'
-        var dav = new webdav.lib.Client();
-        var httpStatus = webdav.lib.HttpStatus;
-        var httpStatusText = webdav.lib.HttpStatus.text;
+        var dav = new xhrdav.lib.Client();
+        var httpStatus = xhrdav.lib.HttpStatus;
+        var httpStatusText = xhrdav.lib.HttpStatus.text;
 
         dav.propfind(dir);
       </script>
@@ -56,7 +56,7 @@ Integrate Scripts
     => generated 'xhrdavclient.js' in current directory.
 
 
-Replace include script.
+Replace script.
 
     #index.html
     <!DOCTYPE html>
@@ -71,8 +71,8 @@ Replace include script.
       <script type="text/javascript">
         goog.require('goog.object');
         goog.require('goog.net.XhrManager');
-        goog.require('webdav.Client');
-        goog.require('webdav.HttpStatus');
+        goog.require('xhrdav.lib.Client');
+        goog.require('xhrdav.lib.HttpStatus');
       </script>
     [...]
     </html>
