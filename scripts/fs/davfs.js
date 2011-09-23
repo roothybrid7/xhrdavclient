@@ -11,7 +11,7 @@ goog.require('goog.object');
 //goog.require('goog.debug');
 
 /**
- * high-level WebDAV client API
+ * high-level WebDAV client API Singleton
  *
  * @constructor
  */
