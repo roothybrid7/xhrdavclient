@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mock Test</title>
+  <link media="all" href="../closure-library/closure/goog/css/common.css" type="text/css" rel="stylesheet" />
+  <script src="../closure-library/closure/goog/base.js" type="text/javascript"></script>
+</head>
+<body>
+  <script type="text/javascript">
+    goog.require('goog.testing.AsyncTestCase');
+    goog.require('goog.testing.GlobalFunctionMock');
+    goog.require('goog.testing.jsunit');
+    goog.require('goog.debug.Console');
+    goog.require('goog.debug.Logger');
+
+    goog.require('goog.string');
+  </script>
+  <script type="text/javascript">
+    function confirmExit(msg) {
+      return confirm(msg);
+    }
+
+    function testConfirmExit() {
+      new goog.testing.GlobalFunctionMock('confirm');
+      try {
+        confirm('終了してよろしいですか?').$returns(true);
+        confirm.$replay();
+        assertTrue(confirmExit('終了してよろしいですか?'));
+        confirm.$verify();
+      } finally {
+        confirm.$tearDown();
+      }
+    }
+
+    function escapeHTML(str) {
+      return goog.string.htmlEscape(str);
+    }
+
+    function testEscapeHTML() {
+      var mock = new goog.testing.MethodMock(goog.string, 'htmlEscape');
+      try {
+        mock('<>&').$returns('&lt;&gt;&amp;');
+        mock.$replay();
+        assertEquals('&lt;&gt;&amp;', escapeHTML('<>&'));
+        mock.$verify();
+      } finally {
+        mock.$tearDown();
+      }
+    }
+  </script>
+</body>
+</html>

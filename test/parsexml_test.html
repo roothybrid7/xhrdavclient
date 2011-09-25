@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Parse XML Test(Multi-Status)</title>
+  <script src="../closure-library/closure/goog/base.js" type="text/javascript"></script>
+  <script src="../xhrdavclientdeps.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    goog.require('goog.testing.AsyncTestCase');
+    goog.require('goog.testing.jsunit');
+    goog.require('goog.debug.Console');
+    goog.require('goog.debug.Logger');
+
+    goog.require('goog.object');
+    goog.require('goog.array');
+    goog.require('goog.string');
+    goog.require('goog.string.path');
+    goog.require('goog.net.XhrManager');
+    goog.require('goog.net.XhrIo');
+    goog.require('goog.dom.xml');
+    goog.require('goog.ds.JsDataSource');
+    goog.require('xhrdav.lib.parser.DomParser');
+    goog.require('xhrdav.lib.parser.MultiStatusDomHandler');
+  </script>
+</head>
+<body>
+  <script type="text/javascript">
+    goog.debug.Console.autoInstall();
+    goog.debug.Console.instance.setCapturing(true);
+
+    // Prepare AsyncTest
+    var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall();
+    var asyncContinue = function() {
+      asyncTestCase.continueTesting();
+    };
+
+    var initData;
+    var srcFile = './multistatus.xml';
+
+    function setUp() {
+      asyncTestCase.waitForAsync('setUp');
+
+      var procRequest = function(e) {
+        var xhr = e.target;
+        initData = xhr.getResponseXml('while(1);');
+        asyncContinue();
+      };
+      goog.net.XhrIo.send(srcFile, procRequest);
+    }
+
+    function tearDown() {
+      initData = null;
+    }
+var nodeKeys = [];
+
+//    function testNormalDocument() {
+//      asyncTestCase.waitForAsync('NormalDocument()');
+//      var logger = goog.debug.Logger.getLogger('NormalDocument().readMultiStatusXML');
+      //logger.info(goog.debug.deepExpose(initData));
+//      logger.info(goog.typeOf(initData));
+//      logger.info(initData.nodeType);
+//      logger.info(goog.dom.xml.serialize(initData));
+//      var doc = goog.dom.xml.loadXml(goog.dom.xml.serialize(initData).split('\n').join('')).documentElement;
+//      logger.info(goog.typeOf(doc));
+//      logger.info(doc.nodeType);
+//      var myObj = xml2Obj(doc);
+//      logger.info(goog.debug.deepExpose(myObj));
+//      logger.info(goog.debug.expose(nodeKeys));
+//      logger.info(goog.debug.deepExpose(myObj));
+//      var nodeList = goog.dom.xml.selectNodes(initData, '//D:response'); // => Array.<node>
+//     logger.info(goog.typeOf(nodeList));
+//     logger.info(nodeList[0].nodeType);
+//      asyncContinue();
+//    }
+
+    function testDataSource() {
+      asyncTestCase.waitForAsync('DataSource()');
+      var logger = goog.debug.Logger.getLogger('DataSource().readMultiStatusXML');
+      var doc = goog.dom.xml.loadXml(goog.dom.xml.serialize(initData).split('\n').join('')).documentElement;
+      var handler = new xhrdav.lib.parser.MultiStatusDomHandler();
+      var parser = new xhrdav.lib.parser.DomParser(doc, handler);
+      parser.parse();
+//      var myObj = xhrdav.lib.parser.DomParser.xml2Obj(doc);
+//      logger.info(goog.debug.deepExpose(myObj));
+//      var ds = new goog.ds.JsDataSource(myObj);
+//      logger.info(ds.getChildNodes().getCount());
+//      var nodeList = ds.getChildNodes();
+//      logger.info(nodeList.getCount());
+//      //logger.info(nodeList.getByIndex(0).getDataName());
+//      var node;
+//      for (var i = 0, l = nodeList.getCount(); i < l; i++) {
+//        node = nodeList.getByIndex(i);
+//        logger.info(node.getDataName() + ':' + node.get());
+//        logger.info(goog.dom.xml.serialize(node));
+//      }
+//
+      asyncContinue();
+    }
+
+  </script>
+</body>
+</html>
