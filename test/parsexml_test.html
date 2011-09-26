@@ -59,7 +59,26 @@ var nodeKeys = [];
       var handler = new xhrdav.lib.MultiStatusDomHandler();
       var parser = new xhrdav.lib.DomParser(null, handler).parse();
       var obj = handler.getObject();
-      logger.config(goog.debug.deepExpose(obj));
+      assertTrue('No Object?', goog.object.isEmpty(obj));
+      asyncContinue();
+    }
+
+    function testParseEmpty() {
+      asyncTestCase.waitForAsync('ParseEmpty()');
+      var logger = goog.debug.Logger.getLogger('ParseEmpty()');
+      var handler = new xhrdav.lib.MultiStatusDomHandler();
+      var parser = new xhrdav.lib.DomParser('', handler).parse();
+      var obj = handler.getObject();
+      assertTrue('No Object?', goog.object.isEmpty(obj));
+      asyncContinue();
+    }
+
+    function testHandlerNull() {
+    // TODO: 例外投げる(Handlerを渡さないと処理が続行できないので)
+      asyncTestCase.waitForAsync('HandlerNull()');
+      var logger = goog.debug.Logger.getLogger('HandlerNull()');
+      var handler = null;
+      var parser = new xhrdav.lib.DomParser(initData, handler).parse();
       asyncContinue();
     }
 
