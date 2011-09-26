@@ -73,15 +73,6 @@ var nodeKeys = [];
       asyncContinue();
     }
 
-    function testHandlerNull() {
-    // TODO: 例外投げる(Handlerを渡さないと処理が続行できないので)
-      asyncTestCase.waitForAsync('HandlerNull()');
-      var logger = goog.debug.Logger.getLogger('HandlerNull()');
-      var handler = null;
-      var parser = new xhrdav.lib.DomParser(initData, handler).parse();
-      asyncContinue();
-    }
-
     function testParseXmlForMultiStatus() {
       asyncTestCase.waitForAsync('ParseXmlForMultiStatus()');
       var logger = goog.debug.Logger.getLogger('ParseXmlForMultiStatus()');
