@@ -24,8 +24,16 @@ xhrdav.lib.DomHandler.prototype.startDocument = function() {};
 xhrdav.lib.DomHandler.prototype.endDocument = function() {};
 
 /**
- * Set object
+ * Execute parse Document
  *
- * @param {Object} obj
+ * @param {xhrdav.lib.DomParser} parser
+ * @param {Object} xml
  */
-xhrdav.lib.DomHandler.prototype.setObject = function(obj) {};
+xhrdav.lib.DomHandler.prototype.execute = function(parser, xml) {};
+
+/**
+ * Get object
+ *
+ */
+xhrdav.lib.DomHandler.prototype.getObject = function() {};
+

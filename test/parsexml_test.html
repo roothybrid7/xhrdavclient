@@ -53,49 +53,41 @@
     }
 var nodeKeys = [];
 
-//    function testNormalDocument() {
-//      asyncTestCase.waitForAsync('NormalDocument()');
-//      var logger = goog.debug.Logger.getLogger('NormalDocument().readMultiStatusXML');
-      //logger.info(goog.debug.deepExpose(initData));
-//      logger.info(goog.typeOf(initData));
-//      logger.info(initData.nodeType);
-//      logger.info(goog.dom.xml.serialize(initData));
-//      var doc = goog.dom.xml.loadXml(goog.dom.xml.serialize(initData).split('\n').join('')).documentElement;
-//      logger.info(goog.typeOf(doc));
-//      logger.info(doc.nodeType);
-//      var myObj = xml2Obj(doc);
-//      logger.info(goog.debug.deepExpose(myObj));
-//      logger.info(goog.debug.expose(nodeKeys));
-//      logger.info(goog.debug.deepExpose(myObj));
-//      var nodeList = goog.dom.xml.selectNodes(initData, '//D:response'); // => Array.<node>
-//     logger.info(goog.typeOf(nodeList));
-//     logger.info(nodeList[0].nodeType);
-//      asyncContinue();
-//    }
+    function testParseNull() {
+      asyncTestCase.waitForAsync('ParseEmpty()');
+      var logger = goog.debug.Logger.getLogger('ParseEmpty()');
+      var handler = new xhrdav.lib.MultiStatusDomHandler();
+      var parser = new xhrdav.lib.DomParser(null, handler).parse();
+      var obj = handler.getObject();
+      logger.config(goog.debug.deepExpose(obj));
+      asyncContinue();
+    }
 
-    function testDataSource() {
-      asyncTestCase.waitForAsync('DataSource()');
-      var logger = goog.debug.Logger.getLogger('DataSource().readMultiStatusXML');
-//      var doc = goog.dom.xml.loadXml(goog.dom.xml.serialize(initData).split('\n').join('')).documentElement;
+    function testParseXmlForMultiStatus() {
+      asyncTestCase.waitForAsync('ParseXmlForMultiStatus()');
+      var logger = goog.debug.Logger.getLogger('ParseXmlForMultiStatus()');
       var handler = new xhrdav.lib.MultiStatusDomHandler();
       var parser = new xhrdav.lib.DomParser(initData, handler).parse();
       var obj = handler.getObject();
       assertNotNullNorUndefined('RootObject', obj);
       assertTrue('Object?', obj instanceof Object);
       assertNotNaN('Resources?', goog.object.getCount(obj['D$response']))
-//      logger.info(goog.debug.deepExpose(obj));
+//      var nodeList = goog.dom.xml.selectNodes(initData, '//D:response'); // => Array.<node>
+//     logger.config(goog.typeOf(nodeList));
+//     logger.config(nodeList[0].nodeType);
+//      logger.config(goog.debug.deepExpose(obj));
 //      var myObj = xhrdav.lib.DomParser.xml2Obj(doc);
-//      logger.info(goog.debug.deepExpose(myObj));
+//      logger.config(goog.debug.deepExpose(myObj));
 //      var ds = new goog.ds.JsDataSource(myObj);
-//      logger.info(ds.getChildNodes().getCount());
+//      logger.config(ds.getChildNodes().getCount());
 //      var nodeList = ds.getChildNodes();
-//      logger.info(nodeList.getCount());
-//      //logger.info(nodeList.getByIndex(0).getDataName());
+//      logger.config(nodeList.getCount());
+//      //logger.config(nodeList.getByIndex(0).getDataName());
 //      var node;
 //      for (var i = 0, l = nodeList.getCount(); i < l; i++) {
 //        node = nodeList.getByIndex(i);
-//        logger.info(node.getDataName() + ':' + node.get());
-//        logger.info(goog.dom.xml.serialize(node));
+//        logger.config(node.getDataName() + ':' + node.get());
+//        logger.config(goog.dom.xml.serialize(node));
 //      }
 //
       asyncContinue();

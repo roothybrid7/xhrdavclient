@@ -43,12 +43,12 @@
      */
     var logging = function(id, req, callback) {
       var logger = goog.debug.Logger.getLogger(id);
-      logger.info("ID: " + id);
-      logger.info("Status: " + req.getStatus() + " - " + req.getStatusText());
-      logger.info("Success?: " + req.isSuccess());
-      logger.info("ResponseType: " + req.getResponseType());
-      logger.info("Response: " + req.getResponse());
-      logger.info("Response Headers: " + req.getAllResponseHeaders());
+      logger.config("ID: " + id);
+      logger.config("Status: " + req.getStatus() + " - " + req.getStatusText());
+      logger.config("Success?: " + req.isSuccess());
+      logger.config("ResponseType: " + req.getResponseType());
+      logger.config("Response: " + req.getResponse());
+      logger.config("Response Headers: " + req.getAllResponseHeaders());
       if (req.getLastError()) {
         logger.warning("Error?: " + req.getLastErrorCode() + " - " + req.getLastError());
       }
@@ -80,25 +80,25 @@
         var rootDoc = content.documentElement;
 
         var ds = new goog.ds.XmlDataSource(content, null, rootName); // RootTree
-        l.info("DataSourceName: " + ds.getDataName());
-        l.info("DataSourcePath: " + ds.getDataPath());
+        l.config("DataSourceName: " + ds.getDataName());
+        l.config("DataSourcePath: " + ds.getDataPath());
 //        var childNode = ds.getChildNode('D:multistatus');
-//        l.info(childNode.getDataPath());
+//        l.config(childNode.getDataPath());
         var dm = goog.ds.DataManager.getInstance();
         dm.addDataSource(ds);
-//        l.info("DM getDS: " +
+//        l.config("DM getDS: " +
 //          dm.getDataSource('$' + rootName)
 //            .getChildNode('D:multistatus')
 //            .getChildNodes().getCount());
         var nodeList = dm.getChildNode('$' + rootName).getChildNode('D:multistatus').getChildNodes();
         var childValues = [], node;
-        l.info("Count: " + nodeList.getCount());
+        l.config("Count: " + nodeList.getCount());
 
         for (var i = 0, cnt = nodeList.getCount(); i < cnt; i++) {
           node = nodeList.getByIndex(i);
           var href = node.getChildNode('D:href').get();
-          l.info(href);
-          l.info(goog.string.urlDecode(href));
+          l.config(href);
+          l.config(goog.string.urlDecode(href));
         }
         asyncContinue();
       };

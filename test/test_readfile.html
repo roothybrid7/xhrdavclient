@@ -28,8 +28,8 @@
       el.innerHTML = data;
 
       var logger = goog.debug.Logger.getLogger('readFile');
-      logger.info("TYPEOF: " + goog.typeOf(data));
-      logger.info("DUMP XHR: " + goog.debug.deepExpose(xhr));
+      logger.config("TYPEOF: " + goog.typeOf(data));
+      logger.config("DUMP XHR: " + goog.debug.deepExpose(xhr));
     };
     goog.net.XhrIo.send('./テストファイル.txt', processRequest);
   </script>

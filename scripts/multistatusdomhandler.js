@@ -7,7 +7,7 @@
 goog.provide('xhrdav.lib.MultiStatusDomHandler');
 goog.require('xhrdav.lib.DomHandler');
 goog.require('goog.object');
-//goog.require('goog.debug');
+goog.require('goog.debug');
 
 /**
  * Dom handler of Multi-Status
@@ -31,6 +31,7 @@ xhrdav.lib.MultiStatusDomHandler.prototype.startDocument = function() {
  */
 xhrdav.lib.MultiStatusDomHandler.prototype.endDocument = function() {
   var resourceList = this.resources_['D$response'];
+  if (!goog.isDefAndNotNull(resourceList)) return;
   for (var i = 0, l = resourceList.length; i < l; i++) {
     var resource = resourceList[i];
     resource['path'] = goog.array.filter(
