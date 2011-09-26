@@ -49,7 +49,27 @@
       WebDAV Client ajax API using google closure library(UNFIXED)
     </div>
 
-    <p>WebDAV Client Ajax API library using google closure library</p><h2>Authors</h2>
+    <p>WebDAV Client Ajax API library using google closure library</p><h2>Dependencies</h2>
+    <p>依存しているもの</p>
+    <h2>Install</h2>
+    <p>
+    <pre>
+    # Integrate scripts
+    $ cd unzip OR untar directory
+    $ ./tools/builder.sh
+    =&gt; xhrdavclient.js       # Generate integrated scripts
+
+    # Integrate, compile and optimize scripts
+    $ ./tools/builder.sh -s     # SIMPLE_OPTIMIZATIONS
+    $ ./tools/builder.sh -w     # WHITESPACE TRIMING ONLY
+    =&gt; xhrdavclient.js       # Generate compiled scripts
+
+    # Release build scripts(goog.DEBUG=off)
+    $ ./tools/builder.sh -sr
+    =&gt; xhrdavclient.js       # Generate compiled scripts
+    </pre></p>
+    <h2>License</h2>
+    <p>Apache License 2.0</p><h2>Authors</h2>
 <p>Satoshi Ohki (roothybrid7@gmail.com)<br/><br/>      </p>
 <h2>Contact</h2>
 <p>Satoshi Ohki (roothybrid7@gmail.com)<br/>      </p>
@@ -72,6 +92,14 @@
 
   </div>
 
-  
+   <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-25401771-3");
+pageTracker._trackPageview();
+} catch(err) {}</script>
 </body>
 </html>
