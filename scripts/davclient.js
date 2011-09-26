@@ -412,7 +412,7 @@ xhrdav.lib.Client.prototype._delete = function(
  * @param {Object=} options Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-xhrdav.lib.Client.prototype.copyOrMoveDir_ = function(
+xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
   method, path, dstPath, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
@@ -451,11 +451,11 @@ xhrdav.lib.Client.prototype.copyOrMoveDir_ = function(
  *     => 201, string: '<html> ... </html>', #Object: {'Location': 'http:// ...}
  *   }, options);
  *
- * @see #copyOrMoveDir_
+ * @see #copyOrMovePath_
  */
 xhrdav.lib.Client.prototype.move = function(
   path, dstPath, handler, options, debugHandler) {
-  this.copyOrMoveDir_('MOVE', path, dstPath, handler, options, debugHandler);
+  this.copyOrMovePath_('MOVE', path, dstPath, handler, options, debugHandler);
 };
 
 /**
@@ -472,11 +472,11 @@ xhrdav.lib.Client.prototype.move = function(
  *     => 201, string: '<html> ... </html>', #Object: {'Location': 'http:// ...}
  *   }, options);
  *
- * @see #copyOrMoveDir_
+ * @see #copyOrMovePath_
  */
 xhrdav.lib.Client.prototype.copy = function(
   path, dstPath, handler, options, debugHandler) {
-  this.copyOrMoveDir_('COPY', path, dstPath, handler, options, debugHandler);
+  this.copyOrMovePath_('COPY', path, dstPath, handler, options, debugHandler);
 };
 
 /* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
