@@ -53,6 +53,7 @@
     <p><a href="http://code.google.com/intl/ja/closure/library/docs/overview.html">Closure Library</a></p>
     <h2>Install</h2>
     <p>
+    1. Integrate and compile scripts
     <pre>
     # Integrate scripts
     $ cd unzip OR untar directory
@@ -68,7 +69,18 @@
     $ ./tools/builder.sh -sr
     =&gt; xhrdavclient.js       # Generate compiled scripts
     </pre>
-    Put generated script in Application.
+    </p>
+    <p>
+    2. Put the generated script in Application.
+    </p>
+    <p>
+    3. Configuration
+    <pre>
+    &lt;script src="xhrdavclient.js" type="text/javascript"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript"&gt;
+      goog.require('goog.lib.DavFs');
+    &lt;/script&gt;
+    </pre>
     </p>
     <h2>License</h2>
     <p>Apache License 2.0</p><h2>Authors</h2>
