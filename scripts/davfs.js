@@ -5,11 +5,8 @@
  */
 
 goog.provide('xhrdav.lib.DavFs');
+goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.Client');
-goog.require('xhrdav.lib.HttpStatus');
-goog.require('goog.array');
-goog.require('goog.object');
-goog.require('goog.debug');
 
 /**
  * high-level WebDAV client API Singleton

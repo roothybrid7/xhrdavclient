@@ -5,9 +5,8 @@
  */
 
 goog.provide('xhrdav.lib.MultiStatusDomHandler');
+goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.DomHandler');
-goog.require('goog.object');
-goog.require('goog.debug');
 
 /**
  * Dom handler of Multi-Status

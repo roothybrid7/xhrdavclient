@@ -6,8 +6,7 @@
 
 goog.provide('xhrdav.lib.DomParser');
 goog.require('goog.dom.xml');
-goog.require('goog.array');
-//goog.require('goog.debug');
+goog.require('xhrdav.lib.Config');
 
 /**
  * Dom parser for WebDAV Client API
