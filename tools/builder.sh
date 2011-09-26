@@ -52,8 +52,13 @@ ROOTS=(
   'scripts/'
 )
 NAMESPACES=(
+  'xhrdav.lib.Config'
   'xhrdav.lib.Client'
   'xhrdav.lib.HttpStatus'
+  'xhrdav.lib.DomParser'
+  'xhrdav.lib.DomHandler'
+  'xhrdav.lib.MultiStatusDomHandler'
+  'xhrdav.lib.DavFs'
 )
 
 rootdir=

@@ -10,7 +10,8 @@ goog.require('goog.dom');
 goog.require('goog.Uri');
 goog.require('goog.net.XhrIo');
 goog.require('goog.net.XhrManager');
-//goog.require('goog.debug');
+goog.require('goog.debug');
+goog.require('goog.debug');
 
 /**
  * WebDAV Client library by Google Closure library.
@@ -154,12 +155,20 @@ xhrdav.lib.Client.prototype.options = function(
 /**
  * Check Resource(WebDAV: HEAD)
  *
+ * Example:
+ *   var dav = new xhrdav.lib.Client();
+ *   dav.head('/foo/bar.txt', function(status, content, headers) {
+ *     // Receive response
+ *     var statusCode = status, response = content, responseheaders = headers;
+ *     => 200, '', #Object: {'Content-Length': 0, ...}
+ *   });
+ *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
  * @param {Function} handler Callback chain after request processing.
  * @param {Object=} options Option params(headers, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-// TODO: UNFIXED
+// TODO: UNFIXED code
 xhrdav.lib.Client.prototype.head = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
@@ -180,6 +189,16 @@ xhrdav.lib.Client.prototype.head = function(path, handler, options, debugHandler
 /**
  * Get Resource(WebDAV: GET)
  *
+ * Example:
+ *   var debugHandler = function(requestObject) { // Debug code here };
+ *
+ *   var dav = new xhrdav.lib.Client();
+ *   dav.get('/foo/bar.txt', function(status, content, headers) {
+ *     // Receive response
+ *     var statusCode = status, response = content, responseheaders = headers;
+ *     => 200, 'GET CONTENT FROM WEBDAV.', #Object: {'Content-Length': 48, ...}
+ *   }, null, debugHandler);
+ *
  * @param {string} path Path(<code>/foo/bar.xml</code>, <code>/foo/bar.txt</code>).
  * @param {Function} handler Callback chain after request processing.
  * @param {Object=} options Option params(headers, etc);
@@ -194,7 +213,19 @@ xhrdav.lib.Client.prototype.get = function(path, handler, options, debugHandler)
 /**
  * Upload Resource(WebDAV: PUT)
  *
+ * Example:
+ *   var mgr = new goog.net.XhrManager();
+ *   var id = goog.string.createUniqueString();
+ *   var options = {xhrId: id, request: mgr};
+ *   var dav = new xhrdav.lib.Client();
+ *   dav.put('/foo/upload.txt', 'UPLOAD test', function(status, content, headers) {
+ *     // Receive response
+ *     var statusCode = status, response = content, responseheaders = headers;
+ *     => 201, string: <html> ...</html>, #Object: {'Location': http:// ...}
+ *   }, options);
+ *
  * @param {string} path Path(<code>/foo/bar.xml</code>, <code>/foo/bar.txt</code>).
+ * @param {Object} data Upload filedata(text OR binary)
  * @param {Function} handler Callback chain after request processing.
  * @param {Object=} options Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
@@ -216,6 +247,30 @@ xhrdav.lib.Client.prototype.put = function(
 
 /**
  * Get Collection list and Resource property(WebDAV: PROPFIND)
+ *
+ * Example: Receive Response and debug
+ *   var options = {depth: 1};
+ *   var myPrefix = 'PROPFIND#';
+ *   var debugHandler = function(prefix, requestObject) { // Debug code here };
+ *
+ *   var dav = new xhrdav.lib.Client();
+ *   dav.propfind('/foo/', function(status, content, headers) {
+ *     // Receive response
+ *     var statusCode = status, response = content, responseheaders = headers;
+ *     => 207, #Document: <?xml ....</D:multistatus>,
+ *        #Object: {'Content-Length': 48, ...}
+ *   }, options, goog.partial(debugHandler, myPrefix));
+ *
+ * Example2: Parse response
+ *   var options = {depth: 1};
+ *   var parseXml = function(handler, status, content, headers) {
+ *       // [... parse xml ...]
+ *      handler(responseObj);
+ *   };
+ *   var modelHandler = function(object) { // [... building models ...] };
+ *
+ *   var dav = new xhrdav.lib.Client();
+ *   dav.propfind('/foo/', goog.partial(parseXml, modelHandler), options);
  *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
  * @param {Function} handler Callback chain after request processing.
@@ -299,6 +354,17 @@ xhrdav.lib.Client.prototype.lock = function(path, handler, options, debugHandler
 /**
  * Create Collection(WebDAV: MKCOL)
  *
+ * Example:
+ *   var mgr = new goog.net.XhrManager();
+ *   var id = goog.string.createUniqueString();
+ *   var options = {xhrId: id, request: mgr};
+ *   var dav = new xhrdav.lib.Client();
+ *   dav.mkcol('/foo/bar/', function(status, content, headers) {
+ *     // Receive response
+ *     var statusCode = status, response = content, responseheaders = headers;
+ *     => 201, string: '<html> ... </html>', #Object: {'Location': 'http:// ...}
+ *   }, options);
+ *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar/</code>).
  * @param {Function} handler Callback chain after request processing.
  * @param {Object=} options Option params(xhrId, xhrManager, etc);
@@ -313,6 +379,17 @@ xhrdav.lib.Client.prototype.mkcol = function(path, handler, options, debugHandle
 
 /**
  * Delete Collection or Resource(WebDAV: DELETE)
+ *
+ * Example:
+ *   var mgr = new goog.net.XhrManager();
+ *   var id = goog.string.createUniqueString();
+ *   var options = {xhrId: id, request: mgr};
+ *   var dav = new xhrdav.lib.Client();
+ *   dav._delete('/foo/bar/', function(status, content, headers) {
+ *     // Receive response
+ *     var statusCode = status, response = content, responseheaders = headers;
+ *     => 204, string: '', #Object: {'Content-Length': 0, ...}
+ *   }, options);
  *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
  * @param {Function} handler Callback chain after request processing.
@@ -365,6 +442,17 @@ xhrdav.lib.Client.prototype.copyOrMoveDir_ = function(
 /**
  * Move Collection(WebDAV: MOVE)
  *
+ * Example:
+ *   var mgr = new goog.net.XhrManager();
+ *   var id = goog.string.createUniqueString();
+ *   var options = {xhrId: id, request: mgr};
+ *   var dav = new xhrdav.lib.Client();
+ *   dav.move('/foo/bar.txt', '/hoge/', function(status, content, headers) {
+ *     // Receive response
+ *     var statusCode = status, response = content, responseheaders = headers;
+ *     => 201, string: '<html> ... </html>', #Object: {'Location': 'http:// ...}
+ *   }, options);
+ *
  * @see #copyOrMoveDir_
  */
 xhrdav.lib.Client.prototype.move = function(
@@ -374,6 +462,17 @@ xhrdav.lib.Client.prototype.move = function(
 
 /**
  * Copy Collection(WebDAV: COPY)
+ *
+ * Example:
+ *   var mgr = new goog.net.XhrManager();
+ *   var id = goog.string.createUniqueString();
+ *   var options = {xhrId: id, request: mgr};
+ *   var dav = new xhrdav.lib.Client();
+ *   dav.copy('/foo/bar.txt', '/hoge/bar.txt', function(status, content, headers) {
+ *     // Receive response
+ *     var statusCode = status, response = content, responseheaders = headers;
+ *     => 201, string: '<html> ... </html>', #Object: {'Location': 'http:// ...}
+ *   }, options);
  *
  * @see #copyOrMoveDir_
  */

@@ -38,12 +38,12 @@
      */
     var logging = function(id, req, callback) {
       var logger = goog.debug.Logger.getLogger(id);
-      logger.info("ID: " + id);
-      logger.info("Status: " + req.getStatus() + " - " + req.getStatusText());
-      logger.info("Success?: " + req.isSuccess());
-      logger.info("ResponseType: " + req.getResponseType());
-      logger.info("Response: " + req.getResponse());
-      logger.info("Response Headers: " + req.getAllResponseHeaders());
+      logger.config("ID: " + id);
+      logger.config("Status: " + req.getStatus() + " - " + req.getStatusText());
+      logger.config("Success?: " + req.isSuccess());
+      logger.config("ResponseType: " + req.getResponseType());
+      logger.config("Response: " + req.getResponse());
+      logger.config("Response Headers: " + req.getAllResponseHeaders());
       if (req.getLastError()) {
         logger.warning("Error?: " + req.getLastErrorCode() + " - " + req.getLastError());
       }

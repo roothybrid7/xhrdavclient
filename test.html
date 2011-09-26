@@ -15,7 +15,9 @@
     var testRunner = new goog.testing.MultiTestRunner();
     testRunner.addTests([
       'test/directories_test.html',
-      'test/files_test.html']);
+      'test/files_test.html',
+      'test/parsexml_test.html',
+      'test/fs_files_test.html']);
     testRunner.setPoolSize(4);
     testRunner.render(document.getElementById('runner'));
   </script>

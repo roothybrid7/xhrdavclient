@@ -17,28 +17,28 @@
     goog.debug.Console.instance.setCapturing(true);
 
     var logger = goog.debug.Logger.getLogger('testUri');
-    logger.info("HREF: " + location.href);
-    logger.info("HOST: " + location.host);
-    logger.info("PORT: " + location.port);
-    logger.info("PROTO: " + location.protocol);
-    logger.info("HOSTNAME: " + location.hostname);
-    logger.info("PATHNAME: " + location.pathname);
-    logger.info("QUERY: " + location.search);
+    logger.config("HREF: " + location.href);
+    logger.config("HOST: " + location.host);
+    logger.config("PORT: " + location.port);
+    logger.config("PROTO: " + location.protocol);
+    logger.config("HOSTNAME: " + location.hostname);
+    logger.config("PATHNAME: " + location.pathname);
+    logger.config("QUERY: " + location.search);
 
     var url = goog.Uri.parse(location);
-    logger.info("URL: " + url.toString());
-    logger.info("DecodedQuery: " + url.getDecodedQuery());
-    logger.info("EncodedQuery: " + url.getEncodedQuery());
-    logger.info("Domain: " + url.getDomain());
-    logger.info("Fragment: " + url.getFragment());
-    logger.info("Parameters: " + goog.debug.expose(url.getParameterValues()));
-    logger.info("Path: " + url.getPath());
-    logger.info("Port: " + (url.getPort() || 80));
-    logger.info("Query: " + url.getQuery());
-    logger.info("Scheme: " + (url.getScheme() || 'http'));
-    logger.info("Userinfo: " + url.getUserInfo());
-    logger.info(url.hasDomain());
-    logger.info("Unique: " + url.makeUnique());
+    logger.config("URL: " + url.toString());
+    logger.config("DecodedQuery: " + url.getDecodedQuery());
+    logger.config("EncodedQuery: " + url.getEncodedQuery());
+    logger.config("Domain: " + url.getDomain());
+    logger.config("Fragment: " + url.getFragment());
+    logger.config("Parameters: " + goog.debug.expose(url.getParameterValues()));
+    logger.config("Path: " + url.getPath());
+    logger.config("Port: " + (url.getPort() || 80));
+    logger.config("Query: " + url.getQuery());
+    logger.config("Scheme: " + (url.getScheme() || 'http'));
+    logger.config("Use.config: " + url.getUse.config());
+    logger.config(url.hasDomain());
+    logger.config("Unique: " + url.makeUnique());
   </script>
 </body>
 </html>
