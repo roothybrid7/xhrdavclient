@@ -1,30 +1,39 @@
 /**
  * davfs.js - XHTTPRequest High-level WebDAV Client API.
- * @deprecated 未実装のため使用不可
+ *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
 goog.provide('xhrdav.lib.DavFs');
 goog.require('xhrdav.lib.Client');
 goog.require('xhrdav.lib.HttpStatus');
+goog.require('goog.array');
 goog.require('goog.object');
-//goog.require('goog.debug');
+goog.require('goog.debug');
 
 /**
  * high-level WebDAV client API Singleton
  *
  * @constructor
  */
-xhrdav.lib.fs.DavFs = function() {
+xhrdav.lib.DavFs = function() {
+  this.appname_ = 'hoge';
 };
-goog.addSingletonGetter(webdav.fs.DavFs);
+goog.addSingletonGetter(xhrdav.lib.DavFs);
+
+xhrdav.lib.DavFs.OBJNAME = 'xhrdav.lib.DavFs';
+
+xhrdav.lib.DavFs.Instance = xhrdav.lib.DavFs.getInstance();
 
 /**
- * @private
+ * Init with calling low-level client API.
+ *
  * @param {Object=} options URI Parameters(options: scheme, domain, port)
+ * @return {xhrdav.lib.DavFs}
  */
-xhrdav.lib.fs.DavFs.prototype.initialize = function(options) {
+xhrdav.lib.DavFs.prototype.initialize = function(options) {
   this.client_ = new xhrdav.lib.Client(options);
+  return this;
 };
 
 /**
@@ -39,14 +48,70 @@ xhrdav.lib.fs.DavFs.prototype.initialize = function(options) {
 // TODO: Cacheはpathごとにもつ
 //    cache['/'] = goog.ds.XmlDataSource(response, null, 'root');
 //    cache['/foo'] = goog.ds.XmlDataSource(response, rootTree, name);
-xhrdav.lib.fs.DavFs.prototype.listDir = function(path, handler, options, debugHandler) {
+xhrdav.lib.DavFs.prototype.listDir = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   options.depth = 1;  // listing directory
   this.client_.propfind(path, handler, options, debugHandler);
 };
 
+/**
+ * WebDAV Response process handler(callback)
+ *
+ * @private
+ * @param {Function} handler callback client.
+ * @param {Function} processHandler
+ * @param {number} statusCode HTTP Status code.
+ * @param {Object} content Response body data.
+ * @param {Object} headers Response headers.
+ */
+xhrdav.lib.DavFs.prototype.responseHandler_ = function(handler, processHandler, statusCode, content, headers) {
+  var httpStatus = xhrdav.lib.HttpStatus;
+  var args = processHandler(statusCode, content, headers);
+  handler(args);
+};
+
+/**
+ * Error Handler
+ *
+ * @private
+ * @param {number} statusCode HTTP Status code.
+ * @param {Object} content Response body data.
+ * @param {Object} headers Response headers.
+ * @return {Array} Errors array.
+ */
+xhrdav.lib.DavFs.prototype.simpleErrorHandler_ = function(statusCode, content, headers) {
+  var httpStatus = xhrdav.lib.HttpStatus;
+  var errors = [];
+  if (!goog.array.contains(
+    [httpStatus.OK, httpStatus.CREATED, httpStatus.NO_CONTENT],
+    statusCode)) {
+    errors.push(httpStatus.text[statusCode]);
+  }
+  return errors;
+};
+
+/**
+ * Write data to WebDAV server
+ *
+ * @param {string} path upload file path.
+ * @param {Object} content file content.
+ * @param {Function(Array)} handler callback handler function.
+ * @param {Object=} options Request options.
+ * @param {Function=} debugHandler
+ */
+xhrdav.lib.DavFs.prototype.write = function(
+  path, content, handler, options, debugHandler) {
+  this.client_.put(path, content,
+    goog.bind(this.responseHandler_, this, handler, this.simpleErrorHandler_),
+    options, debugHandler);
+};
+
 /* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
-goog.exportSymbol('xhrdav.lib.fs.DavFs.getInstance', xhrdav.lib.fs.DavFs.getInstance);
-goog.exportProperty(xhrdav.lib.fs.DavFs.prototype, 'initialize', xhrdav.lib.fs.DavFs.prototype.initialize);
-goog.exportProperty(xhrdav.lib.fs.DavFs.prototype, 'listDir', xhrdav.lib.fs.DavFs.prototype.listDir);
+goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'initialize',
+  xhrdav.lib.DavFs.prototype.initialize);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'listDir',
+  xhrdav.lib.DavFs.prototype.listDir);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'write',
+  xhrdav.lib.DavFs.prototype.write);
 
