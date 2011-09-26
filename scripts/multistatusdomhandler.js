@@ -42,12 +42,13 @@ xhrdav.lib.MultiStatusDomHandler.prototype.endDocument = function() {
 };
 
 /**
- * set object of parse xml docuemnt
+ * Execute parse Document
  *
- * @param {Object} obj javascript object.
+ * @param {xhrdav.lib.DomParser} parser
+ * @param {Object} xml
  */
-xhrdav.lib.MultiStatusDomHandler.prototype.setObject = function(obj) {
-  this.resources_ = obj;
+xhrdav.lib.MultiStatusDomHandler.prototype.execute = function(parser, xml) {
+  this.resources_ = parser.parseDocument(xml);
 };
 
 /**
@@ -69,8 +70,8 @@ goog.exportProperty(
   xhrdav.lib.MultiStatusDomHandler.prototype, 'endDocument',
   xhrdav.lib.MultiStatusDomHandler.prototype.endDocument);
 goog.exportProperty(
-  xhrdav.lib.MultiStatusDomHandler.prototype, 'setObject',
-  xhrdav.lib.MultiStatusDomHandler.prototype.setObject);
+  xhrdav.lib.MultiStatusDomHandler.prototype, 'execute',
+  xhrdav.lib.MultiStatusDomHandler.prototype.execute);
 goog.exportProperty(
   xhrdav.lib.MultiStatusDomHandler.prototype, 'getObject',
   xhrdav.lib.MultiStatusDomHandler.prototype.getObject);

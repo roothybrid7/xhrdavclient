@@ -30,17 +30,20 @@ xhrdav.lib.DomParser = function(xml, handler, options) {
 
 /**
  * Parse XML to Javascript Object
- * @param {Object} XML DOM Document.
  */
 xhrdav.lib.DomParser.prototype.parse = function() {
-//  var obj = {};
   var xml = this.xml_;
   this.handler_.startDocument();
-  this.handler_.setObject(this.parseDocument_(xml));
+  this.handler_.execute(this, xml);
   this.handler_.endDocument();
 };
 
-xhrdav.lib.DomParser.prototype.parseDocument_ = function(xml) {
+/**
+ * Execute parse XML Document to Javascript Object
+ *
+ * @param {Object} xml
+ */
+xhrdav.lib.DomParser.prototype.parseDocument = function(xml) {
   var obj = {};
 
   // get nodeValue
@@ -64,19 +67,31 @@ xhrdav.lib.DomParser.prototype.parseDocument_ = function(xml) {
           obj[key] = [];
           obj[key].push(old);
         }
-        obj[key].push(this.parseDocument_(node));
+        obj[key].push(this.parseDocument(node));
       } else {
-        obj[key] = this.parseDocument_(node);
+        obj[key] = this.parseDocument(node);
       }
     }, this);
   }
   return obj;
 };
 
+/**
+ * XML attribute nodename to Javascript object key
+ *
+ * @private
+ * @param {string} nodeName
+ */
 xhrdav.lib.DomParser.prototype.parseAttributeName_ = function(nodeName) {
   return this.attributePrefix_ + nodeName.replace(/:/, this.nsSeparator_);
 };
 
+/**
+ * XML nodename to Javascript object key
+ *
+ * @private
+ * @param {string} nodeName
+ */
 xhrdav.lib.DomParser.prototype.parseNodeName_ = function(nodeName) {
   return nodeName
     .replace(/:/, this.nsSeparator_)
@@ -87,4 +102,6 @@ xhrdav.lib.DomParser.prototype.parseNodeName_ = function(nodeName) {
 goog.exportSymbol('xhrdav.lib.DomParser', xhrdav.lib.DomParser);
 goog.exportProperty(xhrdav.lib.DomParser.prototype, 'parse',
   xhrdav.lib.DomParser.prototype.parse);
+goog.exportProperty(xhrdav.lib.DomParser.prototype, 'parseDocument',
+  xhrdav.lib.DomParser.prototype.parseDocument);
 
