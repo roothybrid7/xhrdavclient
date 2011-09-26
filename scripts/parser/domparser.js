@@ -18,7 +18,8 @@ goog.require('goog.array');
  * @param {Object} options Parse options.
  */
 xhrdav.lib.parser.DomParser = function(xml, handler, options) {
-  this.xml_ = xml;
+  this.xml_ = goog.dom.xml.loadXml(
+    goog.dom.xml.serialize(xml).split('\n').join('')).documentElement;
   this.handler_ = handler;
 
   if (!goog.isDefAndNotNull(options)) options = {};
