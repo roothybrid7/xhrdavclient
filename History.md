@@ -1,4 +1,11 @@
 
+0.0.5 / 2011-09-26 
+==================
+
+  * fixed goog.require
+  * Merge branch 'release/v0.0.4' into develop
+  * update changelog
+
 0.0.4 / 2011-09-26 
 ==================
 
