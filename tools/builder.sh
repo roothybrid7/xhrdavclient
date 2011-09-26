@@ -54,9 +54,9 @@ ROOTS=(
 NAMESPACES=(
   'xhrdav.lib.Client'
   'xhrdav.lib.HttpStatus'
-  'xhrdav.lib.parser.DomParser'
-  'xhrdav.lib.parser.DomHandler'
-  'xhrdav.lib.parser.MultiStatusDomHandler'
+  'xhrdav.lib.DomParser'
+  'xhrdav.lib.DomHandler'
+  'xhrdav.lib.MultiStatusDomHandler'
 )
 
 rootdir=
