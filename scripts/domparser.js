@@ -30,12 +30,15 @@ xhrdav.lib.DomParser = function(xml, handler, options) {
 
 /**
  * Parse XML to Javascript Object
+ *
+ * @return {xhrdav.lib.DomParser}
  */
 xhrdav.lib.DomParser.prototype.parse = function() {
   var xml = this.xml_;
   this.handler_.startDocument();
   this.handler_.execute(this, xml);
   this.handler_.endDocument();
+  return this;
 };
 
 /**

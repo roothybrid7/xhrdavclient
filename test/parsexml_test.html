@@ -78,13 +78,12 @@ var nodeKeys = [];
       var logger = goog.debug.Logger.getLogger('DataSource().readMultiStatusXML');
 //      var doc = goog.dom.xml.loadXml(goog.dom.xml.serialize(initData).split('\n').join('')).documentElement;
       var handler = new xhrdav.lib.MultiStatusDomHandler();
-      var parser = new xhrdav.lib.DomParser(initData, handler);
-      parser.parse();
+      var parser = new xhrdav.lib.DomParser(initData, handler).parse();
       var obj = handler.getObject();
       assertNotNullNorUndefined('RootObject', obj);
       assertTrue('Object?', obj instanceof Object);
-//      assertNotNullNorUndefined('MultiStatus?', obj['D:multistatus']);
-      logger.info(goog.debug.deepExpose(obj));
+      assertNotNaN('Resources?', goog.object.getCount(obj['D$response']))
+//      logger.info(goog.debug.deepExpose(obj));
 //      var myObj = xhrdav.lib.DomParser.xml2Obj(doc);
 //      logger.info(goog.debug.deepExpose(myObj));
 //      var ds = new goog.ds.JsDataSource(myObj);
