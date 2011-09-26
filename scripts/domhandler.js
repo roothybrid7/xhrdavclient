@@ -4,28 +4,28 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.parser.DomHandler');
+goog.provide('xhrdav.lib.DomHandler');
 
 /**
  * Interface of Dom handler
  *
  * @interface
  */
-xhrdav.lib.parser.DomHandler = function() {};
+xhrdav.lib.DomHandler = function() {};
 
 /**
  * Handle start document
  */
-xhrdav.lib.parser.DomHandler.prototype.startDocument = function() {};
+xhrdav.lib.DomHandler.prototype.startDocument = function() {};
 
 /**
  * Handle end document
  */
-xhrdav.lib.parser.DomHandler.prototype.endDocument = function() {};
+xhrdav.lib.DomHandler.prototype.endDocument = function() {};
 
 /**
  * Set object
  *
  * @param {Object} obj
  */
-xhrdav.lib.parser.DomHandler.prototype.setObject = function(obj) {};
+xhrdav.lib.DomHandler.prototype.setObject = function(obj) {};

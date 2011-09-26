@@ -14,7 +14,7 @@
     goog.require('goog.object');
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
-    goog.require('webdav.fs.DavFs');
+    goog.require('webdav.DavFs');
     goog.require('webdav.HttpStatus');
     goog.require('goog.ds.XmlDataSource');
     goog.require('goog.ds.DataManager');
@@ -68,7 +68,7 @@
       asyncTestCase.waitForAsync(testId);
 
       var dir = '/mydav/';
-      var davFs = webdav.fs.DavFs.getInstance();
+      var davFs = webdav.DavFs.getInstance();
       davFs.initialize();
       var httpStatus = webdav.HttpStatus;
       var httpStatusText = webdav.HttpStatus.text;

@@ -4,7 +4,7 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.parser.DomParser');
+goog.provide('xhrdav.lib.DomParser');
 goog.require('goog.dom.xml');
 goog.require('goog.array');
 //goog.require('goog.debug');
@@ -17,7 +17,7 @@ goog.require('goog.array');
  * @param {Object} handler Dom Handler.
  * @param {Object} options Parse options.
  */
-xhrdav.lib.parser.DomParser = function(xml, handler, options) {
+xhrdav.lib.DomParser = function(xml, handler, options) {
   this.xml_ = goog.dom.xml.loadXml(
     goog.dom.xml.serialize(xml).split('\n').join('')).documentElement;
   this.handler_ = handler;
@@ -32,7 +32,7 @@ xhrdav.lib.parser.DomParser = function(xml, handler, options) {
  * Parse XML to Javascript Object
  * @param {Object} XML DOM Document.
  */
-xhrdav.lib.parser.DomParser.prototype.parse = function() {
+xhrdav.lib.DomParser.prototype.parse = function() {
 //  var obj = {};
   var xml = this.xml_;
   this.handler_.startDocument();
@@ -40,7 +40,7 @@ xhrdav.lib.parser.DomParser.prototype.parse = function() {
   this.handler_.endDocument();
 };
 
-xhrdav.lib.parser.DomParser.prototype.parseDocument_ = function(xml) {
+xhrdav.lib.DomParser.prototype.parseDocument_ = function(xml) {
   var obj = {};
 
   // get nodeValue
@@ -73,19 +73,18 @@ xhrdav.lib.parser.DomParser.prototype.parseDocument_ = function(xml) {
   return obj;
 };
 
-xhrdav.lib.parser.DomParser.prototype.parseAttributeName_ = function(nodeName) {
+xhrdav.lib.DomParser.prototype.parseAttributeName_ = function(nodeName) {
   return this.attributePrefix_ + nodeName.replace(/:/, this.nsSeparator_);
 };
 
-xhrdav.lib.parser.DomParser.prototype.parseNodeName_ = function(nodeName) {
+xhrdav.lib.DomParser.prototype.parseNodeName_ = function(nodeName) {
   return nodeName
     .replace(/:/, this.nsSeparator_)
     .replace(/#text/, this.textNodeName_);
 };
 
 /* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
-goog.exportSymbol('xhrdav.lib.parser.DomParser', xhrdav.lib.parser.DomParser);
-goog.exportProperty(
-  xhrdav.lib.parser.DomParser.prototype, 'parse',
-  xhrdav.lib.parser.DomParser.prototype.parse);
+goog.exportSymbol('xhrdav.lib.DomParser', xhrdav.lib.DomParser);
+goog.exportProperty(xhrdav.lib.DomParser.prototype, 'parse',
+  xhrdav.lib.DomParser.prototype.parse);
 

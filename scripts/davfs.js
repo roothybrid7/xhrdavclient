@@ -4,7 +4,7 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.fs.DavFs');
+goog.provide('xhrdav.lib.DavFs');
 goog.require('xhrdav.lib.Client');
 goog.require('xhrdav.lib.HttpStatus');
 goog.require('goog.object');
