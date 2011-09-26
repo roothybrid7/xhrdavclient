@@ -1,4 +1,23 @@
 
+0.0.4 / 2011-09-26 
+==================
+
+  * Add library config namespace
+  * Add Commonheaders file
+  * Add upload method
+  * delete testcase
+  * Add testcase of empty string to parser
+  * logger info -> config
+  * refactor parser for method chain
+  * fixed namespace
+  * refactor scripts
+  * remove script sub directories
+  * trim linefeeds
+  * Add parse multistatus
+  * Add Example
+  * Merge branch 'hotfix/v0.0.3' into develop
+  * update changelog
+
 0.0.3 / 2011-09-23 
 ==================
 
