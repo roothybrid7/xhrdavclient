@@ -28,24 +28,17 @@
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
 
-    // Prepare AsyncTest
-    var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall();
-    var asyncContinue = function() {
-      asyncTestCase.continueTesting();
-    };
-
     var initData;
-    var srcFile = './multistatus.xml';
+
+    // Load fixture by jsonp
+    var fixtureData;
+    var loadDavData = function(json) {
+      fixtureData = json;
+    }
 
     function setUp() {
-      asyncTestCase.waitForAsync('setUp');
-
-      var procRequest = function(e) {
-        var xhr = e.target;
-        initData = xhr.getResponseXml('while(1);');
-        asyncContinue();
-      };
-      goog.net.XhrIo.send(srcFile, procRequest);
+      initData = goog.dom.xml.loadXml(
+        fixtureData['multistatus'].split('\n').join(''));
     }
 
     function tearDown() {
@@ -72,7 +65,6 @@
     }
 
     function testHandlerNull() {
-      asyncTestCase.waitForAsync('HandlerNull()');
       var logger = goog.debug.Logger.getLogger('HandlerNull()');
       var handler = null;
       try {
@@ -82,11 +74,9 @@
         assertEquals('Error message?', 'Parse handler is NOT GIVEN!!', e.message);
       } finally {
       }
-      asyncContinue();
     }
 
     function testParseXmlForMultiStatus() {
-      asyncTestCase.waitForAsync('ParseXmlForMultiStatus()');
       var logger = goog.debug.Logger.getLogger('ParseXmlForMultiStatus()');
       var handler = new xhrdav.lib.MultiStatusDomHandler();
       var parser, obj;
@@ -119,9 +109,9 @@
 //        logger.config(goog.dom.xml.serialize(node));
 //      }
 //
-      asyncContinue();
     }
-
   </script>
+  <!-- load fixture -->
+  <script src="data/davfixture.js" type="text/javascript"></script>
 </body>
 </html>
