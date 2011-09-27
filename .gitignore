@@ -5,3 +5,7 @@ tags
 **/*.pyc
 # Build integrated script
 xhrdavclient.js
+# Gnu global
+GPATH
+GRTAGS
+GTAGS
