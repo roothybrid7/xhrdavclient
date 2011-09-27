@@ -15,7 +15,6 @@
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
     goog.require('xhrdav.lib.DavFs');
-    goog.require('xhrdav.lib.HttpStatus');
     goog.require('goog.ds.XmlDataSource');
     goog.require('goog.ds.DataManager');
     goog.require('goog.array');
@@ -61,14 +60,33 @@
       asyncTestCase.continueTesting();
     };
 
+    function testListDirByNullPath() {
+      var testId = 'ListDirByNullPath()';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var dir = null;
+
+      var fs = xhrdav.lib.DavFs.Instance.initialize();
+      var httpStatus = xhrdav.lib.HttpStatus;
+      var httpStatusText = xhrdav.lib.HttpStatus.text;
+
+//      var assertListDir = function(content, 
+
+      fs.listDir(dir, assertListDir, null, goog.partial(logging, testId + '#callback'));
+
+      asyncContinue();
+    }
+
     // Unfixed
-    function testListDir() {
+    function /*test*/ListDir() {
       var testId = 'fs_directories_test#ListDir';
 
       asyncTestCase.waitForAsync(testId);
 
       var dir = '/mydav/';
-      var davFs = webdav.DavFs.getInstance();
+      var davFs = webdav.lib.DavFs.getInstance();
       davFs.initialize();
       var httpStatus = webdav.HttpStatus;
       var httpStatusText = webdav.HttpStatus.text;

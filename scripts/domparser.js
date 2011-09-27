@@ -12,11 +12,19 @@ goog.require('goog.dom.xml');
  * Dom parser for WebDAV Client API
  *
  * @constructor
+ */
+xhrdav.lib.DomParser = function() {
+};
+
+/**
+ * Initialize parser
+ *
  * @param {Object} xml XML Document.
  * @param {Object} handler Dom Handler.
  * @param {Object} options Parse options.
+ * @return {xhrdav.lib.DomParser}
  */
-xhrdav.lib.DomParser = function(xml, handler, options) {
+xhrdav.lib.DomParser.prototype.initialize = function(xml, handler, options) {
   this.xml_ = (goog.isDefAndNotNull(xml) && xml instanceof Document) ?
     goog.dom.xml.loadXml(
       goog.dom.xml.serialize(xml).split('\n').join('')).documentElement :
@@ -27,6 +35,8 @@ xhrdav.lib.DomParser = function(xml, handler, options) {
   this.nsSeparator_ = options.nsSeparator || '$';
   this.textNodeName_ = options.textNodeName || '$t';
   this.attributePrefix_ = options.attributePrefix || '';
+
+  return this;
 };
 
 /**
@@ -104,6 +114,8 @@ xhrdav.lib.DomParser.prototype.parseNodeName_ = function(nodeName) {
 
 /* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
 goog.exportSymbol('xhrdav.lib.DomParser', xhrdav.lib.DomParser);
+goog.exportProperty(xhrdav.lib.DomParser.prototype, 'initialize',
+  xhrdav.lib.DomParser.prototype.initialize);
 goog.exportProperty(xhrdav.lib.DomParser.prototype, 'parse',
   xhrdav.lib.DomParser.prototype.parse);
 goog.exportProperty(xhrdav.lib.DomParser.prototype, 'parseDocument',
