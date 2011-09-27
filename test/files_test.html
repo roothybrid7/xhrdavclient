@@ -5,6 +5,7 @@
   <title>WebDAV Files Test</title>
   <script src="../closure-library/closure/goog/base.js" type="text/javascript"></script>
   <script src="../xhrdavclientdeps.js" type="text/javascript"></script>
+  <script src="utils.js" type="text/javascript"></script>
   <script type="text/javascript">
     goog.require('goog.testing.AsyncTestCase');
     goog.require('goog.testing.jsunit');
@@ -22,34 +23,6 @@
   <script type="text/javascript">
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
-
-    /**
-     * Logging for XHR
-     *
-     * <pre><code>
-     * goog.net.XhrIo.send('/foo', function() {
-     *   var xhr = e.target;
-     *   logging('foo1', xhr);
-     * });
-     * </code></pre>
-     *
-     * @param {string} id Logger ID.
-     * @param {Object} req XHTTPRequest object.
-     * @param {Function} callback Callback function.
-     */
-    var logging = function(id, req, callback) {
-      var logger = goog.debug.Logger.getLogger(id);
-      logger.config("ID: " + id);
-      logger.config("Status: " + req.getStatus() + " - " + req.getStatusText());
-      logger.config("Success?: " + req.isSuccess());
-      logger.config("ResponseType: " + req.getResponseType());
-      logger.config("Response: " + req.getResponse());
-      logger.config("Response Headers: " + req.getAllResponseHeaders());
-      if (req.getLastError()) {
-        logger.warning("Error?: " + req.getLastErrorCode() + " - " + req.getLastError());
-      }
-      if (callback) callback(id, req);
-    };
 
     // Prepare AsyncTest
     var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall();
@@ -81,6 +54,7 @@
 
     function testFileNotFound() {
       var testId = 'FileNotFound';
+      var logger = new goog.debug.Logger.getLogger(testId);
 
       asyncTestCase.waitForAsync(testId);
 
@@ -94,11 +68,12 @@
         asyncContinue();
       };
 
-      dav.get(dummyFile, assertNotFound, null, goog.partial(logging, testId));
+      dav.get(dummyFile, assertNotFound, null, goog.partial(xhrLogging, logger));
     }
 
     function testDeleteFile() {
       var testId = 'DeleteFile';
+      var logger = new goog.debug.Logger.getLogger(testId);
 
       asyncTestCase.waitForAsync(testId);
 
@@ -115,15 +90,16 @@
       var callbackUploadFile = function(statusCode, content, headers) {
         dav._delete(file, assertDeleteFile, {
           xhrId: goog.string.createUniqueString(), request: mgr},
-          goog.partial(logging, testId));
+          goog.partial(xhrLogging, logger));
       };
       dav.put(file, initData, callbackUploadFile, {
         xhrId: goog.string.createUniqueString(), request: mgr},
-        goog.partial(logging, testId));
+        goog.partial(xhrLogging, logger));
     }
 
     function testDownloadFile() {
       var testId = 'DownloadFile';
+      var logger = new goog.debug.Logger.getLogger(testId);
 
       asyncTestCase.waitForAsync(testId);
 
@@ -138,18 +114,19 @@
         assertEquals('ResponseData:', initData, content);
         dav._delete(file, asyncContinue, {
           xhrId: goog.string.createUniqueString(), request: mgr},
-          goog.partial(logging, testId));
+          goog.partial(xhrLogging, logger));
       };
       var callbackUploadFile = function(statusCode, content, headers) {
-        dav.get(file, assertDownloadFile, null, goog.partial(logging, testId));
+        dav.get(file, assertDownloadFile, null, goog.partial(xhrLogging, logger));
       };
       dav.put(file, initData, callbackUploadFile, {
         xhrId: goog.string.createUniqueString(), request: mgr},
-        goog.partial(logging, testId));
+        goog.partial(xhrLogging, logger));
     }
 
     function testUploadFile() {
       var testId = 'UploadFile';
+      var logger = new goog.debug.Logger.getLogger(testId);
 
       asyncTestCase.waitForAsync(testId);
 
@@ -170,15 +147,16 @@
           goog.string.endsWith(headers['Location'], file));
         dav.put(file, initData + "<MODIFIED>", assertUploadFileOverWrite, {
           xhrId: goog.string.createUniqueString(), request: mgr},
-          goog.partial(logging, testId));
+          goog.partial(xhrLogging, logger));
       };
       dav.put(file, initData, assertUploadFile, {
         xhrId: goog.string.createUniqueString(), request: mgr},
-        goog.partial(logging, testId));
+        goog.partial(xhrLogging, logger));
     }
 
     function testRenameFile() {
       var testId = 'RenameFile';
+      var logger = new goog.debug.Logger.getLogger(testId);
 
       asyncTestCase.waitForAsync(testId);
 
@@ -198,15 +176,16 @@
       var callbackUploadFile = function(statusCode, content, headers) {
         dav.move(file, newFile, assertRenameFile, {
           xhrId: goog.string.createUniqueString(), request: mgr},
-          goog.partial(logging, testId));
+          goog.partial(xhrLogging, logger));
       };
       dav.put(file, initData, callbackUploadFile, {
         xhrId: goog.string.createUniqueString(), request: mgr},
-        goog.partial(logging, testId));
+        goog.partial(xhrLogging, logger));
     }
 
     function testCopyFile() {
       var testId = 'CopyFile';
+      var logger = new goog.debug.Logger.getLogger(testId);
 
       asyncTestCase.waitForAsync(testId);
 
@@ -226,7 +205,7 @@
         dav.copy(file, newFile, assertCopyFileOverWriteFalse, {
           xhrId: goog.string.createUniqueString(), request: mgr,
           overwrite: false},
-          goog.partial(logging, testId));
+          goog.partial(xhrLogging, logger));
       };
       var assertCopyFile = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
@@ -236,12 +215,12 @@
         dav.copy(newFile, file, assertCopyFileOverWrite, {
           xhrId: goog.string.createUniqueString(), request: mgr,
           overwrite: true},
-          goog.partial(logging, testId));
+          goog.partial(xhrLogging, logger));
       };
       var callbackUploadFile = function(statusCode, content, headers) {
         dav.copy(file, newFile, assertCopyFile, {
           xhrId: goog.string.createUniqueString(), request: mgr},
-          goog.partial(logging, testId));
+          goog.partial(xhrLogging, logger));
       };
       dav.put(file, initData, callbackUploadFile, {
         xhrId: goog.string.createUniqueString(), request: mgr});
@@ -249,6 +228,7 @@
 
     function testMoveFile() {
       var testId = 'MoveFile';
+      var logger = new goog.debug.Logger.getLogger(testId);
 
       asyncTestCase.waitForAsync(testId);
 
@@ -268,13 +248,13 @@
         dav.move(file, newFile, assertMoveFileOverWrite, {
           xhrId: goog.string.createUniqueString(), request: mgr,
           overwrite: true},
-          goog.partial(logging, testId));
+          goog.partial(xhrLogging, logger));
       };
       var callbackCopyFile = function(statusCode, content, headers) {
         dav.move(file, newFile, assertMoveFileOverWriteFalse, {
           xhrId: goog.string.createUniqueString(), request: mgr,
           overwrite: false},
-          goog.partial(logging, testId));
+          goog.partial(xhrLogging, logger));
       };
       var assertMoveFile = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
