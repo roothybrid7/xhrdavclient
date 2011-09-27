@@ -20,17 +20,19 @@ xhrdav.lib.DomParser = function() {
  * Initialize parser
  *
  * @param {Object} xml XML Document.
- * @param {!Object} handler Dom Handler.
+ * @param {Object} handler Dom Handler.
  * @param {Object} options Parse options.
  * @return {xhrdav.lib.DomParser}
  */
 xhrdav.lib.DomParser.prototype.initialize = function(xml, handler, options) {
-  /** @type {Object} */
-  this.xml_ = (goog.isDefAndNotNull(xml) && xml instanceof Document) ?
-    goog.dom.xml.loadXml(
-      goog.dom.xml.serialize(xml).split('\n').join('')).documentElement :
-    goog.dom.xml.createDocument();
+  if (!(goog.isDefAndNotNull(xml) && xml instanceof Document)) {
+    goog.functions.error('Xml document is NOT GIVEN!!')();
+  }
   if (!goog.isDefAndNotNull(handler)) goog.functions.error('Parse handler is NOT GIVEN!!')();
+
+  /** @type {Object} */
+  this.xml_ = goog.dom.xml.loadXml(
+      goog.dom.xml.serialize(xml).split('\n').join('')).documentElement;
   /** @type {Object} */
   this.handler_ = handler;
 

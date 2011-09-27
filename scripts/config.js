@@ -1,5 +1,5 @@
 /**
- * config.js - XHTTPRequest High-level WebDAV Client API.
+ * config.js - xhrdavclient config
  *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */

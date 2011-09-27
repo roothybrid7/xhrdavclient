@@ -51,26 +51,24 @@
     function tearDown() {
       initData = null;
     }
-var nodeKeys = [];
 
-    function testParseNull() {
-      asyncTestCase.waitForAsync('ParseEmpty()');
-      var logger = goog.debug.Logger.getLogger('ParseEmpty()');
+    function testParseNullOrEmpty() {
+      var testId = 'ParseNullOrEmpty';
+      var logger = goog.debug.Logger.getLogger(testId);
       var handler = new xhrdav.lib.MultiStatusDomHandler();
-      var parser = new xhrdav.lib.DomParser().initialize(null, handler).parse();
-      var obj = handler.getObject();
-      assertTrue('No Object?', goog.object.isEmpty(obj));
-      asyncContinue();
-    }
-
-    function testParseEmpty() {
-      asyncTestCase.waitForAsync('ParseEmpty()');
-      var logger = goog.debug.Logger.getLogger('ParseEmpty()');
-      var handler = new xhrdav.lib.MultiStatusDomHandler();
-      var parser = new xhrdav.lib.DomParser().initialize('', handler).parse();
-      var obj = handler.getObject();
-      assertTrue('No Object?', goog.object.isEmpty(obj));
-      asyncContinue();
+      var parser;
+      try {
+        parser = new xhrdav.lib.DomParser().initialize(null, handler).parse();
+      } catch(e) {
+        assertNotNullNorUndefined('Error object?', e);
+        assertEquals('Error message?', 'Xml document is NOT GIVEN!!', e.message);
+      }
+      try {
+        parser = new xhrdav.lib.DomParser().initialize('', handler).parse();
+      } catch(e) {
+        assertNotNullNorUndefined('Error object?', e);
+        assertEquals('Error message?', 'Xml document is NOT GIVEN!!', e.message);
+      }
     }
 
     function testHandlerNull() {
@@ -91,8 +89,15 @@ var nodeKeys = [];
       asyncTestCase.waitForAsync('ParseXmlForMultiStatus()');
       var logger = goog.debug.Logger.getLogger('ParseXmlForMultiStatus()');
       var handler = new xhrdav.lib.MultiStatusDomHandler();
-      var parser = new xhrdav.lib.DomParser().initialize(initData, handler).parse();
-      var obj = handler.getObject();
+      var parser, obj;
+      try {
+        parser = new xhrdav.lib.DomParser().initialize(initData, handler).parse();
+      } catch(e) {
+      } finally {
+        obj = handler.getObject();
+        handler.dispose();
+        assertNull('Destruct object?', handler.getObject());
+      }
       assertNotNullNorUndefined('RootObject', obj);
       assertTrue('Object?', obj instanceof Object);
       assertNotNaN('Resources?', goog.object.getCount(obj['D$response']))
