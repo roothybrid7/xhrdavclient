@@ -17,8 +17,6 @@ xhrdav.lib.DavFs = function() {
 };
 goog.addSingletonGetter(xhrdav.lib.DavFs);
 
-xhrdav.lib.DavFs.Instance = xhrdav.lib.DavFs.getInstance();
-
 /**
  * Init with calling low-level client API.
  *
@@ -102,7 +100,7 @@ xhrdav.lib.DavFs.prototype.write = function(
 };
 
 /* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
-goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs);
+goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs.getInstance);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'initialize',
   xhrdav.lib.DavFs.prototype.initialize);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'listDir',

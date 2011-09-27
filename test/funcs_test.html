@@ -32,12 +32,6 @@
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
 
-    // Prepare AsyncTest
-    var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall();
-    var asyncContinue = function() {
-      asyncTestCase.continueTesting();
-    };
-
     var initData;
     var func;
 
@@ -78,6 +72,23 @@
       var testId = 'MultiStatusMock';
       var logger = goog.debug.Logger.getLogger(testId);
     }
+
+    function testMultiStatusByBothMethod() {
+      var testId = 'MultiStatusByBothMethod';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      var parseByClassMethod = func.domParseMultiStatus(initData);
+      var parseByInstanceMethod = new func().domParseMultiStatus(initData);
+
+      assertNotNullNorUndefined('Returning Obj by instance method?',
+        parseByInstanceMethod);
+      assertNotEquals('> zeon count by instance method?',
+        goog.object.getCount(parseByInstanceMethod));
+      assertNotNullNorUndefined('Collection?', parseByInstanceMethod['D$response']);
+      assertObjectEquals('Result same by both method?',
+        parseByClassMethod, parseByInstanceMethod);
+    }
+
   </script>
 </body>
 </html>
