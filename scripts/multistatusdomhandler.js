@@ -16,7 +16,16 @@ goog.require('xhrdav.lib.DomHandler');
  * @implements {xhrdav.lib.DomHandler}
  */
 xhrdav.lib.MultiStatusDomHandler = function() {
-}
+  /** @type {Object} */
+  this.resources_ = null;
+};
+goog.inherits(xhrdav.lib.MultiStatusDomHandler, goog.Disposable);
+
+/** @override */
+xhrdav.lib.MultiStatusDomHandler.prototype.disposeInternal = function() {
+  goog.base(this, 'disposeInternal');
+  this.resources_ = null;
+};
 
 /**
  * Handle start document

@@ -73,6 +73,20 @@ var nodeKeys = [];
       asyncContinue();
     }
 
+    function testHandlerNull() {
+      asyncTestCase.waitForAsync('HandlerNull()');
+      var logger = goog.debug.Logger.getLogger('HandlerNull()');
+      var handler = null;
+      try {
+      var parser = new xhrdav.lib.DomParser().initialize(initData, handler).parse();
+      } catch(e) {
+        assertNotNullNorUndefined('Error object?', e);
+        assertEquals('Error message?', 'Parse handler is NOT GIVEN!!', e.message);
+      } finally {
+      }
+      asyncContinue();
+    }
+
     function testParseXmlForMultiStatus() {
       asyncTestCase.waitForAsync('ParseXmlForMultiStatus()');
       var logger = goog.debug.Logger.getLogger('ParseXmlForMultiStatus()');

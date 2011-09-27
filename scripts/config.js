@@ -5,9 +5,11 @@
  */
 
 goog.provide('xhrdav.lib.Config');
+goog.require('goog.functions');
 goog.require('goog.array');
 goog.require('goog.object');
 goog.require('goog.string.path');
 goog.require('xhrdav.lib.HttpStatus');
+goog.require('goog.Disposable');
 goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');
