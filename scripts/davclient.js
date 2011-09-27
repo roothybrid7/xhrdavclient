@@ -33,8 +33,11 @@ xhrdav.lib.Client.prototype.initialize_ = function(options) {
     options = {};
   }
   var locationUrl = goog.Uri.parse(location);
+  /** @type {string} */
   this.scheme_ = options.scheme || locationUrl.getScheme() || 'http';
+  /** @type {string} */
   this.domain_ = options.domain || locationUrl.getDomain();
+  /** @type {number} */
   this.port_ = options.port || locationUrl.getPort() || 80;
 };
 

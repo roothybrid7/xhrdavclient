@@ -14,11 +14,8 @@ goog.require('xhrdav.lib.Client');
  * @constructor
  */
 xhrdav.lib.DavFs = function() {
-  this.appname_ = 'hoge';
 };
 goog.addSingletonGetter(xhrdav.lib.DavFs);
-
-xhrdav.lib.DavFs.OBJNAME = 'xhrdav.lib.DavFs';
 
 xhrdav.lib.DavFs.Instance = xhrdav.lib.DavFs.getInstance();
 
@@ -29,6 +26,7 @@ xhrdav.lib.DavFs.Instance = xhrdav.lib.DavFs.getInstance();
  * @return {xhrdav.lib.DavFs}
  */
 xhrdav.lib.DavFs.prototype.initialize = function(options) {
+  /** @type {xhrdav.lib.Client} */
   this.client_ = new xhrdav.lib.Client(options);
   return this;
 };
