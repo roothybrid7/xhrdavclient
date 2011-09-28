@@ -59,7 +59,7 @@ NAMESPACES=(
   'xhrdav.lib.DomParser'
   'xhrdav.lib.functions.DomParse'
   'xhrdav.lib.HttpStatus'
-  'xhrdav.lib.MultiStatusDomHandler'
+  'xhrdav.lib.RawMultiStatusDomHandler'
 )
 
 rootdir=
