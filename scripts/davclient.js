@@ -84,7 +84,7 @@ xhrdav.lib.Client.prototype.processRequest_ = function(
   if (xhr.getStatus() == 207) {
     content = xhr.getResponseXml(xssGuard);
   }
-  handler(xhr.getStatus() || 500, content, headers);
+  if (handler) handler(xhr.getStatus() || 500, content, headers);
 };
 
 /**
