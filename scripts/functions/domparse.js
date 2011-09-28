@@ -7,7 +7,7 @@
 goog.provide('xhrdav.lib.functions.DomParse');
 goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.DomParser');
-goog.require('xhrdav.lib.RawMultiStatusDomHandler');
+goog.require('xhrdav.lib.RawDomHandler');
 
 /**
  * Parse WebDAV Multi-Status to row structure by Dom parser
@@ -16,7 +16,7 @@ goog.require('xhrdav.lib.RawMultiStatusDomHandler');
  * @return {Object} converted multistatus object(Associate array)
  */
 xhrdav.lib.functions.DomParse.ParseRawMultiStatus = function(xml) {
-  var handler = new xhrdav.lib.RawMultiStatusDomHandler();
+  var handler = new xhrdav.lib.RawDomHandler();
   var parser, obj;
   try {
     parser = new xhrdav.lib.DomParser().initialize(xml, handler).parse();
