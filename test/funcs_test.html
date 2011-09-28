@@ -24,7 +24,7 @@
     goog.require('goog.ds.JsDataSource');
     goog.require('xhrdav.lib.functions.DomParse');
     goog.require('xhrdav.lib.DomParser');
-    goog.require('xhrdav.lib.MultiStatusDomHandler');
+    goog.require('xhrdav.lib.RawMultiStatusDomHandler');
   </script>
 </head>
 <body>
@@ -37,15 +37,15 @@
 
     // Load fixture by jsonp
     var fixtureData;
-    var loadDavData = function(json) {
+    var multistatusCurrentdir = function(json) {
       fixtureData = json;
     }
-    loadJson('data/davfixture.js');
+    loadJson('../fixtures/multistatus_currentdir.js');
 
     function setUp() {
       func = xhrdav.lib.functions.DomParse;
       initData = goog.dom.xml.loadXml(
-        fixtureData['multistatus'].split('\n').join(''));
+        fixtureData['xml'].split('\n').join(''));
     }
 
     function tearDown() {

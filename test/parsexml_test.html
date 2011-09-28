@@ -33,14 +33,14 @@
 
     // Load fixture by jsonp
     var fixtureData;
-    var loadDavData = function(json) {
+    var multistatusCurrentdir = function(json) {
       fixtureData = json;
     }
-    loadJson('data/davfixture.js');
+    loadJson('../fixtures/multistatus_currentdir.js');
 
     function setUp() {
       initData = goog.dom.xml.loadXml(
-        fixtureData['multistatus'].split('\n').join(''));
+        fixtureData['xml'].split('\n').join(''));
     }
 
     function tearDown() {
