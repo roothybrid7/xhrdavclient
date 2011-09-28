@@ -22,7 +22,7 @@
     goog.require('goog.net.XhrIo');
     goog.require('goog.dom.xml');
     goog.require('goog.ds.JsDataSource');
-    goog.require('xhrdav.lib.Functions');
+    goog.require('xhrdav.lib.functions.DomParse');
     goog.require('xhrdav.lib.DomParser');
     goog.require('xhrdav.lib.MultiStatusDomHandler');
   </script>
@@ -31,12 +31,6 @@
   <script type="text/javascript">
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
-
-    // Prepare AsyncTest
-    var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall();
-    var asyncContinue = function() {
-      asyncTestCase.continueTesting();
-    };
 
     var initData;
     var func;
@@ -49,7 +43,7 @@
     loadJson('data/davfixture.js');
 
     function setUp() {
-      func = xhrdav.lib.Functions;
+      func = xhrdav.lib.functions.DomParse;
       initData = goog.dom.xml.loadXml(
         fixtureData['multistatus'].split('\n').join(''));
     }
@@ -59,12 +53,12 @@
     }
 
     function testMultiStatus() {
-      var testId = 'MultiStatusNull';
+      var testId = 'MultiStatus';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var notGiven = func.domParseMultiStatus();
-      var nullGiven = func.domParseMultiStatus(null);
-      var multiStatus = func.domParseMultiStatus(initData);
+      var notGiven = func.ParseMultiStatusRow();
+      var nullGiven = func.ParseMultiStatusRow(null);
+      var multiStatus = func.ParseMultiStatusRow(initData);
 
       assertNotNullNorUndefined('Returing Obj with not given?', notGiven);
       assertNotNullNorUndefined('Returing Obj with null?', nullGiven);

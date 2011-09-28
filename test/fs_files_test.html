@@ -35,7 +35,8 @@
     var parentDir = '/mydav/parentforfsfile/';
     var srcFile = './testwebdav.txt';
 
-    var file = goog.string.path.join(parentDir, 'testwebdav.txt');
+    var file = goog.string.path.normalizePath(
+      goog.string.path.join(parentDir, 'testwebdav.txt'));
 
     function setUp() {
       asyncTestCase.waitForAsync('setUp');
@@ -59,7 +60,7 @@
       asyncTestCase.waitForAsync(testId);
       var logger = goog.debug.Logger.getLogger(testId);
       var mgr = new goog.net.XhrManager();
-      var fs = xhrdav.lib.DavFs.Instance.initialize();
+      var fs = xhrdav.lib.DavFs.getInstance().initialize();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
 
@@ -79,7 +80,7 @@
       asyncTestCase.waitForAsync(testId);
       var logger = goog.debug.Logger.getLogger(testId);
       var mgr = new goog.net.XhrManager();
-      var fs = xhrdav.lib.DavFs.Instance.initialize();
+      var fs = xhrdav.lib.DavFs.getInstance().initialize();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
 
@@ -99,7 +100,7 @@
       asyncTestCase.waitForAsync(testId);
       var logger = goog.debug.Logger.getLogger(testId);
       var mgr = new goog.net.XhrManager();
-      var fs = xhrdav.lib.DavFs.Instance.initialize();
+      var fs = xhrdav.lib.DavFs.getInstance().initialize();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
 
