@@ -30,3 +30,9 @@ xhrdav.lib.Functions.domParseMultiStatus = function(xml) {
 
   return obj;
 };
+
+/* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
+goog.exportSymbol('xhrdav.lib.Functions', xhrdav.lib.Functions);
+goog.exportSymbol('xhrdav.lib.Functions.domParseMultiStatus',
+  xhrdav.lib.Functions.domParseMultiStatus);
+
