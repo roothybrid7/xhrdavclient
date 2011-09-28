@@ -52,7 +52,9 @@ ROOTS=(
   'scripts/'
 )
 NAMESPACES=(
+  'xhrdav.lib'
   'xhrdav.lib.Config'
+  'xhrdav.lib.string'
   'xhrdav.lib.Client'
   'xhrdav.lib.DavFs'
   'xhrdav.lib.DomHandler'
