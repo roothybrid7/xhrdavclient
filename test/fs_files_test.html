@@ -65,8 +65,9 @@
       asyncTestCase.waitForAsync(testId);
 
       var assertUploadFile = function(errors) {
-      logger.config(errors);
-        assertTrue('Empty?', goog.array.isEmpty(errors));
+        logger.config(goog.typeOf(errors));
+        assertNull('No errors?', errors);
+
         asyncContinue();
       };
 
@@ -77,36 +78,45 @@
 
     function testUploadMissingPath() {
       var testId = 'UploadMissingPath()';
-      asyncTestCase.waitForAsync(testId);
+      var testPath = '/notfound/dummy.txt';
       var logger = goog.debug.Logger.getLogger(testId);
       var mgr = new goog.net.XhrManager();
       var fs = xhrdav.lib.DavFs.getInstance().initialize();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
 
+      asyncTestCase.waitForAsync(testId);
+
       var assertUploadFail = function(errors) {
-        assertFalse('Not Empty?', goog.array.isEmpty(errors));
-        logger.config(errors);
+        assertTrue('xhrdav.lib.Errors?', errors instanceof xhrdav.lib.Errors);
+        assertTrue('No request Error?', errors.hasRequest());
+        logger.config(goog.debug.expose(errors.request()));
+        assertFalse('Occured request errors?',
+          goog.object.isEmpty(errors.request()));
+        assertEquals('Error path', testPath, errors.request().path);
+        assertNotNullNorUndefined('Not OK?', errors.request().msg);
+
         asyncContinue();
       };
 
-      fs.write('/notfound/dummy.txt', initData, assertUploadFail, {
+      fs.write(testPath, initData, assertUploadFail, {
         xhrId: goog.string.createUniqueString(), request: mgr},
         goog.partial(xhrLogging, logger));
     }
 
     function testUploadNullData() {
       var testId = 'UploadNullData()';
-      asyncTestCase.waitForAsync(testId);
       var logger = goog.debug.Logger.getLogger(testId);
       var mgr = new goog.net.XhrManager();
       var fs = xhrdav.lib.DavFs.getInstance().initialize();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
 
+      asyncTestCase.waitForAsync(testId);
+
       var assertUploadNull = function(errors) {
-        assertTrue('Empty?', goog.array.isEmpty(errors));
-        logger.config(errors);
+        assertNull('No errors', errors);
+
         asyncContinue();
       };
 

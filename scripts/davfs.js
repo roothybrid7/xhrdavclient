@@ -30,12 +30,11 @@ goog.addSingletonGetter(xhrdav.lib.DavFs);
  * @return {xhrdav.lib.DavFs}
  */
 xhrdav.lib.DavFs.prototype.initialize = function(options) {
-  /** @type {xhrdav.lib.Config} */
-  this.config_ = xhrdav.lib.Config.getInstance();
+  var config = xhrdav.lib.Config.getInstance();
   /** @type {xhrdav.lib.Client} */
   this.client_ = new xhrdav.lib.Client(options);
   this.client_.setXmlParseFunction(
-    goog.getObjectByName(this.config_.xmlParseFuncObj));
+    goog.getObjectByName(config.xmlParseFuncObj));
   return this;
 };
 
@@ -48,9 +47,10 @@ xhrdav.lib.DavFs.prototype.initialize = function(options) {
  */
 xhrdav.lib.DavFs.prototype.connection = function(refresh, options) {
   if (refresh) {
+    var config = xhrdav.lib.Config.getInstance();
     this.client_ = new xhrdav.lib.Client(options);
     this.client_.setXmlParseFunction(
-      goog.getObjectByName(this.config_.xmlParseFuncObj));
+      goog.getObjectByName(config.xmlParseFuncObj));
   }
   return this.client_;
 };
@@ -83,9 +83,10 @@ xhrdav.lib.DavFs.prototype.listDir = function(path, handler, options, debugHandl
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
  */
-xhrdav.lib.DavFs.prototype.responseHandler_ = function(handler, processHandler, statusCode, content, headers) {
+xhrdav.lib.DavFs.prototype.responseHandler_ = function(
+  handler, processHandler, path, statusCode, content, headers) {
   var httpStatus = xhrdav.lib.HttpStatus;
-  var args = processHandler(statusCode, content, headers);
+  var args = processHandler(path, statusCode, content, headers);
   handler(args);
 };
 
@@ -98,15 +99,19 @@ xhrdav.lib.DavFs.prototype.responseHandler_ = function(handler, processHandler, 
  * @param {Object} headers Response headers.
  * @return {Array} Errors array.
  */
-xhrdav.lib.DavFs.prototype.simpleErrorHandler_ = function(statusCode, content, headers) {
+xhrdav.lib.DavFs.prototype.simpleErrorHandler_ = function(
+  path, statusCode, content, headers) {
+  var config = xhrdav.lib.Config.getInstance();
   var httpStatus = xhrdav.lib.HttpStatus;
-  var errors = [];
+  var errors = config.getErrors();
+
+  errors.clear();
   if (!goog.array.contains(
     [httpStatus.OK, httpStatus.CREATED, httpStatus.NO_CONTENT],
     statusCode)) {
-    errors.push(httpStatus.text[statusCode]);
+    errors.setRequest({msg: httpStatus.text[statusCode], path: path});
   }
-  return errors;
+  return (errors.hasRequest()) ? errors : null;
 };
 
 /**
@@ -121,7 +126,7 @@ xhrdav.lib.DavFs.prototype.simpleErrorHandler_ = function(statusCode, content, h
 xhrdav.lib.DavFs.prototype.write = function(
   path, content, handler, options, debugHandler) {
   this.client_.put(path, content,
-    goog.bind(this.responseHandler_, this, handler, this.simpleErrorHandler_),
+    goog.bind(this.responseHandler_, this, handler, this.simpleErrorHandler_, path),
     options, debugHandler);
 };
 
