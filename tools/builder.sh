@@ -61,7 +61,6 @@ NAMESPACES=(
   'xhrdav.lib.DomParser'
   'xhrdav.lib.functions.DomParse'
   'xhrdav.lib.HttpStatus'
-  'xhrdav.lib.RawDomHandler'
 )
 
 rootdir=

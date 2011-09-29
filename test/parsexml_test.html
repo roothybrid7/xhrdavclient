@@ -21,7 +21,7 @@
     goog.require('goog.dom.xml');
     goog.require('goog.ds.JsDataSource');
     goog.require('xhrdav.lib.DomParser');
-    goog.require('xhrdav.lib.RawDomHandler');
+    goog.require('xhrdav.lib.DomHandler');
   </script>
 </head>
 <body>
@@ -50,7 +50,7 @@
     function testParseNullOrEmpty() {
       var testId = 'ParseNullOrEmpty';
       var logger = goog.debug.Logger.getLogger(testId);
-      var handler = new xhrdav.lib.RawDomHandler();
+      var handler = new xhrdav.lib.DomHandler();
       var parser;
       try {
         parser = new xhrdav.lib.DomParser().initialize(null, handler).parse();
@@ -80,7 +80,7 @@
 
     function testParseXmlForMultiStatus() {
       var logger = goog.debug.Logger.getLogger('ParseXmlForMultiStatus()');
-      var handler = new xhrdav.lib.RawDomHandler();
+      var handler = new xhrdav.lib.DomHandler();
       var parser, obj;
       try {
         parser = new xhrdav.lib.DomParser().initialize(initData, handler).parse();

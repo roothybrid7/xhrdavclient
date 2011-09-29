@@ -4,9 +4,7 @@ goog.addDependency('../../../scripts/config.js', ['xhrdav.lib', 'xhrdav.lib.Conf
 goog.addDependency('../../../scripts/core_ext/string.js', ['xhrdav.lib.string'], ['goog.array', 'goog.functions']);
 goog.addDependency('../../../scripts/davclient.js', ['xhrdav.lib.Client'], ['goog.Uri', 'goog.dom', 'goog.net.XhrIo', 'goog.net.XhrManager', 'xhrdav.lib.Config']);
 goog.addDependency('../../../scripts/davfs.js', ['xhrdav.lib.DavFs'], ['xhrdav.lib.Client', 'xhrdav.lib.Config']);
-goog.addDependency('../../../scripts/domhandler.js', ['xhrdav.lib.DomHandler'], []);
+goog.addDependency('../../../scripts/domhandler.js', ['xhrdav.lib.DomHandler'], ['xhrdav.lib.Config']);
 goog.addDependency('../../../scripts/domparser.js', ['xhrdav.lib.DomParser'], ['goog.dom.xml', 'xhrdav.lib.Config']);
-goog.addDependency('../../../scripts/functions/domparse.js', ['xhrdav.lib.functions.DomParse'], ['xhrdav.lib.Config', 'xhrdav.lib.DomParser', 'xhrdav.lib.RawDomHandler']);
+goog.addDependency('../../../scripts/functions/domparse.js', ['xhrdav.lib.functions.DomParse'], ['xhrdav.lib.Config', 'xhrdav.lib.DomHandler', 'xhrdav.lib.DomParser']);
 goog.addDependency('../../../scripts/httpstatus.js', ['xhrdav.lib.HttpStatus'], []);
-goog.addDependency('../../../scripts/rawdomhandler.js', ['xhrdav.lib.RawDomHandler'], ['xhrdav.lib.Config', 'xhrdav.lib.DomHandler']);
-goog.addDependency('../../../scripts/rawmultistatusdomhandler.js', ['xhrdav.lib.RawMultiStatusDomHandler'], ['xhrdav.lib.Config', 'xhrdav.lib.DomHandler']);

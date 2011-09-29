@@ -72,7 +72,7 @@
         asyncContinue();
       };
 
-      dav.propfind(dir, assertList, {depth: 0}, goog.partial(xhrLogging, logger));
+      dav.propfind(dir, assertList, {depth: 1}, goog.partial(xhrLogging, logger));
     }
 
     function testCreateAndDelete() {
