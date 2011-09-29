@@ -1,4 +1,16 @@
 
+0.0.7 / 2011-09-30 
+==================
+
+  * Revert require XhrManager
+  * Merge branch 'feature/errorObj' into develop
+  * Modified error proc in upload method.
+  * update dependency
+  * Add errors to config
+  * Add Errors object
+  * Merge branch 'release/v0.0.6' into develop
+  * update changelog
+
 0.0.6 / 2011-09-29 
 ==================
 
