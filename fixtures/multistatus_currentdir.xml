@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<D:multistatus xmlns:D="DAV:">
+<D:multistatus xmlns:D="DAV:" xmlns:ns0="DAV:">
 <D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">
 <D:href>/mydav/</D:href>
 <D:propstat>
 <D:prop>
 <lp1:resourcetype><D:collection/></lp1:resourcetype>
-<lp1:creationdate>2011-09-25T00:56:22Z</lp1:creationdate>
-<lp1:getlastmodified>Sun, 25 Sep 2011 00:56:22 GMT</lp1:getlastmodified>
-<lp1:getetag>"4b7f638-ee-4adb982cef980"</lp1:getetag>
+<lp1:creationdate>2011-09-28T06:44:40Z</lp1:creationdate>
+<lp1:getlastmodified>Wed, 28 Sep 2011 06:44:40 GMT</lp1:getlastmodified>
+<lp1:getetag>"4b7f638-110-4adfab9f34600"</lp1:getetag>
 <D:supportedlock>
 <D:lockentry>
 <D:lockscope><D:exclusive/></D:lockscope>
@@ -29,10 +28,10 @@
 <D:propstat>
 <D:prop>
 <lp1:resourcetype/>
-<lp1:creationdate>2011-09-15T07:56:38Z</lp1:creationdate>
+<lp1:creationdate>2011-09-28T06:26:57Z</lp1:creationdate>
 <lp1:getcontentlength>4096</lp1:getcontentlength>
-<lp1:getlastmodified>Thu, 15 Sep 2011 07:56:38 GMT</lp1:getlastmodified>
-<lp1:getetag>"4d363df-1000-4acf63762d980"</lp1:getetag>
+<lp1:getlastmodified>Wed, 28 Sep 2011 06:26:57 GMT</lp1:getlastmodified>
+<lp1:getetag>"62a7ce3-1000-4adfa7a972e40"</lp1:getetag>
 <lp2:executable>F</lp2:executable>
 <D:supportedlock>
 <D:lockentry>
@@ -51,14 +50,14 @@
 </D:propstat>
 </D:response>
 <D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">
-<D:href>/mydav/image.jpg</D:href>
+<D:href>/mydav/.DS_Store</D:href>
 <D:propstat>
 <D:prop>
 <lp1:resourcetype/>
-<lp1:creationdate>2011-09-24T12:07:06Z</lp1:creationdate>
-<lp1:getcontentlength>6150</lp1:getcontentlength>
-<lp1:getlastmodified>Sat, 24 Sep 2011 12:07:06 GMT</lp1:getlastmodified>
-<lp1:getetag>"5cd7e2d-1806-4adaec3b24e80"</lp1:getetag>
+<lp1:creationdate>2011-09-28T06:41:30Z</lp1:creationdate>
+<lp1:getcontentlength>6148</lp1:getcontentlength>
+<lp1:getlastmodified>Wed, 28 Sep 2011 06:41:30 GMT</lp1:getlastmodified>
+<lp1:getetag>"62a7cb6-1804-4adfaaea01a80"</lp1:getetag>
 <lp2:executable>F</lp2:executable>
 <D:supportedlock>
 <D:lockentry>
@@ -71,7 +70,30 @@
 </D:lockentry>
 </D:supportedlock>
 <D:lockdiscovery/>
-<D:getcontenttype>image/jpeg</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/mydav/foo/</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:creationdate>2011-09-28T06:26:02Z</lp1:creationdate>
+<lp1:getlastmodified>Wed, 28 Sep 2011 06:26:02 GMT</lp1:getlastmodified>
+<lp1:getetag>"62a7cb9-44-4adfa774ff280"</lp1:getetag>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+<D:lockentry>
+<D:lockscope><D:shared/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>httpd/unix-directory</D:getcontenttype>
 </D:prop>
 <D:status>HTTP/1.1 200 OK</D:status>
 </D:propstat>
@@ -81,10 +103,10 @@
 <D:propstat>
 <D:prop>
 <lp1:resourcetype/>
-<lp1:creationdate>2011-09-15T07:56:38Z</lp1:creationdate>
+<lp1:creationdate>2011-09-28T06:26:57Z</lp1:creationdate>
 <lp1:getcontentlength>111093</lp1:getcontentlength>
-<lp1:getlastmodified>Thu, 15 Sep 2011 07:56:38 GMT</lp1:getlastmodified>
-<lp1:getetag>"4d363da-1b1f5-4acf63762d980"</lp1:getetag>
+<lp1:getlastmodified>Wed, 28 Sep 2011 06:26:57 GMT</lp1:getlastmodified>
+<lp1:getetag>"62a7cdb-1b1f5-4adfa7a972e40"</lp1:getetag>
 <lp2:executable>F</lp2:executable>
 <D:supportedlock>
 <D:lockentry>
@@ -107,9 +129,9 @@
 <D:propstat>
 <D:prop>
 <lp1:resourcetype><D:collection/></lp1:resourcetype>
-<lp1:creationdate>2011-09-15T12:17:51Z</lp1:creationdate>
-<lp1:getlastmodified>Thu, 15 Sep 2011 12:17:51 GMT</lp1:getlastmodified>
-<lp1:getetag>"4b83ded-aa-4acf9dd91d9c0"</lp1:getetag>
+<lp1:creationdate>2011-09-28T06:27:17Z</lp1:creationdate>
+<lp1:getlastmodified>Wed, 28 Sep 2011 06:27:17 GMT</lp1:getlastmodified>
+<lp1:getetag>"62a7ca6-88-4adfa7bc85b40"</lp1:getetag>
 <D:supportedlock>
 <D:lockentry>
 <D:lockscope><D:exclusive/></D:lockscope>
@@ -127,13 +149,15 @@
 </D:propstat>
 </D:response>
 <D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">
-<D:href>/mydav/%e6%97%a5%e6%9c%ac%e8%aa%9e%20%e3%83%95%e3%82%a9%e3%83%ab%e3%82%bf%e3%82%99/</D:href>
+<D:href>/mydav/testwebdav.txt</D:href>
 <D:propstat>
 <D:prop>
-<lp1:resourcetype><D:collection/></lp1:resourcetype>
-<lp1:creationdate>2011-09-21T16:09:42Z</lp1:creationdate>
-<lp1:getlastmodified>Wed, 21 Sep 2011 16:09:42 GMT</lp1:getlastmodified>
-<lp1:getetag>"587f81d-44-4ad75cdc71d80"</lp1:getetag>
+<lp1:resourcetype/>
+<lp1:creationdate>2011-09-28T06:26:57Z</lp1:creationdate>
+<lp1:getcontentlength>21</lp1:getcontentlength>
+<lp1:getlastmodified>Wed, 28 Sep 2011 06:26:57 GMT</lp1:getlastmodified>
+<lp1:getetag>"62a7cd7-15-4adfa7a972e40"</lp1:getetag>
+<lp2:executable>F</lp2:executable>
 <D:supportedlock>
 <D:lockentry>
 <D:lockscope><D:exclusive/></D:lockscope>
@@ -145,7 +169,7 @@
 </D:lockentry>
 </D:supportedlock>
 <D:lockdiscovery/>
-<D:getcontenttype>httpd/unix-directory</D:getcontenttype>
+<D:getcontenttype>text/plain</D:getcontenttype>
 </D:prop>
 <D:status>HTTP/1.1 200 OK</D:status>
 </D:propstat>

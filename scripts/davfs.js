@@ -14,23 +14,45 @@ goog.require('xhrdav.lib.Client');
  * @constructor
  */
 xhrdav.lib.DavFs = function() {
-  this.appname_ = 'hoge';
 };
 goog.addSingletonGetter(xhrdav.lib.DavFs);
-
-xhrdav.lib.DavFs.OBJNAME = 'xhrdav.lib.DavFs';
-
-xhrdav.lib.DavFs.Instance = xhrdav.lib.DavFs.getInstance();
 
 /**
  * Init with calling low-level client API.
  *
- * @param {Object=} options URI Parameters(options: scheme, domain, port)
+ * Example: Create WebDAV Client Instance.
+ *   var fs = xhrdav.lib.DavFs.getInstance().initialize();
+ *   => fs#client_ = new xhrdav.lib.Client();
+ *   # Reinitialize
+ *   fs.initialize();
+ *
+ * @param {Object=} options davclient Parameters(options: scheme, domain, port)
  * @return {xhrdav.lib.DavFs}
  */
 xhrdav.lib.DavFs.prototype.initialize = function(options) {
+  /** @type {xhrdav.lib.Config} */
+  this.config_ = xhrdav.lib.Config.getInstance();
+  /** @type {xhrdav.lib.Client} */
   this.client_ = new xhrdav.lib.Client(options);
+  this.client_.setXmlParseFunction(
+    goog.getObjectByName(this.config_.xmlParseFuncObj));
   return this;
+};
+
+/**
+ * Get and Create Connection xhrdav.lib.Client.
+ *
+ * @param {boolean=} refresh Refresh connection object.
+ * @param {Object=} options URI Parameters(options: scheme, domain, port)
+ * @return {xhrdav.lib.Client}
+ */
+xhrdav.lib.DavFs.prototype.connection = function(refresh, options) {
+  if (refresh) {
+    this.client_ = new xhrdav.lib.Client(options);
+    this.client_.setXmlParseFunction(
+      goog.getObjectByName(this.config_.xmlParseFuncObj));
+  }
+  return this.client_;
 };
 
 /**
@@ -103,10 +125,12 @@ xhrdav.lib.DavFs.prototype.write = function(
     options, debugHandler);
 };
 
-/* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
-goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs);
+/* Entry Point for closure compiler */
+goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs.getInstance);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'initialize',
   xhrdav.lib.DavFs.prototype.initialize);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'connection',
+  xhrdav.lib.DavFs.prototype.connection);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'listDir',
   xhrdav.lib.DavFs.prototype.listDir);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'write',

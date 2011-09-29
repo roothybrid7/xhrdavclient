@@ -9,7 +9,6 @@ goog.require('xhrdav.lib.Config');
 goog.require('goog.dom');
 goog.require('goog.Uri');
 goog.require('goog.net.XhrIo');
-goog.require('goog.net.XhrManager');
 
 /**
  * WebDAV Client library by Google Closure library.
@@ -33,8 +32,11 @@ xhrdav.lib.Client.prototype.initialize_ = function(options) {
     options = {};
   }
   var locationUrl = goog.Uri.parse(location);
+  /** @type {string} */
   this.scheme_ = options.scheme || locationUrl.getScheme() || 'http';
+  /** @type {string} */
   this.domain_ = options.domain || locationUrl.getDomain();
+  /** @type {number} */
   this.port_ = options.port || locationUrl.getPort() || 80;
 };
 
@@ -61,6 +63,24 @@ xhrdav.lib.Client.prototype.parseHeaders_ = function(headerStrings) {
 };
 
 /**
+ * Have xml parse function? <goog.mixin(this, parseFunc)>
+ *
+ * @return {boolean} true: can parse xml, false: can't parse xml.
+ */
+xhrdav.lib.Client.prototype.canParseXml = function() {
+  return (goog.isDef(this.parseXml)) ? true : false;
+};
+
+/**
+ * Set xml parser function Object.
+ *
+ * @param {Object} funcObj Xml Parse function Object(defined function: parseXml).
+ */
+xhrdav.lib.Client.prototype.setXmlParseFunction = function(funcObj) {
+  goog.mixin(this, funcObj);
+};
+
+/**
  * Callback XHTTPRequest Processing
  *
  * @private
@@ -78,10 +98,12 @@ xhrdav.lib.Client.prototype.processRequest_ = function(
   var xssGuard = 'while(1);';
   var headers = this.parseHeaders_(xhr.getAllResponseHeaders());
   var content = xhr.getResponse(xssGuard);
-  if (xhr.getStatus() == 207) {
+//  if (xhr.getStatus() == 207) {
+  if (goog.string.contains(headers['Content-Type'], 'xml')) {
     content = xhr.getResponseXml(xssGuard);
+    if (this.canParseXml()) content = this.parseXml(content);
   }
-  handler(xhr.getStatus() || 500, content, headers);
+  if (handler) handler(xhr.getStatus() || 500, content, headers);
 };
 
 /**
@@ -370,6 +392,7 @@ xhrdav.lib.Client.prototype.lock = function(path, handler, options, debugHandler
  */
 xhrdav.lib.Client.prototype.mkcol = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
+  path = goog.string.endsWith(path, '/') ? path : path + '/'; // Preserve GET
   var url = this.generateUrl_(path);
 //      var url = goog.Uri.parse('http://localhost:8001/foo/');
   this.request_('MKCOL', url, handler, options, debugHandler);
@@ -412,7 +435,7 @@ xhrdav.lib.Client.prototype._delete = function(
  * @param {Object=} options Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-xhrdav.lib.Client.prototype.copyOrMoveDir_ = function(
+xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
   method, path, dstPath, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   var url = this.generateUrl_(path);
@@ -451,11 +474,11 @@ xhrdav.lib.Client.prototype.copyOrMoveDir_ = function(
  *     => 201, string: '<html> ... </html>', #Object: {'Location': 'http:// ...}
  *   }, options);
  *
- * @see #copyOrMoveDir_
+ * @see #copyOrMovePath_
  */
 xhrdav.lib.Client.prototype.move = function(
   path, dstPath, handler, options, debugHandler) {
-  this.copyOrMoveDir_('MOVE', path, dstPath, handler, options, debugHandler);
+  this.copyOrMovePath_('MOVE', path, dstPath, handler, options, debugHandler);
 };
 
 /**
@@ -472,22 +495,35 @@ xhrdav.lib.Client.prototype.move = function(
  *     => 201, string: '<html> ... </html>', #Object: {'Location': 'http:// ...}
  *   }, options);
  *
- * @see #copyOrMoveDir_
+ * @see #copyOrMovePath_
  */
 xhrdav.lib.Client.prototype.copy = function(
   path, dstPath, handler, options, debugHandler) {
-  this.copyOrMoveDir_('COPY', path, dstPath, handler, options, debugHandler);
+  this.copyOrMovePath_('COPY', path, dstPath, handler, options, debugHandler);
 };
 
-/* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
+/* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.Client', xhrdav.lib.Client);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'options', xhrdav.lib.Client.prototype.options);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'head', xhrdav.lib.Client.prototype.head);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'get', xhrdav.lib.Client.prototype.get);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'put', xhrdav.lib.Client.prototype.put);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'propfind', xhrdav.lib.Client.prototype.propfind);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'mkcol', xhrdav.lib.Client.prototype.mkcol);
-goog.exportProperty(xhrdav.lib.Client.prototype, '_delete', xhrdav.lib.Client.prototype._delete);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'move', xhrdav.lib.Client.prototype.move);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'copy', xhrdav.lib.Client.prototype.copy);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'canParseXml',
+  xhrdav.lib.Client.prototype.canParseXml);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'setXmlParseFunction',
+  xhrdav.lib.Client.prototype.setXmlParseFunction);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'options',
+  xhrdav.lib.Client.prototype.options);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'head',
+  xhrdav.lib.Client.prototype.head);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'get',
+  xhrdav.lib.Client.prototype.get);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'put',
+  xhrdav.lib.Client.prototype.put);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'propfind',
+  xhrdav.lib.Client.prototype.propfind);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'mkcol',
+  xhrdav.lib.Client.prototype.mkcol);
+goog.exportProperty(xhrdav.lib.Client.prototype, '_delete',
+  xhrdav.lib.Client.prototype._delete);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'move',
+  xhrdav.lib.Client.prototype.move);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'copy',
+  xhrdav.lib.Client.prototype.copy);
 
