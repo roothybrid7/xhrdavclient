@@ -9,7 +9,6 @@ goog.require('xhrdav.lib.Config');
 goog.require('goog.dom');
 goog.require('goog.Uri');
 goog.require('goog.net.XhrIo');
-goog.require('goog.net.XhrManager');
 
 /**
  * WebDAV Client library by Google Closure library.
@@ -503,7 +502,7 @@ xhrdav.lib.Client.prototype.copy = function(
   this.copyOrMovePath_('COPY', path, dstPath, handler, options, debugHandler);
 };
 
-/* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
+/* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.Client', xhrdav.lib.Client);
 goog.exportProperty(xhrdav.lib.Client.prototype, 'canParseXml',
   xhrdav.lib.Client.prototype.canParseXml);

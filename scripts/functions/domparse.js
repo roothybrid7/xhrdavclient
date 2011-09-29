@@ -5,7 +5,6 @@
  */
 
 goog.provide('xhrdav.lib.functions.domparse');
-goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.DomParser');
 goog.require('xhrdav.lib.DomHandler');
 

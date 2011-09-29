@@ -5,7 +5,6 @@
  */
 
 goog.provide('xhrdav.lib.DomHandler');
-goog.require('xhrdav.lib.Config');
 
 /**
  * XML Dom handler

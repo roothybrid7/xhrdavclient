@@ -144,7 +144,7 @@ xhrdav.lib.HttpStatus.text = {
   1223: 'Unknown'
 }
 
-/* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
+/* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.HttpStatus', xhrdav.lib.HttpStatus);
 goog.exportSymbol('xhrdav.lib.HttpStatus.text', xhrdav.lib.HttpStatus.text);
 

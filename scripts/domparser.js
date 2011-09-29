@@ -5,7 +5,7 @@
  */
 
 goog.provide('xhrdav.lib.DomParser');
-goog.require('xhrdav.lib.Config');
+goog.require('goog.functions');
 goog.require('goog.dom.xml');
 
 /**
@@ -120,7 +120,7 @@ xhrdav.lib.DomParser.prototype.parseNodeName_ = function(nodeName) {
     .replace(/#text/, this.textNodeName_);
 };
 
-/* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
+/* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.DomParser', xhrdav.lib.DomParser);
 goog.exportProperty(xhrdav.lib.DomParser.prototype, 'initialize',
   xhrdav.lib.DomParser.prototype.initialize);
