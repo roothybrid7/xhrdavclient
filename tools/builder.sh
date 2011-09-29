@@ -59,6 +59,7 @@ NAMESPACES=(
   'xhrdav.lib.DavFs'
   'xhrdav.lib.DomHandler'
   'xhrdav.lib.DomParser'
+  'xhrdav.lib.Errors'
   'xhrdav.lib.functions'
   'xhrdav.lib.functions.domparse'
   'xhrdav.lib.HttpStatus'
