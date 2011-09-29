@@ -27,32 +27,41 @@
   <script type="text/javascript">
     var dir = '/mydav/';
 
-    var initData;
     var func = xhrdav.lib.functions.DomParse;
 
     var dav = new xhrdav.lib.Client();
     var httpStatus = xhrdav.lib.HttpStatus;
     var httpStatusText = xhrdav.lib.HttpStatus.text;
 
-    // Load fixture by jsonp
-    var fixtureData;
-    var multistatusCurrentdir = function(json) {
-      fixtureData = json;
-      initData = goog.dom.xml.loadXml(
-        fixtureData['xml'].split('\n').join(''));
-//      console.log(initData);
-      var doc = func.ParseRawMultiStatus(initData);
-//      console.log(doc);
-      var funcName = 'multistatusCurrentDirParseRaw';
+    var multiCurrXml = '../fixtures/multistatus_currentdir.js';
+    var multiOnlyXml = '../fixtures/multistatus_dironly.js';
+
+    var loadDataAndUpload = function(funcName, xml) {
+      var doc = func.ParseRawMultiStatus(xml);
+////      console.log(doc);
       var obj = {json: doc};
       var jsonData = goog.json.serialize(obj);
       var jsonpData = goog.string.buildString(funcName, '(', jsonData, ')');
       var uploadPath = goog.string.path.normalizePath(
         goog.string.path.join(dir, funcName + '.js'));
       dav.put(uploadPath, jsonpData);
-    }
-    loadJson('../fixtures/multistatus_currentdir.js');
+    };
 
+    var multistatusCurrentdir = function(json) {
+      var xml = goog.dom.xml.loadXml(
+        json['xml'].split('\n').join(''));
+//      console.log(xml);
+      loadDataAndUpload('multistatusCurrentDirParseRaw', xml);
+    }
+    loadJson(multiCurrXml);
+
+    var multistatusDironly = function(json) {
+      var xml = goog.dom.xml.loadXml(
+        json['xml'].split('\n').join(''));
+//      console.log(xml);
+      loadDataAndUpload('multistatusDironlyParseRaw', xml);
+    };
+    loadJson(multiOnlyXml);
   </script>
 </body>
 </html>
