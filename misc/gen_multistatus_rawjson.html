@@ -37,7 +37,7 @@
     var multiOnlyXml = '../fixtures/multistatus_dironly.js';
 
     var loadDataAndUpload = function(funcName, xml) {
-      var doc = func.getRawObjWithParseingXml(xml);
+      var doc = func.parseXml(xml);
 ////      console.log(doc);
       var obj = {json: doc};
       var jsonData = goog.json.serialize(obj);

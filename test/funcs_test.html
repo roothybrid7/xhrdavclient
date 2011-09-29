@@ -55,9 +55,9 @@
       var testId = 'MultiStatus';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var notGiven = func.getRawObjWithParseingXml();
-      var nullGiven = func.getRawObjWithParseingXml(null);
-      var multiStatus = func.getRawObjWithParseingXml(initData);
+      var notGiven = func.parseXml();
+      var nullGiven = func.parseXml(null);
+      var multiStatus = func.parseXml(initData);
 
       assertNotNullNorUndefined('Returing Obj with not given?', notGiven);
       assertNotNullNorUndefined('Returing Obj with null?', nullGiven);
