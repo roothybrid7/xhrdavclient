@@ -33,7 +33,7 @@ goog.addSingletonGetter(xhrdav.lib.Errors);
  * @return {boolean} has request error.
  */
 xhrdav.lib.Errors.prototype.hasRequest = function() {
-  return !!(goog.object.getCount(this.request_));
+  return !goog.object.isEmpty(this.request_);
 };
 
 /**
