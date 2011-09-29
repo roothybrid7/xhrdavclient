@@ -45,6 +45,7 @@
     }
 
     function tearDown() {
+      initData = null;
       var dav = new xhrdav.lib.Client();
 
       asyncTestCase.waitForAsync('tearDown');

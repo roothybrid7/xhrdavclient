@@ -39,19 +39,18 @@
       goog.string.path.join(parentDir, 'testwebdav.txt'));
 
     function setUp() {
-      asyncTestCase.waitForAsync('setUp');
+      initData = 'This is a WebDAV Test.';
       var dav = new xhrdav.lib.Client();
-      var processRequest = function(e) {
-        var xhr = e.target;
-        initData = xhr.getResponse('while(1);');
-        dav.mkcol(parentDir, asyncContinue);
-      };
-      goog.net.XhrIo.send(srcFile, processRequest);
+
+      asyncTestCase.waitForAsync('setUp');
+      dav.mkcol(parentDir, asyncContinue);
     }
 
     function tearDown() {
-      asyncTestCase.waitForAsync('tearDown');
+      initData = null;
       var dav = new xhrdav.lib.Client();
+
+      asyncTestCase.waitForAsync('tearDown');
       dav._delete(parentDir, asyncContinue);
     }
 
