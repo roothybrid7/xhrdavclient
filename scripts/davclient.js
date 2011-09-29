@@ -64,6 +64,24 @@ xhrdav.lib.Client.prototype.parseHeaders_ = function(headerStrings) {
 };
 
 /**
+ * Have xml parse function? <goog.mixin(this, parseFunc)>
+ *
+ * @return {boolean} true: can parse xml, false: can't parse xml.
+ */
+xhrdav.lib.Client.prototype.canParseXml = function() {
+  return (goog.isDef(this.parseXml)) ? true : false;
+};
+
+/**
+ * Set xml parser function Object.
+ *
+ * @param {Object} funcObj Xml Parse function Object(defined function: parseXml).
+ */
+xhrdav.lib.Client.prototype.setXmlParseFunction = function(funcObj) {
+  goog.mixin(this, funcObj);
+};
+
+/**
  * Callback XHTTPRequest Processing
  *
  * @private
@@ -81,8 +99,10 @@ xhrdav.lib.Client.prototype.processRequest_ = function(
   var xssGuard = 'while(1);';
   var headers = this.parseHeaders_(xhr.getAllResponseHeaders());
   var content = xhr.getResponse(xssGuard);
-  if (xhr.getStatus() == 207) {
+//  if (xhr.getStatus() == 207) {
+  if (goog.string.contains(headers['Content-Type'], 'xml')) {
     content = xhr.getResponseXml(xssGuard);
+    if (this.canParseXml()) content = this.parseXml(content);
   }
   if (handler) handler(xhr.getStatus() || 500, content, headers);
 };
@@ -373,6 +393,7 @@ xhrdav.lib.Client.prototype.lock = function(path, handler, options, debugHandler
  */
 xhrdav.lib.Client.prototype.mkcol = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
+  path = goog.string.endsWith(path, '/') ? path : path + '/'; // Preserve GET
   var url = this.generateUrl_(path);
 //      var url = goog.Uri.parse('http://localhost:8001/foo/');
   this.request_('MKCOL', url, handler, options, debugHandler);
