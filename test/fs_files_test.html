@@ -54,14 +54,28 @@
       dav._delete(parentDir, asyncContinue);
     }
 
+    function testConnection() {
+      var testId = 'Connection';
+      var logger = goog.debug.Logger.getLogger(testId);
+      var mgr = new goog.net.XhrManager();
+      var fs = xhrdav.lib.DavFs.getInstance().initialize();
+      var conn = fs.connection();
+      assertNotNullNorUndefined('Create Connection?', conn);
+      var conn2 = fs.connection();
+      assertEquals('Same Connection?', conn, conn2);
+      var conn3 = fs.connection(true);
+      assertNotEquals('Same Connection?', conn, conn3);
+    };
+
     function testUploadFile() {
       var testId = 'UpdateFile()';
-      asyncTestCase.waitForAsync(testId);
       var logger = goog.debug.Logger.getLogger(testId);
       var mgr = new goog.net.XhrManager();
       var fs = xhrdav.lib.DavFs.getInstance().initialize();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
+
+      asyncTestCase.waitForAsync(testId);
 
       var assertUploadFile = function(errors) {
       logger.config(errors);

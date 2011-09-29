@@ -505,13 +505,26 @@ xhrdav.lib.Client.prototype.copy = function(
 
 /* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
 goog.exportSymbol('xhrdav.lib.Client', xhrdav.lib.Client);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'options', xhrdav.lib.Client.prototype.options);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'head', xhrdav.lib.Client.prototype.head);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'get', xhrdav.lib.Client.prototype.get);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'put', xhrdav.lib.Client.prototype.put);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'propfind', xhrdav.lib.Client.prototype.propfind);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'mkcol', xhrdav.lib.Client.prototype.mkcol);
-goog.exportProperty(xhrdav.lib.Client.prototype, '_delete', xhrdav.lib.Client.prototype._delete);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'move', xhrdav.lib.Client.prototype.move);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'copy', xhrdav.lib.Client.prototype.copy);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'canParseXml',
+  xhrdav.lib.Client.prototype.canParseXml);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'setXmlParseFunction',
+  xhrdav.lib.Client.prototype.setXmlParseFunction);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'options',
+  xhrdav.lib.Client.prototype.options);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'head',
+  xhrdav.lib.Client.prototype.head);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'get',
+  xhrdav.lib.Client.prototype.get);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'put',
+  xhrdav.lib.Client.prototype.put);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'propfind',
+  xhrdav.lib.Client.prototype.propfind);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'mkcol',
+  xhrdav.lib.Client.prototype.mkcol);
+goog.exportProperty(xhrdav.lib.Client.prototype, '_delete',
+  xhrdav.lib.Client.prototype._delete);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'move',
+  xhrdav.lib.Client.prototype.move);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'copy',
+  xhrdav.lib.Client.prototype.copy);
 
