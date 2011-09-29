@@ -24,9 +24,9 @@ usage() {
   echo "Options:"
   echo "  -a: Compiling scripts with 'ADVANCED_OPTIMIZATIONS' by closure compiler"
   echo "  -f: output formatting(PRETTY_PRINT, etc.)"
-  echo "  -g: Generate integrate scripts WITHOUT OPTIMIZATIONS [DEFAULT]"
+  echo "  -g: Generate integrate scripts WITHOUT OPTIMIZATIONS"
   echo "  -h: Print help"
-  echo "  -s: Compiling scripts with 'SIMPLE_OPTIMIZATIONS' by closure compiler"
+  echo "  -s: Compiling scripts with 'SIMPLE_OPTIMIZATIONS' by closure compiler [DEFAULT]"
   echo "  -w: Compiling scripts with 'WHITESPACE_ONLY' by closure compiler"
   echo "  -r: Release build(goog.DEBUG=false)"
 } 1>&2
@@ -36,8 +36,8 @@ do
   case $OPT in
   "a") FLG_ADVANCED="TRUE" ;;
   "f") FLG_FORMAT="TRUE"; FORMAT_PRINT="$OPTARG" ;;
-  "g") FLG_GENERAGE="TRUE" ;;     # DEFAULT
-  "s") FLG_SIMPLE="TRUE" ;;
+  "g") FLG_GENERAGE="TRUE" ;;
+  "s") FLG_SIMPLE="TRUE" ;;     # DEFAULT
   "r") FLG_RELEASE="TRUE" ;;
   "w") FLG_WHITESPACE_ONLY="TRUE" ;;
   "h"|* ) usage
@@ -59,7 +59,8 @@ NAMESPACES=(
   'xhrdav.lib.DavFs'
   'xhrdav.lib.DomHandler'
   'xhrdav.lib.DomParser'
-  'xhrdav.lib.functions.DomParse'
+  'xhrdav.lib.functions'
+  'xhrdav.lib.functions.domparse'
   'xhrdav.lib.HttpStatus'
 )
 
@@ -69,14 +70,14 @@ for d in ${ROOTS[@]}; do rootdir+=" --root=$d"; done
 entries=
 for n in ${NAMESPACES[@]}; do entries+=" -n $n"; done
 
-if [ "$FLG_ADVANCED" = "TRUE" ]; then
+if [ "$FLG_GENERAGE" = "TRUE" ]; then
+  options='-o script'
+elif [ "$FLG_ADVANCED" = "TRUE" ]; then
   options='-c tools/compiler/compiler.jar -f "--compilation_level=ADVANCED_OPTIMIZATIONS" -o compiled'
-elif [ "$FLG_SIMPLE" = "TRUE" ]; then
-  options='-c tools/compiler/compiler.jar -f "--compilation_level=SIMPLE_OPTIMIZATIONS" -o compiled'
 elif [ "$FLG_WHITESPACE_ONLY" = "TRUE" ]; then
   options='-c tools/compiler/compiler.jar -f "--compilation_level=WHITESPACE_ONLY" -o compiled'
 else
-  options='-o script'
+  options='-c tools/compiler/compiler.jar -f "--compilation_level=SIMPLE_OPTIMIZATIONS" -o compiled'
 fi
 
 # Release build with debug off
