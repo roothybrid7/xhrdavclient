@@ -7,6 +7,7 @@
 goog.provide('xhrdav.lib');
 goog.provide('xhrdav.lib.Config');
 goog.require('goog.object');
+goog.require('goog.functions');
 goog.require('goog.string.path');
 goog.require('xhrdav.lib.string');
 goog.require('xhrdav.lib.HttpStatus');

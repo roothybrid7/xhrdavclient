@@ -10,6 +10,7 @@
   <div id="runner"></div>
   <script type="text/javascript">
     goog.require('goog.testing.MultiTestRunner');
+    goog.require('goog.dom');
   </script>
   <script type="text/javascript">
     var testRunner = new goog.testing.MultiTestRunner();
@@ -18,8 +19,9 @@
       'test/files_test.html',
       'test/parsexml_test.html',
       'test/fs_files_test.html',
-      'test/funcs_test.html']);
-    testRunner.setPoolSize(5);
+      'test/funcs_test.html',
+      'test/clientwparser.html']);
+    testRunner.setPoolSize(3);
     testRunner.render(document.getElementById('runner'));
   </script>
 </body>
