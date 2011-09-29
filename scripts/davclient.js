@@ -9,6 +9,7 @@ goog.require('xhrdav.lib.Config');
 goog.require('goog.dom');
 goog.require('goog.Uri');
 goog.require('goog.net.XhrIo');
+goog.require('goog.net.XhrManager');
 
 /**
  * WebDAV Client library by Google Closure library.
