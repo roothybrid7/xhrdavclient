@@ -26,12 +26,16 @@ goog.addSingletonGetter(xhrdav.lib.DavFs);
  *   # Reinitialize
  *   fs.initialize();
  *
- * @param {Object=} options URI Parameters(options: scheme, domain, port)
+ * @param {Object=} options davclient Parameters(options: scheme, domain, port)
  * @return {xhrdav.lib.DavFs}
  */
 xhrdav.lib.DavFs.prototype.initialize = function(options) {
+  /** @type {xhrdav.lib.Config} */
+  this.config_ = xhrdav.lib.Config.getInstance();
   /** @type {xhrdav.lib.Client} */
   this.client_ = new xhrdav.lib.Client(options);
+  this.client_.setXmlParseFunction(
+    goog.getObjectByName(this.config_.xmlParseFuncObj));
   return this;
 };
 
@@ -43,7 +47,11 @@ xhrdav.lib.DavFs.prototype.initialize = function(options) {
  * @return {xhrdav.lib.Client}
  */
 xhrdav.lib.DavFs.prototype.connection = function(refresh, options) {
-  if (refresh) this.client_ = new xhrdav.lib.Client(options);
+  if (refresh) {
+    this.client_ = new xhrdav.lib.Client(options);
+    this.client_.setXmlParseFunction(
+      goog.getObjectByName(this.config_.xmlParseFuncObj));
+  }
   return this.client_;
 };
 
@@ -117,7 +125,7 @@ xhrdav.lib.DavFs.prototype.write = function(
     options, debugHandler);
 };
 
-/* Entry Point for closure compiler "ADVANCED_OPTIMIZATIONS" option */
+/* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs.getInstance);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'initialize',
   xhrdav.lib.DavFs.prototype.initialize);

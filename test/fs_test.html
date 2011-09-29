@@ -39,6 +39,15 @@
       var conn3 = fs.connection(true);
       assertNotEquals('Same Connection?', conn, conn3);
     };
+
+    function testParseXmlSet() {
+      var testId = 'ParseXmlSet';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      var fs = xhrdav.lib.DavFs.getInstance().initialize();
+      var conn = fs.connection();
+      assertTrue('Can ParseXml?', conn.canParseXml());
+    }
   </script>
 </body>
 </html>
