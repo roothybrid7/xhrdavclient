@@ -1,4 +1,54 @@
 
+0.0.6 / 2011-09-29 
+==================
+
+  * modified namespace in builder script
+  * Fixed Mixin parse function test.
+  * Fixed namespace and require
+  * Add Lib config class
+  * Add require function list script
+  * refactor testcase
+  * modified dependency
+  * Add refresh low-level client api
+  * refactor testcase
+  * Add Mixin function of parseXml to davclient
+  * Refactor testcase
+  * Rename method
+  * Refactor
+  * remove files
+  * modified dependency
+  * Add xml2json testdata and script
+  * parse test data script
+  * refactor name
+  * fixed namespace
+  * remove data
+  * update testdata
+  * Move test data.
+  * Refactor name
+  * rename method
+  * copy to example data from test data dir.
+  * Add multi-status response xml test data.
+  * Fixed check callback handler and examples directory
+  * Add namespace
+  * Merge branch 'feature/pathNormarizeInTestCase' into develop
+  * Refactor for Mix-in parse functions
+  * test mixin feature
+  * fixed normalize path and singleton instance
+  * Add library class function
+  * remove test file
+  * Merge branch 'feature/parseFunctionInFuctionsScript' into develop
+  * Add test utils functions
+  * refactor test functions
+  * Add fixture for multistatus xml
+  * Add parse Multi-Status xml function
+  * refactor
+  * Merge branch 'feature/filelist1' into develop
+  * Add static functions script
+  * Refactor parser
+  * refactor and testcase bugfixed
+  * Merge branch 'release/v0.0.5' into develop
+  * update changelog
+
 0.0.5 / 2011-09-26 
 ==================
 
