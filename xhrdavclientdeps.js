@@ -10,3 +10,4 @@ goog.addDependency('../../../scripts/errors.js', ['xhrdav.lib.Errors'], ['goog.a
 goog.addDependency('../../../scripts/functions.js', ['xhrdav.lib.functions'], ['xhrdav.lib.functions.domparse']);
 goog.addDependency('../../../scripts/functions/domparse.js', ['xhrdav.lib.functions.domparse'], ['xhrdav.lib.DomHandler', 'xhrdav.lib.DomParser']);
 goog.addDependency('../../../scripts/httpstatus.js', ['xhrdav.lib.HttpStatus'], []);
+goog.addDependency('../../../scripts/resource.js', ['xhrdav.lib.Resource'], ['goog.array', 'goog.object', 'xhrdav.lib.Config']);

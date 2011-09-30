@@ -11,6 +11,7 @@ goog.require('xhrdav.lib.Client');
 /**
  * high-level WebDAV client API Singleton
  *
+ * @private
  * @constructor
  */
 xhrdav.lib.DavFs = function() {
