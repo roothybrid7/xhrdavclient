@@ -1,4 +1,12 @@
 
+0.0.8 / 2011-09-30 
+==================
+
+  * webdav dragdrop file with upload sample.
+  * Add resource model class
+  * Merge branch 'release/v0.0.7' into develop
+  * update changelog
+
 0.0.7 / 2011-09-30 
 ==================
 
