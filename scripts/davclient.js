@@ -158,8 +158,8 @@ xhrdav.lib.Client.prototype.generateUrl_ = function(path) {
 xhrdav.lib.Client.prototype.request_ = function(
   method, url, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
-  if (goog.isDefAndNotNull(options.request)) {
-    options.request.send(
+  if (goog.isDefAndNotNull(options.xhrMgr)) {
+    options.xhrMgr.send(
       options.xhrId || goog.string.createUniqueString(),
       url,
       method,
