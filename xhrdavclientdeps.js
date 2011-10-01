@@ -12,3 +12,4 @@ goog.addDependency('../../../scripts/functions/domparse.js', ['xhrdav.lib.functi
 goog.addDependency('../../../scripts/httpstatus.js', ['xhrdav.lib.HttpStatus'], []);
 goog.addDependency('../../../scripts/resource.js', ['xhrdav.lib.Resource'], ['goog.array', 'goog.object']);
 goog.addDependency('../../../scripts/resourcebuilder.js', ['xhrdav.lib.ResourceBuilder'], ['goog.array', 'goog.object', 'xhrdav.lib.Config', 'xhrdav.lib.Resource']);
+goog.addDependency('../../../scripts/resourcegenerator.js', ['xhrdav.lib.ResourceGenerator'], ['xhrdav.lib.Config', 'xhrdav.lib.Resource']);
