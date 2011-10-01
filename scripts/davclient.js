@@ -39,6 +39,26 @@ xhrdav.lib.Client.prototype.initialize_ = function(options) {
   this.domain_ = options.domain || locationUrl.getDomain();
   /** @type {number} */
   this.port_ = options.port || locationUrl.getPort() || 80;
+  /** @type {goog.net.XhrManager} */
+  this.xhrManager_ = null;
+};
+
+/**
+ * Get XhrManager. if not craeted yet, new create it.
+ *
+ * @param {{opt_maxRetries:number=,
+ *          opt_headers:goog.structs.Map=,
+ *          opt_minCount:number=,
+ *          opt_maxCount:number=,
+ *          opt_timeoutInterval:number=}} options Create XhrManger options
+ *
+ * @return {goog.net.XhrManager}
+ */
+xhrdav.lib.Client.prototype.getXhrManager = function(options) {
+  if (goog.isNull(this.xhrManager_)) {
+    this.xhrManager_ = new goog.net.XhrManager();
+  }
+  return this.xhrManager_;
 };
 
 /**
@@ -505,6 +525,8 @@ xhrdav.lib.Client.prototype.copy = function(
 
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.Client', xhrdav.lib.Client);
+goog.exportProperty(xhrdav.lib.Client.prototype, 'getXhrManager',
+  xhrdav.lib.Client.prototype.getXhrManager);
 goog.exportProperty(xhrdav.lib.Client.prototype, 'canParseXml',
   xhrdav.lib.Client.prototype.canParseXml);
 goog.exportProperty(xhrdav.lib.Client.prototype, 'setXmlParseFunction',
