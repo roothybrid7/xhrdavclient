@@ -56,7 +56,7 @@ xhrdav.lib.Client.prototype.initialize_ = function(options) {
  */
 xhrdav.lib.Client.prototype.getXhrManager = function(options) {
   if (goog.isNull(this.xhrManager_)) {
-    this.xhrManager_ = new goog.net.XhrManager();
+    this.xhrManager_ = new goog.net.XhrManager(options);
   }
   return this.xhrManager_;
 };
