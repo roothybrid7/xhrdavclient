@@ -21,8 +21,6 @@ xhrdav.lib.ResourceGenerator = function(resource) {
   } else {
     goog.mixin(this, new xhrdav.lib.Resource());
   }
-  /** @type {string} */
-  this.destination = null;
 };
 
 /**
@@ -31,7 +29,17 @@ xhrdav.lib.ResourceGenerator = function(resource) {
  * @param {string} dest Destination path.
  */
 xhrdav.lib.ResourceGenerator.prototype.setDestination = function(dest) {
-  this.destination = dest;
+  /** @type {string} */
+  this.destination_ = dest;
+};
+
+/**
+ * Getter destination
+ *
+ * @return {string} Destination path.
+ */
+xhrdav.lib.ResourceGenerator.prototype.getDestination = function() {
+  return this.destination_ || null;
 };
 
 /**
@@ -137,6 +145,8 @@ xhrdav.lib.ResourceGenerator.prototype.move = function(
 goog.exportSymbol('xhrdav.lib.ResourceGenerator', xhrdav.lib.ResourceGenerator);
 goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'setDestination',
   xhrdav.lib.ResourceGenerator.prototype.setDestination);
+goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'getDestination',
+  xhrdav.lib.ResourceGenerator.prototype.getDestination);
 goog.exportSymbol('xhrdav.lib.ResourceGenerator.remove',
   xhrdav.lib.ResourceGenerator.remove);
 goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'remove',

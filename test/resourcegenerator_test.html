@@ -76,10 +76,12 @@
 
       var generator = new xhrdav.lib.ResourceGenerator(
         new xhrdav.lib.Resource());
+      assertTrue('Destination is empty?',
+        goog.string.isEmptySafe(generator.getDestination()));
       var destPath ='/mydav/parentGen/bar';
       generator.setDestination('/mydav/parentGen/bar');
-      assertNotNullNorUndefined('Set destination?', generator.destination);
-      assertEquals('Set destpath same?', destPath, generator.destination);
+      assertNotNullNorUndefined('Set destination?', generator.getDestination());
+      assertEquals('Set destpath same?', destPath, generator.getDestination());
     }
 
     function testSupportMethod() {
