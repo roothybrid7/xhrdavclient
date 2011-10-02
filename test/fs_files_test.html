@@ -43,6 +43,8 @@
     var dav = new xhrdav.lib.Client();
     var httpStatus = xhrdav.lib.HttpStatus;
     var httpStatusText = xhrdav.lib.HttpStatus.text;
+    var fs = xhrdav.lib.DavFs.getInstance().initialize();
+
 
     function setUp() {
       initData = 'This is a WebDAV Test.';
@@ -62,8 +64,6 @@
     function testUploadFile() {
       var testId = 'UpdateFile()';
       var logger = goog.debug.Logger.getLogger(testId);
-
-      var fs = xhrdav.lib.DavFs.getInstance().initialize();
 
       asyncTestCase.waitForAsync(testId);
 
@@ -87,8 +87,6 @@
       var testId = 'UploadMissingPath()';
       var testPath = '/notfound/dummy.txt';
       var logger = goog.debug.Logger.getLogger(testId);
-
-      var fs = xhrdav.lib.DavFs.getInstance().initialize();
 
       asyncTestCase.waitForAsync(testId);
 
@@ -114,8 +112,6 @@
       var testId = 'UploadNullData()';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var fs = xhrdav.lib.DavFs.getInstance().initialize();
-
       asyncTestCase.waitForAsync(testId);
 
       var assertUploadNull = function(errors, newLoc) {
@@ -130,6 +126,34 @@
       };
 
       fs.write(file, null, assertUploadNull, null, null, this,
+        goog.partial(xhrLogging, logger));
+    }
+
+    function testRemoveFile() {
+      var testId = 'UploadNullData()';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertRetryRemove = function(errors) {
+        assertTrue('Errors', errors.hasRequest());
+
+        asyncContinue();
+      };
+
+      var assertRemoveFile = function(errors) {
+        assertFalse('No errors', errors.hasRequest());
+
+        fs.removeFile(file, assertRetryRemove, null, null, this,
+          goog.partial(xhrLogging, logger));
+      };
+
+      var callbackUpload = function(errors, newLoc) {
+        fs.removeFile(file, assertRemoveFile, null, null, this,
+          goog.partial(xhrLogging, logger));
+      };
+
+      fs.write(file, initData, callbackUpload, null, null, this,
         goog.partial(xhrLogging, logger));
     }
   </script>

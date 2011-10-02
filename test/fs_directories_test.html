@@ -186,12 +186,12 @@
         assertNotNullNorUndefined('Create Location?', newLoc);
         logger.config('New location: ' + newLoc);
 
-        davFs.mvDir(dir, dstDir, assertRetryMoveDir, null, null, this,
+        davFs.moveDir(dir, dstDir, assertRetryMoveDir, null, null, this,
           goog.partial(xhrLogging, logger));
       };
 
       var callbackMkDir = function() {
-        davFs.mvDir(dir, dstDir, assertMoveDir, null, null, this,
+        davFs.moveDir(dir, dstDir, assertMoveDir, null, null, this,
           goog.partial(xhrLogging, logger));
       };
 
@@ -222,7 +222,7 @@
       };
 
       var callbackCpDir = function() {
-        davFs.cpDir(dir, dstDir, assertCopyDir, null, null, this,
+        davFs.copyDir(dir, dstDir, assertCopyDir, null, null, this,
           goog.partial(xhrLogging, logger));
       };
 

@@ -252,7 +252,7 @@ xhrdav.lib.DavFs.prototype.rmDir = function(
  * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler
  */
-xhrdav.lib.DavFs.prototype.mvDir = function(
+xhrdav.lib.DavFs.prototype.moveDir = function(
   path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
@@ -274,7 +274,7 @@ xhrdav.lib.DavFs.prototype.mvDir = function(
  * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler
  */
-xhrdav.lib.DavFs.prototype.cpDir = function(
+xhrdav.lib.DavFs.prototype.copyDir = function(
   path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
@@ -301,6 +301,32 @@ xhrdav.lib.DavFs.prototype.write = function(
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   this.client_.put(path, content,
+    goog.bind(this.responseHandler_, this,
+      handler, this.simpleErrorHandler_, path, context),
+    opt_request, debugHandler);
+};
+
+/**
+ * Delete file.
+ *
+ * @param {string} path Delete file path.
+ * @param {Function} handler  callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler
+ */
+xhrdav.lib.DavFs.prototype.removeFile = function(
+  path, handler, opt_headers, opt_params, context, debugHandler) {
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
+  if (path.match(/^(.+)\/$/)) {
+    path = RegExp.$1;
+  } else {
+    path = path;
+  } // Preserve GET
+
+  this.client_._delete(path,
     goog.bind(this.responseHandler_, this,
       handler, this.simpleErrorHandler_, path, context),
     opt_request, debugHandler);
