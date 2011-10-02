@@ -131,6 +131,35 @@
       davFs.mkdir(dir, assertMkDir, null, null, this,
         goog.partial(xhrLogging, logger));
     }
+
+    function testRmDir() {
+      var testId = 'RmDir';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var dir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, 'rmDir'));
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertRetryRmDir = function(errors) {
+        assertTrue('Error', errors.hasRequest());
+        asyncContinue();
+      };
+
+      var assertRmDir = function(errors) {
+        assertFalse('No Error', errors.hasRequest());
+        davFs.rmdir(dir, assertRetryRmDir, null, null, this,
+          goog.partial(xhrLogging, logger));
+      };
+
+      var assertMkDir = function(errors, newLoc) {
+        davFs.rmdir(dir, assertRmDir, null, null, this,
+          goog.partial(xhrLogging, logger));
+      };
+
+      davFs.mkdir(dir, assertMkDir, null, null, this,
+        goog.partial(xhrLogging, logger));
+    }
   </script>
 </body>
 </html>
