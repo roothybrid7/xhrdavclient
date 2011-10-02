@@ -9,7 +9,6 @@ goog.require('xhrdav.lib.Config');
 goog.require('goog.dom');
 goog.require('goog.Uri');
 goog.require('goog.net.XhrIo');
-goog.require('goog.net.XhrManager');
 
 /**
  * WebDAV Client library by Google Closure library.
@@ -39,26 +38,6 @@ xhrdav.lib.Client.prototype.initialize_ = function(opt_uri) {
   this.domain_ = opt_uri.domain || locationUrl.getDomain();
   /** @type {number} */
   this.port_ = opt_uri.port || locationUrl.getPort() || 80;
-  /** @type {goog.net.XhrManager} */
-  this.xhrManager_ = null;
-};
-
-/**
- * Get XhrManager. if not craeted yet, new create it.
- *
- * @param {{opt_maxRetries:number=,
- *          opt_headers:goog.structs.Map=,
- *          opt_minCount:number=,
- *          opt_maxCount:number=,
- *          opt_timeoutInterval:number=}} opt_xhrMgr Create XhrManger options
- *
- * @return {goog.net.XhrManager}
- */
-xhrdav.lib.Client.prototype.getXhrManager = function(opt_xhrMgr) {
-  if (goog.isNull(this.xhrManager_)) {
-    this.xhrManager_ = new goog.net.XhrManager(opt_xhrMgr);
-  }
-  return this.xhrManager_;
 };
 
 /**
@@ -428,8 +407,6 @@ xhrdav.lib.Client.prototype.copy = function(
 
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.Client', xhrdav.lib.Client);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'getXhrManager',
-  xhrdav.lib.Client.prototype.getXhrManager);
 goog.exportProperty(xhrdav.lib.Client.prototype, 'canParseXml',
   xhrdav.lib.Client.prototype.canParseXml);
 goog.exportProperty(xhrdav.lib.Client.prototype, 'setXmlParseFunction',

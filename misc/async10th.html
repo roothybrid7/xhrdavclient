@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Async 10 th</title>
+  <script src="../closure-library/closure/goog/base.js" type="text/javascript"></script>
+  <script src="../xhrdavclientdeps.js" type="text/javascript"></script>
+</head>
+<body>
+  <div id="console"></div>
+  <script type="text/javascript">
+    goog.require('goog.debug.Console');
+    goog.require('goog.debug.Logger');
+    goog.require('goog.json');
+
+    goog.require('goog.net.XhrManager');
+    goog.require('xhrdav.lib.DavFs');
+    goog.require('goog.async.ConditionalDelay');
+    goog.require('goog.dom');
+    goog.require('goog.string.StringBuffer');
+  </script>
+  <script type="text/javascript">
+    goog.debug.Console.autoInstall();
+    goog.debug.Console.instance.setCapturing(true);
+
+
+    var testId = 'AsyncTest10th';
+    var logger = goog.debug.Logger.getLogger(testId);
+    // App calling async?
+    function output(msg) {
+      var console = goog.dom.$('console');
+      console.innerHTML += msg + '<br />';
+    }
+
+    var fs = xhrdav.lib.DavFs.getInstance();
+//    var xmgr = fs.getXhrManager();
+    var xmgr = new goog.net.XhrManager();
+
+    var callback = function(xhrId, e) {
+      var xhr = e.target;
+      var sb = new goog.string.StringBuffer();
+      sb.append(xhrId + ' Status: ' + xhr.getStatus());
+      sb.append('<br />');
+      sb.append('Return number: ' + xhr.getResponse());
+      sb.append('<br />');
+      sb.append(goog.json.serialize(xhr));
+      output(sb.toString());
+    };
+
+    var delay = new goog.async.ConditionalDelay(function() {
+      var count = xmgr.getOutstandingCount();
+      logger.config('processing...: ' + count);
+      return (count == 0);
+    });
+
+    delay.onSuccess = function() {
+      logger.config('SUCCESS');
+    };
+
+    var startFunc = function() {
+      delay.start(500, -1);
+      for (var i = 0; i < 10; i++) {
+        // dav request code here
+        // send(id, url,
+        //  opt_method, opt_content, opt_headers, opt_priority,
+        //  opt_callback, opt_maxRetries)
+        xmgr.send(i, '../misc/xhrtest.php?test_id=' + i, 'GET',
+          null, null, 1, goog.partial(callback, i));
+        logger.config('Send: ' + i);
+      }
+    }();
+  </script>
+</body>
+</html>

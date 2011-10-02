@@ -58,9 +58,24 @@ xhrdav.lib.Config.prototype.initialize_ = function() {
 
   /**
    * @private
+   * @type {Object}
+   */
+  this.xmgr_ = {};
+
+  /**
+   * @private
    * @type {xhrdav.lib.Errors}
    */
   this.errors_ = xhrdav.lib.Errors.getInstance();
+};
+
+/**
+ * Get XhrManager
+ *
+ * @return {Object} XhrManager config Map.
+ */
+xhrdav.lib.Config.prototype.getXhrMgrConfig = function() {
+  return this.xmgr_;
 };
 
 /**

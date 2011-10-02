@@ -7,6 +7,7 @@
 goog.provide('xhrdav.lib.DavFs');
 goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.Client');
+goog.require('goog.net.XhrManager');
 
 /**
  * high-level WebDAV client API Singleton
@@ -15,25 +16,45 @@ goog.require('xhrdav.lib.Client');
  * @constructor
  */
 xhrdav.lib.DavFs = function() {
+  /** @type {goog.net.XhrManager} */
+  this.xhrMgr_ = null;
+  /** @type {xhrdav.lib.Client} */
+  this.client_ = null;
+
+  this.initXhrMgr_();
 };
 goog.addSingletonGetter(xhrdav.lib.DavFs);
 
 /**
+ *  Init XhrManager with config.
+ *
+ * @private
+ */
+xhrdav.lib.DavFs.prototype.initXhrMgr_ = function() {
+  var config = xhrdav.lib.Config.getInstance();
+  var configXhrMgr = config.getXhrMgrConfig();
+
+  if (goog.isDefAndNotNull(configXhrMgr) && !goog.object.isEmpty(configXhrMgr)) {
+    this.xhrMgr_ = new goog.net.XhrManager(
+        configXhrMgr.maxRetries || 1,
+        configXhrMgr.headers || {},
+        configXhrMgr.minCount || 1,
+        configXhrMgr.maxCount || 10,
+        configXhrMgr.timeoutInterval || 0);
+  } else {
+    this.xhrMgr_ = new goog.net.XhrManager();
+  }
+};
+
+/**
  * Init with calling low-level client API.
  *
- * Example: Create WebDAV Client Instance.
- *   var fs = xhrdav.lib.DavFs.getInstance().initialize();
- *   => fs#client_ = new xhrdav.lib.Client();
- *   # Reinitialize
- *   fs.initialize();
- *
- * @param {Object=} options davclient Parameters(options: scheme, domain, port)
+ * @param {Object=} opt_uri davclient Parameters(options: scheme, domain, port)
  * @return {xhrdav.lib.DavFs}
  */
-xhrdav.lib.DavFs.prototype.initialize = function(options) {
+xhrdav.lib.DavFs.prototype.initialize = function(opt_uri) {
   var config = xhrdav.lib.Config.getInstance();
-  /** @type {xhrdav.lib.Client} */
-  this.client_ = new xhrdav.lib.Client(options);
+  this.client_ = new xhrdav.lib.Client(opt_uri);
   this.client_.setXmlParseFunction(
     goog.getObjectByName(config.xmlParseFuncObj));
   return this;
@@ -43,16 +64,12 @@ xhrdav.lib.DavFs.prototype.initialize = function(options) {
  * Get and Create Connection xhrdav.lib.Client.
  *
  * @param {boolean=} refresh Refresh connection object.
- * @param {Object=} options URI Parameters(options: scheme, domain, port)
+ * @param {Object=} opt_uri URI Parameters(options: scheme, domain, port)
  * @return {xhrdav.lib.Client}
+ * @see #initialize
  */
-xhrdav.lib.DavFs.prototype.connection = function(refresh, options) {
-  if (refresh) {
-    var config = xhrdav.lib.Config.getInstance();
-    this.client_ = new xhrdav.lib.Client(options);
-    this.client_.setXmlParseFunction(
-      goog.getObjectByName(config.xmlParseFuncObj));
-  }
+xhrdav.lib.DavFs.prototype.getConnection = function(refresh, opt_uri) {
+  if (!!refresh || goog.isNull(this.client_)) this.initialize(opt_uri);
   return this.client_;
 };
 
@@ -64,10 +81,6 @@ xhrdav.lib.DavFs.prototype.connection = function(refresh, options) {
  * @param {Object=} options
  * @param {Function=} debugHandler
  */
-// TODO: 結果をcacheに格納、cacheにあったらcacheを返す
-// TODO: Cacheはpathごとにもつ
-//    cache['/'] = goog.ds.XmlDataSource(response, null, 'root');
-//    cache['/foo'] = goog.ds.XmlDataSource(response, rootTree, name);
 xhrdav.lib.DavFs.prototype.listDir = function(path, handler, options, debugHandler) {
   if (!goog.isDefAndNotNull(options)) options = {};
   options.depth = 1;  // listing directory
@@ -135,8 +148,8 @@ xhrdav.lib.DavFs.prototype.write = function(
 goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs.getInstance);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'initialize',
   xhrdav.lib.DavFs.prototype.initialize);
-goog.exportProperty(xhrdav.lib.DavFs.prototype, 'connection',
-  xhrdav.lib.DavFs.prototype.connection);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'getConnection',
+  xhrdav.lib.DavFs.prototype.getConnection);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'listDir',
   xhrdav.lib.DavFs.prototype.listDir);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'write',

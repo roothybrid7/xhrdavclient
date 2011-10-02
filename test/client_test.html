@@ -9,89 +9,28 @@
 </head>
 <body>
   <script type="text/javascript">
-    goog.require('goog.testing.AsyncTestCase');
     goog.require('goog.testing.jsunit');
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
     goog.require('goog.json');
-    goog.require('goog.async.ConditionalDelay');
 
-    goog.require('goog.net.XhrManager');
     goog.require('xhrdav.lib.Client');
-    goog.require('xhrdav.lib.HttpStatus');
   </script>
   <script type="text/javascript">
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
 
-    // Prepare AsyncTest
-    var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall();
-    asyncTestCase.stepTimeout = 5000;   // Wait Multi HTTP Requests in each test.
-    var asyncContinue = function() {
-      asyncTestCase.continueTesting();
-    };
-
-    function testCreateXhrManager() {
-      var testId = 'CreateXhrManager';
+    function testCreateInstance() {
+      var testId = 'CreateInstance';
       var logger = goog.debug.Logger.getLogger(testId);
 
       var dav = new xhrdav.lib.Client();
-      var xmgr = dav.getXhrManager();
-      assertNotNullNorUndefined('Get XhrManager Instance?', xmgr);
-      assertTrue('Is a goog.net.XhrManger?', xmgr instanceof goog.net.XhrManager);
+      assertNotNullNorUndefined('Create instance?', dav);
+      var opt_uri = {scheme: 'https', domain: 'example.com', port:443};
+      var davWithOpt = new xhrdav.lib.Client(opt_uri);
+      assertNotNullNorUndefined('Create instance with options?', davWithOpt);
+      logger.config(goog.json.serialize(davWithOpt));
     }
-
-    function testCreateTwiceSameXhrManager() {
-      var testId = 'CreateTwiceSameXhrManager';
-      var logger = goog.debug.Logger.getLogger(testId);
-
-      var dav = new xhrdav.lib.Client();
-      var xmgr = dav.getXhrManager();
-      var xmgr2 = dav.getXhrManager();
-      assertEquals('Same XhrManager?', xmgr, xmgr2);
-    }
-
-    // App calling async?
-    function testXhrManagerAsync10th() {
-      var testId = 'XhrManagerAsync10th';
-      var logger = goog.debug.Logger.getLogger(testId);
-
-      var dav = new xhrdav.lib.Client();
-      var xmgr = dav.getXhrManager();
-
-      var callback = function(xhrId, e) {
-        var xhr = e.target;
-        logger.config(xhrId + ' Status: ' + xhr.getStatus());
-        logger.config('Return number: ' + xhr.getResponse());
-        logger.config(goog.json.serialize(xhr));
-      };
-
-      var delay = new goog.async.ConditionalDelay(function() {
-        var count = xmgr.getOutstandingCount();
-        logger.config('processing...: ' + count);
-        return (count == 0);
-      });
-
-      delay.onSuccess = function() {
-        assertEquals('Xhr success?', 0, xmgr.getOutstandingCount());
-        asyncContinue();
-      };
-
-      asyncTestCase.waitForAsync(testId);
-
-      var startFunc = function() {
-        delay.start(500, -1);
-        for (var i = 0; i < 10; i++) {
-          // dav request code here
-          // send(id, url,
-          //  opt_method, opt_content, opt_headers, opt_priority,
-          //  opt_callback, opt_maxRetries)
-          xmgr.send(i, '../misc/xhrtest.php?test_id=' + i, 'GET', null, null, 1, goog.partial(callback, i));
-          logger.config('Send: ' + i);
-        }
-      }();
-    }
-
   </script>
 </body>
 </html>
