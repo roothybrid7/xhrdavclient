@@ -189,6 +189,28 @@ xhrdav.lib.DavFs.prototype.listDir = function(
 };
 
 /**
+ * Create directory (collection)
+ *
+ * @param {string} path Create dierctory path.
+ * @param {Function} handler callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler
+ */
+xhrdav.lib.DavFs.prototype.mkdir = function(
+  path, handler, opt_headers, opt_params, context, debugHandler) {
+  var opt_request = {
+    xhrId: goog.string.createUniqueString(), xhrMgr: this.xhrMgr_,
+    headers: opt_headers || {}, query: opt_params || {}};
+
+  this.client_.mkcol(path,
+    goog.bind(this.responseHandler_, this,
+      handler, this.simpleErrorHandler_, path, context),
+    opt_request, debugHandler);
+};
+
+/**
  * Write data to WebDAV server
  *
  * @param {string} path upload file path.

@@ -38,6 +38,19 @@
     var httpStatusText = xhrdav.lib.HttpStatus.text;
     var davFs = xhrdav.lib.DavFs.getInstance().initialize();
 
+    var parentDir = '/mydav/FsDirTest/';
+    var dav = new xhrdav.lib.Client();
+
+    function setUp() {
+      asyncTestCase.waitForAsync('setUp');
+      dav.mkcol(parentDir, asyncContinue);
+    }
+
+    function tearDown() {
+      asyncTestCase.waitForAsync('tearDown');
+      dav._delete(parentDir, asyncContinue);
+    }
+
 
     function testListDirByNullPath() {
       var testId = 'ListDirByNullPath()';
@@ -83,6 +96,41 @@
         goog.partial(xhrLogging, logger));
     }
 
+    function testMkDir() {
+      var testId = 'MkDir';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var dir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, 'mkDir')) + '/';
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertRetryMkDir = function(errors, newLoc) {
+        assertTrue('Errors?', errors.hasRequest());
+        logger.config(newLoc);
+        asyncContinue();
+      };
+
+      var assertMkDir = function(errors, newLoc) {
+        logger.config('CallBack');
+        assertFalse('No Errors?', errors.hasRequest());
+        assertNotNullNorUndefined('Create New location', newLoc);
+
+        var createPath = newLoc.split('/');
+        var requestPath = dir.split('/');
+        createPath.pop(), requestPath.pop();
+        var createPath = createPath.pop();
+        var requestPath = requestPath.pop();
+        assertEquals('Creaet and Request path is same?',
+          requestPath, createPath);
+
+        davFs.mkdir(dir, assertRetryMkDir, null, null, this,
+          goog.partial(xhrLogging, logger));
+      };
+
+      davFs.mkdir(dir, assertMkDir, null, null, this,
+        goog.partial(xhrLogging, logger));
+    }
   </script>
 </body>
 </html>
