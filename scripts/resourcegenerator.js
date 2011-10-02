@@ -160,6 +160,8 @@ xhrdav.lib.ResourceGenerator.prototype.move = function(
 
 /* Entry point for closure compiler */
 goog.exportSymbol('xhrdav.lib.ResourceGenerator', xhrdav.lib.ResourceGenerator);
+goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'serialize',
+  xhrdav.lib.ResourceGenerator.prototype.serialize);
 goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'setDestination',
   xhrdav.lib.ResourceGenerator.prototype.setDestination);
 goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'getDestination',

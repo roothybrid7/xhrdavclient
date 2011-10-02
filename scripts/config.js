@@ -10,6 +10,7 @@ goog.require('goog.Disposable');
 goog.require('goog.dom');
 goog.require('goog.array');
 goog.require('goog.object');
+goog.require('goog.json');
 goog.require('goog.functions');
 goog.require('goog.string.path');
 goog.require('xhrdav.lib.functions');
@@ -91,6 +92,8 @@ xhrdav.lib.Config.getInstance();
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.LIBNAME', xhrdav.lib.LIBNAME);
 goog.exportSymbol('xhrdav.lib.Config.getInstance', xhrdav.lib.Config.getInstance);
+goog.exportProperty(xhrdav.lib.Config.prototype, 'getXhrMgrConfig',
+  xhrdav.lib.Config.prototype.getXhrMgrConfig);
 goog.exportProperty(xhrdav.lib.Config.prototype, 'getLogger',
   xhrdav.lib.Config.prototype.getLogger);
 

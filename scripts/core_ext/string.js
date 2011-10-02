@@ -56,3 +56,11 @@ String.prototype.$camelize = function(firstLetter) {
 
   return str;
 };
+
+/* Entry point for closure compiler */
+goog.exportSymbol('xhrdav.lib.string.LetterType', xhrdav.lib.string.LetterType);
+goog.exportProperty(String.prototype, '$capitalize',
+  String.prototype.$capitalize);
+goog.exportProperty(String.prototype, '$camelize',
+  String.prototype.$camelize);
+

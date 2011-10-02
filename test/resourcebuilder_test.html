@@ -57,24 +57,82 @@
       assertNotUndefined('Defined property: resource?', builder.getResources);
     }
 
-    function testCreateResoruce() {
+    function testCreateResoruceOne() {
+      var testId = 'CreateResourceOne';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var builder = xhrdav.lib.ResourceBuilder.createCollection(initDirOnlyData);
+      assertNotNullNorUndefined('Set rawData?', builder.getRawData());
+      assertNotEquals('Contains D:response?',
+        0, goog.object.getCount(builder.getRawData().D$response));
+      assertNotNullNorUndefined('Get Resources', builder.getResources());
+      assertNotNullNorUndefined('root', builder.getResources().root);
+      assertTrue('Empty childs', goog.array.isEmpty(builder.getResources().childs));
+    }
+
+    function testCreateResoruces() {
       var testId = 'CreateResource';
       var logger = new goog.debug.Logger.getLogger(testId);
 
       var builder = xhrdav.lib.ResourceBuilder.createCollection(initCurrDirData);
-      assertNotNullNorUndefined('Set rawData?', builder.getRawData());
       assertNotEquals('Contains D:response?',
         0, goog.object.getCount(builder.getRawData().D$response));
 //      logger.config(goog.object.getCount(builder.getRawData().D$response));
 //      logger.config(goog.json.serialize(builder.getRawData().D$response[0]));
 
       assertNotNullNorUndefined('Get Resources', builder.getResources());
-//      logger.config(goog.json.serialize(builder.getResources()));
+      //logger.config(goog.json.serialize(builder.getResources()));
+//      logger.config(goog.json.serialize(builder.getResources().root));
+//      logger.config(goog.object.getKeys(builder.getResources().root));
       assertNotNullNorUndefined('root', builder.getResources().root);
       assertNotNullNorUndefined('childs', builder.getResources().childs);
       assertEquals('Resource Childs count = rawData D:response count - 1',
         goog.object.getCount(builder.getRawData().D$response) - 1,
         goog.object.getCount(builder.getResources().childs));
+    }
+
+    function testSerializeResourceOne() {
+      var testId = 'SerializeResourceOne';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var bldKls = xhrdav.lib.ResourceBuilder;
+      var builder = bldKls.createCollection(initDirOnlyData);
+      var resources = builder.getResources();
+      var resSerialized = bldKls.serialize(resources);
+      logger.config(goog.json.serialize(resSerialized));
+      assertNotNullNorUndefined('Serialized resources?', resSerialized);
+      assertTrue('xhrdav.lib.Resource?',
+        resSerialized.root instanceof xhrdav.lib.Resource);
+      assertTrue('Empty childs?', goog.array.isEmpty(resSerialized.childs));
+    }
+
+    function testSerializeResources() {
+      var testId = 'SerializeResources';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var bldKls = xhrdav.lib.ResourceBuilder;
+      var builder = bldKls.createCollection(initCurrDirData);
+      var resources = builder.getResources();
+      var resSerialized = bldKls.serialize(resources);
+      logger.config(goog.json.serialize(resSerialized));
+      assertNotNullNorUndefined('Serialized resources?', resSerialized);
+      assertTrue('xhrdav.lib.Resource?',
+        resSerialized.root instanceof xhrdav.lib.Resource);
+      assertTrue('childs of xhrdav.lib.Resource?',
+        resSerialized.childs[0] instanceof xhrdav.lib.Resource);
+    }
+
+    function testSerializeResourceBySelf() {
+      var testId = 'SerializeResourceBySelf';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var bldKls = xhrdav.lib.ResourceBuilder;
+      var builder = bldKls.createCollection(initDirOnlyData);
+      var resources = builder.getResources();
+      var resSerialized = builder.serialize();
+      assertNotNullNorUndefined('Serialized resources?', resSerialized);
+      assertTrue('xhrdav.lib.Resource?',
+        resSerialized.root instanceof xhrdav.lib.Resource);
     }
 
     /*
