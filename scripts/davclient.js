@@ -224,7 +224,13 @@ xhrdav.lib.Client.prototype.get = function(path, handler, opt_request, debugHand
 xhrdav.lib.Client.prototype.put = function(
   path, data, handler, opt_request, debugHandler) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
-  var url = this.generateUrl_(path);
+
+  var url;
+  if (path.match(/^(.+)\/$/)) {
+    url = this.generateUrl_(RegExp.$1);
+  } else {
+    url = this.generateUrl_(path);
+  } // Preserve GET
 
   if (goog.isDefAndNotNull(opt_request.headers)) {
     goog.object.extend(opt_request.headers, {'Content-Type': 'text/xml'});
@@ -247,6 +253,7 @@ xhrdav.lib.Client.prototype.put = function(
 xhrdav.lib.Client.prototype.propfind = function(
   path, handler, opt_request, debugHandler) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
+
   var url = this.generateUrl_(path);
 
   // 0(path only) or 1(current directory)

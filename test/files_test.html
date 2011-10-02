@@ -156,6 +156,30 @@
         goog.partial(xhrLogging, logger));
     }
 
+    function testPutLastSlash() {
+      var testId = 'PutLastSlash';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var httpStatus = xhrdav.lib.HttpStatus;
+      var httpStatusText = xhrdav.lib.HttpStatus.text;
+      var options = {xhrMgr: xmgr};
+
+      var assertUploadFile = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        logger.config(headers['Location']);
+        asyncContinue();
+      };
+
+      var fileAddedLastSlash = file + '/';
+      logger.config(fileAddedLastSlash);
+      dav.put(fileAddedLastSlash, initData + '<LastSlash>', assertUploadFile, options,
+        goog.partial(xhrLogging, logger));
+
+    }
+
     function testRenameFile() {
       var testId = 'RenameFile';
       var logger = new goog.debug.Logger.getLogger(testId);
