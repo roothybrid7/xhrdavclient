@@ -63,12 +63,6 @@ xhrdav.lib.Config.prototype.initialize_ = function() {
    * @type {Object}
    */
   this.xmgr_ = {};
-
-  /**
-   * @private
-   * @type {xhrdav.lib.Errors}
-   */
-  this.errors_ = xhrdav.lib.Errors.getInstance();
 };
 
 /**
@@ -91,15 +85,6 @@ xhrdav.lib.Config.prototype.getLogger = function(level) {
   return this.logger_;
 };
 
-/**
- * Get Errors object.
- *
- * @return {xhrdav.lib.Errors} Errors.object
- */
-xhrdav.lib.Config.prototype.getErrors = function() {
-  return this.errors_;
-};
-
 // Load Config
 xhrdav.lib.Config.getInstance();
 
@@ -108,6 +93,4 @@ goog.exportSymbol('xhrdav.lib.LIBNAME', xhrdav.lib.LIBNAME);
 goog.exportSymbol('xhrdav.lib.Config.getInstance', xhrdav.lib.Config.getInstance);
 goog.exportProperty(xhrdav.lib.Config.prototype, 'getLogger',
   xhrdav.lib.Config.prototype.getLogger);
-goog.exportProperty(xhrdav.lib.Config.prototype, 'getErrors',
-  xhrdav.lib.Config.prototype.getErrors);
 

@@ -30,7 +30,7 @@
       var testId = 'CreateErrorsObject';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var errors = xhrdav.lib.Errors.getInstance();
+      var errors = new xhrdav.lib.Errors();
       assertNotNullNorUndefined('Get Error Object?', errors);
       assertTrue('xhrdav.lib.Errors?', errors instanceof xhrdav.lib.Errors);
 
@@ -53,14 +53,14 @@
     }
 
     /* Json/Hash repr
-      {request: {msg: 'Forbidden', path: '/mydav/foo/'},
+      {request: {message: 'Forbidden', path: '/mydav/foo/'},
       props: []}
      */
     function testRequestErrors() {
       var testId = 'RequestErrors';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var errors = xhrdav.lib.Errors.getInstance();
+      var errors = new xhrdav.lib.Errors();
 
       var assertReqErrsNull = function(errs) {
         errors.setRequest(errs);
@@ -69,7 +69,7 @@
       assertReqErrsNull();
       assertReqErrsNull(null);
       assertReqErrsNull({});
-      var ocurred_errs = {msg: 'Forbidden', path: '/mydav/foo/'};
+      var ocurred_errs = {message: 'Forbidden', path: '/mydav/foo/'};
       errors.setRequest(ocurred_errs);
       assertTrue('Request error?', errors.hasRequest());
 
@@ -80,15 +80,15 @@
     /* Json/Hash repr
       {request: {},
       props: [
-        {msg: 'Not Found', path: '/mydav/foo/a.png'},
-        {msg: 'Locked', path: '/mydav/foo/b.txt'}
+        {message: 'Not Found', path: '/mydav/foo/a.png'},
+        {message: 'Locked', path: '/mydav/foo/b.txt'}
       ]}
      */
     function testPropsErrors() {
       var testId = 'PropsErrors';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var errors = xhrdav.lib.Errors.getInstance();
+      var errors = new xhrdav.lib.Errors();
 
       var assertPropsNull = function(errs) {
         errors.addProps(errs);
@@ -98,8 +98,8 @@
       assertPropsNull(null);
       assertPropsNull([]);
 
-      var occured_errs = {msg: 'Not Found', path: '/mydav/foo/a.png'};
-      var occured_errs2 = {msg: 'Locked', path: '/mydav/foo/b.txt'};
+      var occured_errs = {message: 'Not Found', path: '/mydav/foo/a.png'};
+      var occured_errs2 = {message: 'Locked', path: '/mydav/foo/b.txt'};
 
       errors.addProps(occured_errs);
       assertTrue('Error occured', errors.hasProps());

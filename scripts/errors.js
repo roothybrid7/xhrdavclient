@@ -25,7 +25,6 @@ xhrdav.lib.Errors = function() {
   this.request_ = {};
   this.props_ = [];
 };
-goog.addSingletonGetter(xhrdav.lib.Errors);
 
 /**
  * Has request error?
@@ -116,7 +115,7 @@ xhrdav.lib.Errors.prototype.addProps = function(propsErr) {
 };
 
 /* Entry point for closure compiler */
-goog.exportSymbol('xhrdav.lib.Errors.getInstance', xhrdav.lib.Errors.getInstance);
+goog.exportSymbol('xhrdav.lib.Errors', xhrdav.lib.Errors);
 goog.exportProperty(xhrdav.lib.Errors.prototype, 'hasRequest',
   xhrdav.lib.Errors.prototype.hasRequest);
 goog.exportProperty(xhrdav.lib.Errors.prototype, 'hasProps',
