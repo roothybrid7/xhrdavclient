@@ -36,10 +36,9 @@
     var file = goog.string.path.normalizePath(
       goog.string.path.join(parentDir, 'testwebdav.txt'));
     var dav = new xhrdav.lib.Client();
-    var xmgr = null;
+    var xmgr = new goog.net.XhrManager();
 
     function setUp() {
-      xmgr = dav.getXhrManager();
       initData = 'This is a WebDAV Test.';
 
       asyncTestCase.waitForAsync('setUp');
@@ -48,7 +47,6 @@
 
     function tearDown() {
       initData = null;
-      xmgr = null;
 
       asyncTestCase.waitForAsync('tearDown');
       dav._delete(parentDir, asyncContinue);
