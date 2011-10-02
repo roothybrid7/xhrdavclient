@@ -21,6 +21,8 @@
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
 
+    var httpStatus = xhrdav.lib.HttpStatus;
+    var httpStatusText = xhrdav.lib.HttpStatus.text;
     /*
       Json/Hash repr
       {request: {},
@@ -69,9 +71,13 @@
       assertReqErrsNull();
       assertReqErrsNull(null);
       assertReqErrsNull({});
-      var ocurred_errs = {message: 'Forbidden', path: '/mydav/foo/'};
+      var ocurred_errs = {
+        message: httpStatusText[httpStatus.FORBIDDEN], path: '/mydav/foo/'};
       errors.setRequest(ocurred_errs);
       assertTrue('Request error?', errors.hasRequest());
+      logger.config(goog.json.serialize(errors));
+      assertEquals('Forbidden?',
+        httpStatusText[httpStatus.FORBIDDEN], errors.request.message);
 
       errors.clear();
       assertFalse('Clear errors?', errors.hasRequest());
@@ -98,16 +104,29 @@
       assertPropsNull(null);
       assertPropsNull([]);
 
-      var occured_errs = {message: 'Not Found', path: '/mydav/foo/a.png'};
-      var occured_errs2 = {message: 'Locked', path: '/mydav/foo/b.txt'};
+      var occured_errs = {
+        message: httpStatusText[httpStatus.NOT_FOUND], path: '/mydav/foo/a.png'};
+      var occured_errs2 = {
+        message: httpStatusText[httpStatus.LOCKED], path: '/mydav/foo/b.txt'};
 
       errors.addProps(occured_errs);
       assertTrue('Error occured', errors.hasProps());
       errors.addProps(occured_errs2);
       assertTrue('Error occured', errors.hasProps());
+      logger.config(goog.json.serialize(errors));
+      assertEquals('Props error count = 2?',
+        2, errors.props.length);
+      assertArrayEquals('Error messages match:',
+        [httpStatusText[httpStatus.NOT_FOUND], httpStatusText[httpStatus.LOCKED]],
+        goog.array.map(errors.props, function(v, i) {
+          return v.message;
+        })
+      );
 
       errors.clear();
       assertFalse('Error occured', errors.hasProps());
+      assertEquals('Props error count = 0?',
+        0, errors.props.length);
     }
   </script>
 </body>
