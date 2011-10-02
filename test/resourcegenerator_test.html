@@ -97,6 +97,35 @@
       assertNotUndefined('Define method copy?', generator.copy);
       assertNotUndefined('Define method move?', generator.move);
     }
+
+    function testSerialize() {
+      var testId = 'Serialize';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var genKlass = xhrdav.lib.ResourceGenerator;
+      var generator = new genKlass();
+      generator.href = '/foo/bar/';
+      generator.status = 'HTTP/1.1 200 OK';
+      var resSerializeKls = generator.serialize();
+      assertTrue('same xhrdav.lib.Resource?',
+        resSerializeKls instanceof xhrdav.lib.Resource);
+      logger.config(goog.json.serialize(resSerializeKls));
+      assertEquals('href is same?', generator.href, resSerializeKls.href);
+      assertEquals('status is same?', generator.status, resSerializeKls.status);
+    }
+
+    function testLoad() {
+      var testId = 'Load';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var genKlass = xhrdav.lib.ResourceGenerator;
+      var resource = new xhrdav.lib.Resource();
+      resource.href = '/foo/bar/';
+      resource.status = 'HTTP/1.1 200 OK';
+      var generator = new genKlass(resource);
+      assertEquals('href is same?', resource.href, generator.href);
+      assertEquals('status is same?', resource.status, resource.status);
+    }
   </script>
 </body>
 </html>

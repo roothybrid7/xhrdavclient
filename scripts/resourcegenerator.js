@@ -24,6 +24,23 @@ xhrdav.lib.ResourceGenerator = function(resource) {
 };
 
 /**
+ * Serialize resource
+ *
+ * @return {xhrdav.lib.Resource} converted Json/Hash object for WebDAV resource.
+ * @see xhrdav.lib.Resource
+ */
+xhrdav.lib.ResourceGenerator.prototype.serialize = function() {
+  var resource = new xhrdav.lib.Resource();
+//  resource.href = this.href;
+  goog.object.forEach(this, function(val, key) {
+    if (goog.object.containsKey(resource, key)) {
+      goog.object.set(resource, key, val);
+    }
+  });
+  return resource;
+};
+
+/**
  * Setter destination
  *
  * @param {string} dest Destination path.
