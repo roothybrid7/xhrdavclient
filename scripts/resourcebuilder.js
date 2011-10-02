@@ -7,8 +7,6 @@
 goog.provide('xhrdav.lib.ResourceBuilder');
 goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.Resource');
-goog.require('goog.array');
-goog.require('goog.object');
 
 /**
  * xhrdavclient resource object
