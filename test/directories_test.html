@@ -31,10 +31,9 @@
 
     var parentDir = '/mydav/DirClientTest/';
     var dav = new xhrdav.lib.Client();
-    var xmgr = null;
+    var xmgr = goog.net.XhrManager();
 
     function setUp() {
-      xmgr = dav.getXhrManager();
       asyncTestCase.waitForAsync('setUp');
       dav.mkcol(parentDir, asyncContinue);
     }
@@ -42,7 +41,6 @@
     function tearDown() {
       asyncTestCase.waitForAsync('tearDown');
       dav._delete(parentDir, asyncContinue);
-      xmgr = null;
     }
 
     function testPropfind() {
