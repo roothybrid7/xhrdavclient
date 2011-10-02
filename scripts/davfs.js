@@ -166,6 +166,21 @@ xhrdav.lib.DavFs.prototype.processMultistatus_ = function(
 };
 
 /**
+ * Create Request paramters.
+ *
+ * @param {Object=} opt_headers
+ * @param {Object=} opt_params
+ * @return {Object}
+ */
+xhrdav.lib.DavFs.prototype.createRequestParameters_ = function(
+  opt_headers, opt_params) {
+  var opt_request = {
+    xhrId: goog.string.createUniqueString(), xhrMgr: this.xhrMgr_,
+    headers: opt_headers || {}, query: opt_params || {}};
+  return opt_request;
+};
+
+/**
  * listing collection
  *
  * @param {string} path
@@ -177,9 +192,7 @@ xhrdav.lib.DavFs.prototype.processMultistatus_ = function(
  */
 xhrdav.lib.DavFs.prototype.listDir = function(
   path, handler, opt_headers, opt_params, context, debugHandler) {
-  var opt_request = {
-    xhrId: goog.string.createUniqueString(), xhrMgr: this.xhrMgr_,
-    headers: opt_headers || {}, query: opt_params || {}};
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   opt_request.headers['Depth'] = 1;  // listing directory
   this.client_.propfind(path,
@@ -198,11 +211,9 @@ xhrdav.lib.DavFs.prototype.listDir = function(
  * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler
  */
-xhrdav.lib.DavFs.prototype.mkdir = function(
+xhrdav.lib.DavFs.prototype.mkDir = function(
   path, handler, opt_headers, opt_params, context, debugHandler) {
-  var opt_request = {
-    xhrId: goog.string.createUniqueString(), xhrMgr: this.xhrMgr_,
-    headers: opt_headers || {}, query: opt_params || {}};
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   this.client_.mkcol(path,
     goog.bind(this.responseHandler_, this,
@@ -211,22 +222,64 @@ xhrdav.lib.DavFs.prototype.mkdir = function(
 };
 
 /**
- * Remove directory (collection)
+ * Remove directory
  *
  * @param {string} path Remove dierctory path.
- * @param {Function} handler callback handler function.
+ * @param {Function} handler  callback handler function.
  * @param {Object=} opt_headers Request headers options.
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler
  */
-xhrdav.lib.DavFs.prototype.rmdir = function(
+xhrdav.lib.DavFs.prototype.rmDir = function(
   path, handler, opt_headers, opt_params, context, debugHandler) {
-  var opt_request = {
-    xhrId: goog.string.createUniqueString(), xhrMgr: this.xhrMgr_,
-    headers: opt_headers || {}, query: opt_params || {}};
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   this.client_._delete(goog.string.endsWith(path, '/') ? path : path + '/',
+    goog.bind(this.responseHandler_, this,
+      handler, this.simpleErrorHandler_, path, context),
+    opt_request, debugHandler);
+};
+
+/**
+ * Move directory
+ *
+ * @param {string} path Move src directory path.
+ * @param {string} dstPath  Move destination path.
+ * @param {Function} handler  callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler
+ */
+xhrdav.lib.DavFs.prototype.mvDir = function(
+  path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
+  this.client_.move(goog.string.endsWith(path, '/') ? path : path + '/',
+    goog.string.endsWith(dstPath, '/') ? dstPath : dstPath + '/',
+    goog.bind(this.responseHandler_, this,
+      handler, this.simpleErrorHandler_, path, context),
+    opt_request, debugHandler);
+};
+
+/**
+ * Copy directory
+ *
+ * @param {string} path Move src directory path.
+ * @param {string} dstPath  Move destination path.
+ * @param {Function} handler  callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler
+ */
+xhrdav.lib.DavFs.prototype.cpDir = function(
+  path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
+  this.client_.copy(goog.string.endsWith(path, '/') ? path : path + '/',
+    goog.string.endsWith(dstPath, '/') ? dstPath : dstPath + '/',
     goog.bind(this.responseHandler_, this,
       handler, this.simpleErrorHandler_, path, context),
     opt_request, debugHandler);
@@ -245,9 +298,8 @@ xhrdav.lib.DavFs.prototype.rmdir = function(
  */
 xhrdav.lib.DavFs.prototype.write = function(
   path, content, handler, opt_headers, opt_params, context, debugHandler) {
-  var opt_request = {
-    xhrId: goog.string.createUniqueString(), xhrMgr: this.xhrMgr_,
-    headers: opt_headers || {}, query: opt_params || {}};
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
   this.client_.put(path, content,
     goog.bind(this.responseHandler_, this,
       handler, this.simpleErrorHandler_, path, context),
@@ -264,6 +316,14 @@ goog.exportSymbol('xhrdav.lib.DavFs.getListDirFromMultistatus',
   xhrdav.lib.DavFs.getListDirFromMultistatus);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'listDir',
   xhrdav.lib.DavFs.prototype.listDir);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'mkDir',
+  xhrdav.lib.DavFs.prototype.mkDir);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'rmDir',
+  xhrdav.lib.DavFs.prototype.rmDir);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'mvDir',
+  xhrdav.lib.DavFs.prototype.mvDir);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'cpDir',
+  xhrdav.lib.DavFs.prototype.cpDir);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'write',
   xhrdav.lib.DavFs.prototype.write);
 
