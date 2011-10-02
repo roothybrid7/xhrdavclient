@@ -121,6 +121,28 @@
       dav.mkcol(dir, assertCreate, options, goog.partial(xhrLogging, logger));
     }
 
+    function testForgetLastSlash() {
+      var testId = 'ForgetLastSlash';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var dir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, 'foo'));
+      var httpStatus = xhrdav.lib.HttpStatus;
+      var httpStatusText = xhrdav.lib.HttpStatus.text;
+      var options = {xhrMgr: xmgr};
+      logger.config(dir);
+
+      var assertCreate = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        logger.config(headers['Location']);
+        asyncContinue();
+      };
+      dav.mkcol(dir, assertCreate, options, goog.partial(xhrLogging, logger));
+    }
+
     function testRename() {
       var testId = 'Rename';
       var logger = new goog.debug.Logger.getLogger(testId);
