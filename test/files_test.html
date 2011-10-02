@@ -68,7 +68,7 @@
         asyncContinue();
       };
 
-      var options = {xhrId: goog.string.createUniqueString(), xhrMgr: xmgr};
+      var opt_request = {xhrId: goog.string.createUniqueString(), xhrMgr: xmgr};
       dav.get(dummyFile, assertNotFound, null, goog.partial(xhrLogging, logger));
     }
 
@@ -80,7 +80,7 @@
 
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
-      var options = {xhrMgr: xmgr};
+      var opt_request = {xhrMgr: xmgr};
 
       var assertDeleteFile = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
@@ -88,12 +88,12 @@
         asyncContinue();
       };
       var callbackUploadFile = function(statusCode, content, headers) {
-        options.xhrId = goog.string.createUniqueString();
-        dav._delete(file, assertDeleteFile, options,
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav._delete(file, assertDeleteFile, opt_request,
           goog.partial(xhrLogging, logger));
       };
-      options.xhrId = goog.string.createUniqueString();
-      dav.put(file, initData, callbackUploadFile, options,
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.put(file, initData, callbackUploadFile, opt_request,
         goog.partial(xhrLogging, logger));
     }
 
@@ -105,24 +105,24 @@
 
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
-      var options = {xhrMgr: xmgr};
+      var opt_request = {xhrMgr: xmgr};
 
       var assertDownloadFile = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.OK, statusCode);
         // TODO: assert Content-Type
         assertEquals('ResponseData:', initData, content);
 
-        options.xhrId = goog.string.createUniqueString();
-        dav._delete(file, asyncContinue, options,
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav._delete(file, asyncContinue, opt_request,
           goog.partial(xhrLogging, logger));
       };
       var callbackUploadFile = function(statusCode, content, headers) {
-        options.xhrId = goog.string.createUniqueString();
-        dav.get(file, assertDownloadFile, options,
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.get(file, assertDownloadFile, opt_request,
           goog.partial(xhrLogging, logger));
       };
-      options.xhrId = goog.string.createUniqueString();
-      dav.put(file, initData, callbackUploadFile, options,
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.put(file, initData, callbackUploadFile, opt_request,
         goog.partial(xhrLogging, logger));
     }
 
@@ -134,7 +134,7 @@
 
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
-      var options = {xhrMgr: xmgr};
+      var opt_request = {xhrMgr: xmgr};
 
       var assertUploadFileOverWrite = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
@@ -147,12 +147,12 @@
         assertTrue('Location match:',
           goog.string.endsWith(headers['Location'], file));
 
-        options.xhrId = goog.string.createUniqueString();
-        dav.put(file, initData + "<MODIFIED>", assertUploadFileOverWrite, options,
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.put(file, initData + "<MODIFIED>", assertUploadFileOverWrite, opt_request,
           goog.partial(xhrLogging, logger));
       };
-      options.xhrId = goog.string.createUniqueString();
-      dav.put(file, initData, assertUploadFile, options,
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.put(file, initData, assertUploadFile, opt_request,
         goog.partial(xhrLogging, logger));
     }
 
@@ -164,7 +164,7 @@
 
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
-      var options = {xhrMgr: xmgr};
+      var opt_request = {xhrMgr: xmgr};
 
       var assertUploadFile = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
@@ -175,7 +175,7 @@
 
       var fileAddedLastSlash = file + '/';
       logger.config(fileAddedLastSlash);
-      dav.put(fileAddedLastSlash, initData + '<LastSlash>', assertUploadFile, options,
+      dav.put(fileAddedLastSlash, initData + '<LastSlash>', assertUploadFile, opt_request,
         goog.partial(xhrLogging, logger));
 
     }
@@ -190,7 +190,7 @@
         goog.string.path.join(parentDir, 'rename.txt'));
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
-      var options = {xhrMgr: xmgr};
+      var opt_request = {xhrMgr: xmgr};
 
       var assertRenameFile = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
@@ -200,12 +200,12 @@
         asyncContinue();
       };
       var callbackUploadFile = function(statusCode, content, headers) {
-        options.xhrId = goog.string.createUniqueString();
-        dav.move(file, newFile, assertRenameFile, options,
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.move(file, newFile, assertRenameFile, opt_request,
           goog.partial(xhrLogging, logger));
       };
-      options.xhrId = goog.string.createUniqueString();
-      dav.put(file, initData, callbackUploadFile, options,
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.put(file, initData, callbackUploadFile, opt_request,
         goog.partial(xhrLogging, logger));
     }
 
@@ -219,7 +219,7 @@
         goog.string.path.join(parentDir, 'copy.txt'));
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
-      var options = {xhrMgr: xmgr};
+      var opt_request = {xhrMgr: xmgr};
 
       var assertCopyFileOverWriteFalse = function(statusCode, content, headers) {
         assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
@@ -229,9 +229,9 @@
         assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
         assertTrue('No Content?', goog.string.isEmptySafe(content));
 
-        options.xhrId = goog.string.createUniqueString();
-        options.overwrite = false;
-        dav.copy(file, newFile, assertCopyFileOverWriteFalse, options,
+        opt_request.xhrId = goog.string.createUniqueString();
+        opt_request.headers['Overwrite'] = false;
+        dav.copy(file, newFile, assertCopyFileOverWriteFalse, opt_request,
           goog.partial(xhrLogging, logger));
       };
       var assertCopyFile = function(statusCode, content, headers) {
@@ -240,18 +240,18 @@
         assertTrue('Location match:',
           goog.string.endsWith(headers['Location'], newFile));
 
-        options.xhrId = goog.string.createUniqueString();
-        options.overwrite = true;
-        dav.copy(newFile, file, assertCopyFileOverWrite, options,
+        opt_request.xhrId = goog.string.createUniqueString();
+        opt_request.headers = {}, opt_request.headers['Overwrite'] = true;
+        dav.copy(newFile, file, assertCopyFileOverWrite, opt_request,
           goog.partial(xhrLogging, logger));
       };
       var callbackUploadFile = function(statusCode, content, headers) {
-        options.xhrId = goog.string.createUniqueString();
-        dav.copy(file, newFile, assertCopyFile, options,
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.copy(file, newFile, assertCopyFile, opt_request,
           goog.partial(xhrLogging, logger));
       };
-      options.xhrId = goog.string.createUniqueString();
-      dav.put(file, initData, callbackUploadFile, options);
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.put(file, initData, callbackUploadFile, opt_request);
     }
 
     function testMoveFile() {
@@ -264,7 +264,7 @@
         goog.string.path.join(parentDir, 'move.txt'));
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
-      var options = {xhrMgr: xmgr};
+      var opt_request = {xhrMgr: xmgr};
 
       var assertMoveFileOverWrite = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
@@ -274,15 +274,15 @@
       var assertMoveFileOverWriteFalse = function(statusCode, content, headers) {
         assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
 
-        options.xhrId = goog.string.createUniqueString();
-        options.overwrite = true;
-        dav.move(file, newFile, assertMoveFileOverWrite, options,
+        opt_request.xhrId = goog.string.createUniqueString();
+        opt_request.headers['Overwrite'] = true;
+        dav.move(file, newFile, assertMoveFileOverWrite, opt_request,
           goog.partial(xhrLogging, logger));
       };
       var callbackCopyFile = function(statusCode, content, headers) {
-        options.xhrId = goog.string.createUniqueString();
-        options.overwrite = false;
-        dav.move(file, newFile, assertMoveFileOverWriteFalse, options,
+        opt_request.xhrId = goog.string.createUniqueString();
+        opt_request.headers = {}, opt_request.headers['Overwrite'] = false;
+        dav.move(file, newFile, assertMoveFileOverWriteFalse, opt_request,
           goog.partial(xhrLogging, logger));
       };
       var assertMoveFile = function(statusCode, content, headers) {
@@ -291,15 +291,15 @@
         assertTrue('Location match:',
           goog.string.endsWith(headers['Location'], newFile));
 
-        options.xhrId = goog.string.createUniqueString();
-        dav.copy(newFile, file, callbackCopyFile, options);
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.copy(newFile, file, callbackCopyFile, opt_request);
       };
       var callbackUploadFile = function(statusCode, content, headers) {
-        options.xhrId = goog.string.createUniqueString();
-        dav.move(file, newFile, assertMoveFile, options);
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.move(file, newFile, assertMoveFile, opt_request);
       };
-      options.xhrId = goog.string.createUniqueString();
-      dav.put(file, initData, callbackUploadFile, options);
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.put(file, initData, callbackUploadFile, opt_request);
     }
   </script>
 </body>

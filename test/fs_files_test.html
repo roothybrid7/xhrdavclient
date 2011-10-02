@@ -67,14 +67,19 @@
 
       asyncTestCase.waitForAsync(testId);
 
-      var assertUploadFile = function(errors) {
+      var assertUploadFile = function(errors, newLoc) {
         logger.config(goog.typeOf(errors));
         assertFalse('No errors?', errors.hasRequest());
+        assertNotNullNorUndefined('new resource location?', newLoc);
+        logger.config(newLoc);
+        var createPath = newLoc.split('/').pop();
+        var requestPath = file.split('/').pop();
+        assertEquals('Filename is same?', requestPath, createPath);
 
         asyncContinue();
       };
 
-      fs.write(file, initData, assertUploadFile, null, null,
+      fs.write(file, initData, assertUploadFile, null, null, this,
         goog.partial(xhrLogging, logger));
     }
 
@@ -87,19 +92,21 @@
 
       asyncTestCase.waitForAsync(testId);
 
-      var assertUploadFail = function(errors) {
+      var assertUploadFail = function(errors, newLoc) {
         assertTrue('xhrdav.lib.Errors?', errors instanceof xhrdav.lib.Errors);
         assertTrue('No request Error?', errors.hasRequest());
         logger.config(goog.debug.expose(errors.request));
         assertFalse('Occured request errors?',
           goog.object.isEmpty(errors.request));
         assertEquals('Error path', testPath, errors.request.path);
-        assertNotNullNorUndefined('Not OK?', errors.request.msg);
+        assertNotNullNorUndefined('Not OK?', errors.request.message);
+        assertTrue('Not Create file?', goog.string.isEmptySafe(newLoc));
 
         asyncContinue();
       };
 
       fs.write(testPath, initData, assertUploadFail, {depth: 1}, {a: 'b'},
+        this,
         goog.partial(xhrLogging, logger));
     }
 
@@ -111,13 +118,18 @@
 
       asyncTestCase.waitForAsync(testId);
 
-      var assertUploadNull = function(errors) {
+      var assertUploadNull = function(errors, newLoc) {
         assertFalse('No errors', errors.hasRequest());
+        assertNotNullNorUndefined('new resource location?', newLoc);
+        logger.config(newLoc);
+        var createPath = newLoc.split('/').pop();
+        var requestPath = file.split('/').pop();
+        assertEquals('Filename is same?', requestPath, createPath);
 
         asyncContinue();
       };
 
-      fs.write(file, null, assertUploadNull, null, null,
+      fs.write(file, null, assertUploadNull, null, null, this,
         goog.partial(xhrLogging, logger));
     }
   </script>
