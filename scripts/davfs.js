@@ -1,6 +1,10 @@
 /**
  * davfs.js - XHTTPRequest High-level WebDAV Client API.
  *
+ * This is a High-level WebDAV client API for File system.
+ * Path base request.
+ * Resource base request: @see xhrdav.lib.ResourceController
+ *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 

@@ -1,6 +1,9 @@
 /**
  * resourcecontroller.js - xhrdavclient resource object controller
  *
+ * This is a WebDAV resource controller.
+ * A single resource simply copy, move, rename, delete support.
+ *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
@@ -10,9 +13,6 @@ goog.require('xhrdav.lib.Resource');
 
 /**
  * xhrdavclient resource controller
- *
- * This is a WebDAV resource controller.
- * A single resource simply copy, move, rename, delete support.
  *
  * @constructor
  * @param {(xhrdav.lib.Resource|Object}=} resource  Json/Hash object for WebDAV resource.

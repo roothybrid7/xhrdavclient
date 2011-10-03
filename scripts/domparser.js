@@ -1,6 +1,8 @@
 /**
  * domparser.js - WebDAV Client dom parser.
  *
+ * This is a Xml dom parser for WebDAV collection.
+ *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
