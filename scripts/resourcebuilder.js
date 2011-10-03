@@ -165,17 +165,19 @@ xhrdav.lib.ResourceBuilder.prototype.getResources = function() {
  *
  * @param {{root:xhrdav.lib.ResourceGenerator,
  *          childs:Array.<xhrdav.lib.ResourceGenerator}} resources
+ * @param {boolean} isClassbase TRUE: xhrdav.lib.Resource FALSE: {}
  * @return {{root:xhrdav.lib.Resource, childs:Array.<xhrdav.lib.Resource}}
  */
-xhrdav.lib.ResourceBuilder.serialize = function(resources) {
+xhrdav.lib.ResourceBuilder.serialize = function(resources, isClassbase) {
   var serializedResources = {};
 
   var root = resources.root;
   var childs = resources.childs;
 
-  serializedResources.root = root.serialize();
+  serializedResources.root = root.serialize(isClassbase);
   serializedResources.childs =
-    goog.array.map(childs, function(v, i) { return v.serialize(); }) || [];
+    goog.array.map(childs, function(v, i) {
+      return v.serialize(isClassbase); }) || [];
 
   return serializedResources;
 };
@@ -183,11 +185,12 @@ xhrdav.lib.ResourceBuilder.serialize = function(resources) {
 /**
  * Serialize resources
  *
+ * @param {boolean} isClassbase TRUE: xhrdav.lib.Resource FALSE: {}
  * @return {{root:xhrdav.lib.Resource, childs:Array.<xhrdav.lib.Resource}}
  * @see xhrdav.lib.ResourceBuilder.serialize
  */
-xhrdav.lib.ResourceBuilder.prototype.serialize = function() {
-  return xhrdav.lib.ResourceBuilder.serialize(this.getResources());
+xhrdav.lib.ResourceBuilder.prototype.serialize = function(isClassbase) {
+  return xhrdav.lib.ResourceBuilder.serialize(this.getResources(), isClassbase);
 };
 
 /* Entry point for closure compiler */

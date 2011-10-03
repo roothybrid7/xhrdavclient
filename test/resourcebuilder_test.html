@@ -97,7 +97,7 @@
       var bldKls = xhrdav.lib.ResourceBuilder;
       var builder = bldKls.createCollection(initDirOnlyData);
       var resources = builder.getResources();
-      var resSerialized = bldKls.serialize(resources);
+      var resSerialized = bldKls.serialize(resources, true);
       logger.config(goog.json.serialize(resSerialized));
       assertNotNullNorUndefined('Serialized resources?', resSerialized);
       assertTrue('xhrdav.lib.Resource?',
@@ -112,12 +112,28 @@
       var bldKls = xhrdav.lib.ResourceBuilder;
       var builder = bldKls.createCollection(initCurrDirData);
       var resources = builder.getResources();
-      var resSerialized = bldKls.serialize(resources);
+      var resSerialized = bldKls.serialize(resources, true);
       logger.config(goog.json.serialize(resSerialized));
       assertNotNullNorUndefined('Serialized resources?', resSerialized);
       assertTrue('xhrdav.lib.Resource?',
         resSerialized.root instanceof xhrdav.lib.Resource);
       assertTrue('childs of xhrdav.lib.Resource?',
+        resSerialized.childs[0] instanceof xhrdav.lib.Resource);
+    }
+
+    function testSerializeResourcesNotClassbase() {
+      var testId = 'SerializeResourcesNotClassbase';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var bldKls = xhrdav.lib.ResourceBuilder;
+      var builder = bldKls.createCollection(initCurrDirData);
+      var resources = builder.getResources();
+      var resSerialized = bldKls.serialize(resources);
+      logger.config(goog.json.serialize(resSerialized));
+      assertNotNullNorUndefined('Serialized resources?', resSerialized);
+      assertFalse('xhrdav.lib.Resource?',
+        resSerialized.root instanceof xhrdav.lib.Resource);
+      assertFalse('childs of xhrdav.lib.Resource?',
         resSerialized.childs[0] instanceof xhrdav.lib.Resource);
     }
 
@@ -128,9 +144,22 @@
       var bldKls = xhrdav.lib.ResourceBuilder;
       var builder = bldKls.createCollection(initDirOnlyData);
       var resources = builder.getResources();
-      var resSerialized = builder.serialize();
+      var resSerialized = builder.serialize(true);
       assertNotNullNorUndefined('Serialized resources?', resSerialized);
       assertTrue('xhrdav.lib.Resource?',
+        resSerialized.root instanceof xhrdav.lib.Resource);
+    }
+
+    function testSerializeResourceBySelfNotClassbase() {
+      var testId = 'SerializeResourceBySelfNotClassbase';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var bldKls = xhrdav.lib.ResourceBuilder;
+      var builder = bldKls.createCollection(initDirOnlyData);
+      var resources = builder.getResources();
+      var resSerialized = builder.serialize();
+      assertNotNullNorUndefined('Serialized resources?', resSerialized);
+      assertFalse('xhrdav.lib.Resource?',
         resSerialized.root instanceof xhrdav.lib.Resource);
     }
 
