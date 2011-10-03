@@ -24,20 +24,38 @@ xhrdav.lib.ResourceGenerator = function(resource) {
 };
 
 /**
- * Serialize resource
+ * Serialize resource [Class method]
  *
- * @return {xhrdav.lib.Resource} converted Json/Hash object for WebDAV resource.
+ * @param {(xhrdav.lib.ResourceGenerator|xhrdavlib.Resource|Object)} resource
+ * @param {boolean} isClassbase true: xhrdav.lib.Resource, false: {}
+ * @return {(xhrdav.lib.Resource|Object)} converted Json/Hash object for WebDAV resource.
  * @see xhrdav.lib.Resource
  */
-xhrdav.lib.ResourceGenerator.prototype.serialize = function() {
-  var resource = new xhrdav.lib.Resource();
-//  resource.href = this.href;
-  goog.object.forEach(this, function(val, key) {
-    if (goog.object.containsKey(resource, key)) {
-      goog.object.set(resource, key, val);
+xhrdav.lib.ResourceGenerator.serialize = function(resource, isClassbase) {
+  var newResource;
+  if (!!isClassbase) {
+    newResource = new xhrdav.lib.Resource();
+  } else {
+    newResource = {}, goog.mixin(newResource, new xhrdav.lib.Resource());
+  }
+
+  goog.object.forEach(resource, function(val, key) {
+    if (goog.object.containsKey(newResource, key)) {
+      goog.object.set(newResource, key, val);
     }
   });
-  return resource;
+  return newResource;
+};
+
+/**
+ * Serialize resource
+ *
+ * @param {boolean} isClassbase true: xhrdav.lib.Resource, false: {}
+ * @return {(xhrdav.lib.Resource|Object)} converted Json/Hash object for WebDAV resource.
+ * @see xhrdav.lib.ResourceGenerator.serialize
+ */
+xhrdav.lib.ResourceGenerator.prototype.serialize = function(isClassbase) {
+  return xhrdav.lib.ResourceGenerator.serialize(this, isClassbase);
 };
 
 /**
@@ -66,13 +84,15 @@ xhrdav.lib.ResourceGenerator.prototype.getDestination = function() {
  *                                        Json/Hash object for WebDAV resoruce.
  * @param {Function=} handler callback handler function
  *                            [callback args: errors object]
- * @param {Object=} opt_request Request options.
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
  */
 xhrdav.lib.ResourceGenerator.remove = function(
-  resource, handler, opt_request, debugHandler) {
+  resource, handler, opt_headers, opt_params, debugHandler) {
   // TODO: Implements
+  // resource.hrefのパスを削除する
 };
 
 /**
@@ -80,14 +100,16 @@ xhrdav.lib.ResourceGenerator.remove = function(
  *
  * @param {Function=} handler callback handler function
  *                            [callback args: errors object]
- * @param {Object=} opt_request Request options.
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
  * @see xhrdav.lib.ResourceGenerator.remove
  */
 xhrdav.lib.ResourceGenerator.prototype.remove = function(
-  handler, opt_request, debugHandler) {
+  handler, opt_headers, opt_params, debugHandler) {
   // TODO: Implements
+  // 同名のクラスメソッドに投げる
 };
 
 /**
@@ -98,14 +120,23 @@ xhrdav.lib.ResourceGenerator.prototype.remove = function(
  * @param {string} dest Copy destination Path <code>/mydav/bar/</code>.
  * @param {Function=} handler callback handler function
  *                            [callback args: errors object]
- * @param {Object=} opt_request Request options.
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
  */
 xhrdav.lib.ResourceGenerator.copy = function(
-  resource, dest, handler, opt_request, debugHandler) {
+  resource, dest, handler, opt_headers, opt_params, debugHandler) {
 //  if (!this.destination) // Errors
   // TODO: Implements
+  // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
+  // ディレクトリの場合:
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'を補完してcopy
+  //  違う場合は、destの末尾にresource.hrefの末尾を追加してcopy
+  // ファイルの場合:
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'があった場合削除してcopy
+  //  違う場合は、destをディレクトリと見なし、destの末尾に'/'を補完してから
+  //  resource.hrefの末尾を追加してcopy
 };
 
 /**
@@ -113,13 +144,14 @@ xhrdav.lib.ResourceGenerator.copy = function(
  *
  * @param {Function=} handler callback handler function
  *                            [callback args: errors object]
- * @param {Object=} opt_request Request options.
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
  * @see xhrdav.lib.ResourceGenerator.copy
  */
 xhrdav.lib.ResourceGenerator.prototype.copy = function(
-  handler, opt_request, debugHandler) {
+  handler, opt_headers, opt_params, debugHandler) {
 //  if (!this.destination) // Errors
   // TODO: Implements
 };
@@ -132,14 +164,25 @@ xhrdav.lib.ResourceGenerator.prototype.copy = function(
  * @param {string} dest Move destination Path <code>/mydav/bar/</code>.
  * @param {Function=} handler callback handler function
  *                            [callback args: errors object]
- * @param {Object=} opt_request Request options.
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
  */
 xhrdav.lib.ResourceGenerator.move = function(
-  resoruce, dest, handler, opt_request, debugHandler) {
+  resoruce, dest, handler, opt_headers, opt_params, debugHandler) {
 //  if (!this.destination) // Errors
   // TODO: Implements
+//  if (!this.destination) // Errors
+  // TODO: Implements
+  // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
+  // ディレクトリの場合:
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'を補完してmove
+  //  違う場合は、destの末尾にresource.hrefの末尾を追加してmove
+  // ファイルの場合:
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'があった場合削除してmove
+  //  違う場合は、destをディレクトリと見なし、destの末尾に'/'を補完してから
+  //  resource.hrefの末尾を追加してmove
 };
 
 /**
@@ -147,19 +190,61 @@ xhrdav.lib.ResourceGenerator.move = function(
  *
  * @param {Function=} handler callback handler function
  *                            [callback args: errors object]
- * @param {Object=} opt_request Request options.
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of Resource or #destination
  * @see xhrdav.lib.ResourceGenerator.move
  */
 xhrdav.lib.ResourceGenerator.prototype.move = function(
-  handler, opt_request, debugHandler) {
+  handler, opt_headers, opt_params, debugHandler) {
 //  if (!this.destination) // Errors
   // TODO: Implements
 }
 
+/**
+ * Rename resource [Class method]
+ *
+ * @param {(xhrdav.lib.ResourceGenerator|xhrdav.lib.Resource)} resource
+ *                                        Json/Hash object for WebDAV resource.
+ * @param {string} dest New resource name.
+ * @param {Function=} handler callback handler function
+ *                            [callback args: errors object]
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
+ * @param {Function=} debugHandler  [Callback args: errors object]
+ * @throws {Error} Not found of xhrdav.lib.Resource or #destination
+ */
+xhrdav.lib.ResourceGenerator.rename = function(
+  resource, dest, handler, opt_headers, opt_params, debugHandler) {
+  // TODO: Implements
+  // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
+  // ディレクトリの場合:
+  //  先頭にresource.hrefのディレクトリパスを追加し、destの末尾に'/'を補完してrename
+  // ファイルの場合:
+  //  先頭にresource.hrefのディレクトリパスを追加してrename
+};
+
+/**
+ * Rename resource
+ *
+ * @param {Function=} handler callback handler function
+ *                            [callback args: errors object]
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
+ * @param {Function=} debugHandler  [Callback args: errors object]
+ * @throws {Error} Not found of xhrdav.lib.Resource or #destination
+ */
+xhrdav.lib.ResourceGenerator.prototype.rename = function(
+  handler, opt_headers, opt_params, debugHandler) {
+  // TODO: Implements
+};
+
+
 /* Entry point for closure compiler */
 goog.exportSymbol('xhrdav.lib.ResourceGenerator', xhrdav.lib.ResourceGenerator);
+goog.exportSymbol('xhrdav.lib.ResourceGenerator.serialize',
+  xhrdav.lib.ResourceGenerator.serialize);
 goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'serialize',
   xhrdav.lib.ResourceGenerator.prototype.serialize);
 goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'setDestination',

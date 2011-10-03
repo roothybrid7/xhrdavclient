@@ -92,10 +92,12 @@
       assertNotUndefined('Define class method remove?', genKlass.remove);
       assertNotUndefined('Define class method copy?', genKlass.copy);
       assertNotUndefined('Define class method move?', genKlass.move);
+      assertNotUndefined('Define class method rename?', genKlass.rename);
       var generator = new genKlass();
       assertNotUndefined('Define method remove?', generator.remove);
       assertNotUndefined('Define method copy?', generator.copy);
       assertNotUndefined('Define method move?', generator.move);
+      assertNotUndefined('Define method rename?', generator.rename);
     }
 
     function testSerialize() {
@@ -106,12 +108,44 @@
       var generator = new genKlass();
       generator.href = '/foo/bar/';
       generator.status = 'HTTP/1.1 200 OK';
-      var resSerializeKls = generator.serialize();
+      var resSerialize = generator.serialize();
+      assertFalse('same xhrdav.lib.Resource?',
+        resSerialize instanceof xhrdav.lib.Resource);
+      logger.config(goog.json.serialize(resSerialize));
+      assertEquals('href is same?', generator.href, resSerialize.href);
+      assertEquals('status is same?', generator.status, resSerialize.status);
+    }
+
+    function testSerializeWithClassbase() {
+      var testId = 'SerializeWithClassbase';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var genKlass = xhrdav.lib.ResourceGenerator;
+      var generator = new genKlass();
+      generator.href = '/foo/bar/';
+      generator.status = 'HTTP/1.1 200 OK';
+      var resSerializeKls = generator.serialize(true);
       assertTrue('same xhrdav.lib.Resource?',
         resSerializeKls instanceof xhrdav.lib.Resource);
       logger.config(goog.json.serialize(resSerializeKls));
       assertEquals('href is same?', generator.href, resSerializeKls.href);
       assertEquals('status is same?', generator.status, resSerializeKls.status);
+    }
+
+    function testSerializeResource2Object() {
+      var testId = 'SerializeResource2Object';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var genKlass = xhrdav.lib.ResourceGenerator;
+      var resource = new xhrdav.lib.Resource();
+      resource.href = '/foo/bar/';
+      resource.status = 'HTTP/1.1 200 OK';
+      var resSerialize = genKlass.serialize(resource);
+      assertFalse('same xhrdav.lib.Resource?',
+        resSerialize instanceof xhrdav.lib.Resource);
+      logger.config(goog.json.serialize(resSerialize));
+      assertEquals('href is same?', resource.href, resSerialize.href);
+      assertEquals('status is same?', resource.status, resSerialize.status);
     }
 
     function testLoad() {

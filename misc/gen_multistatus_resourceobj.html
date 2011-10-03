@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <script src="../closure-library/closure/goog/base.js" type="text/javascript"></script>
+  <script src="../xhrdavclientdeps.js" type="text/javascript"></script>
+  <script src="../test/utils.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    goog.require('goog.json');
+    goog.require('goog.object');
+    goog.require('goog.array');
+    goog.require('goog.string');
+    goog.require('goog.string.path');
+    goog.require('goog.net.XhrManager');
+    goog.require('goog.net.XhrIo');
+    goog.require('goog.dom.xml');
+    goog.require('xhrdav.lib.DavFs');
+    goog.require('xhrdav.lib.ResourceBuilder');
+
+    goog.require('goog.debug.Console');
+    goog.require('goog.debug.Logger');
+  </script>
+</head>
+<body>
+  <script type="text/javascript">
+    var davDir = '/mydav/';
+
+    var davFs = xhrdav.lib.DavFs.getInstance().initialize();
+    var dav = new xhrdav.lib.Client();
+    var httpStatus = xhrdav.lib.HttpStatus;
+    var bldKls = xhrdav.lib.ResourceBuilder;
+
+    var multiCurrJs = '../fixtures/multistatusCurrentDirParseRaw.js';
+    var multiOnlyJs = '../fixtures/multistatusDironlyParseRaw.js';
+
+    var loadDataAndUpload = function(funcName, data) {
+      console.log(data);
+      var builder = bldKls.createCollection(data);
+      console.log(builder);
+      var resources = builder.serialize();
+      var lastMod = resources.root.lastmodified;
+//      alert(lastMod);
+      var jsonData = goog.json.serialize(resources);
+      lastMod = goog.json.parse(jsonData).root.lastmodified; // 日付オブジェクトはserializeできない
+      var jsonpData = goog.string.buildString(funcName, '(', jsonData, ')');
+
+      var uploadPath = goog.string.path.normalizePath(
+        goog.string.path.join(davDir, funcName + '.js'));
+      dav.put(uploadPath, jsonpData);
+    };
+
+    var multistatusCurrentDirParseRaw = function(json) {
+      loadDataAndUpload('currDirList', json['json']);
+    };
+    loadJson(multiCurrJs);
+
+    var multistatusDironlyParseRaw = function(json) {
+      loadDataAndUpload('dirOnly', json['json']);
+    };
+    loadJson(multiOnlyJs);
+  </script>
+</body>
+</html>

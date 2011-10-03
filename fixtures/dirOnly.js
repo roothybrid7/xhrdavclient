@@ -1,0 +1,1 @@
+dirOnly({"root":{"href":"/mydav/","pathlist":["mydav"],"status":"HTTP/1.1 200 OK","protocol":"HTTP/1.1","statuscode":200,"statustext":"OK","resourcetype":"collection","creationdate":{},"lastmodified":{},"contenttype":"httpd/unix-directory","contentlength":0,"etag":"\"4b7f638-110-4adfab9f34600\"","executable":false},"childs":[]})
