@@ -74,6 +74,7 @@ xhrdav.lib.ResourceGenerator.prototype.getDestination = function() {
 xhrdav.lib.ResourceGenerator.remove = function(
   resource, handler, opt_headers, opt_params, debugHandler) {
   // TODO: Implements
+  // resource.hrefのパスを削除する
 };
 
 /**
@@ -90,6 +91,7 @@ xhrdav.lib.ResourceGenerator.remove = function(
 xhrdav.lib.ResourceGenerator.prototype.remove = function(
   handler, opt_headers, opt_params, debugHandler) {
   // TODO: Implements
+  // 同名のクラスメソッドに投げる
 };
 
 /**
@@ -109,6 +111,14 @@ xhrdav.lib.ResourceGenerator.copy = function(
   resource, dest, handler, opt_headers, opt_params, debugHandler) {
 //  if (!this.destination) // Errors
   // TODO: Implements
+  // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
+  // ディレクトリの場合:
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'を補完してcopy
+  //  違う場合は、destの末尾にresource.hrefの末尾を追加してcopy
+  // ファイルの場合:
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'があった場合削除してcopy
+  //  違う場合は、destをディレクトリと見なし、destの末尾に'/'を補完してから
+  //  resource.hrefの末尾を追加してcopy
 };
 
 /**
@@ -145,6 +155,16 @@ xhrdav.lib.ResourceGenerator.move = function(
   resoruce, dest, handler, opt_headers, opt_params, debugHandler) {
 //  if (!this.destination) // Errors
   // TODO: Implements
+//  if (!this.destination) // Errors
+  // TODO: Implements
+  // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
+  // ディレクトリの場合:
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'を補完してmove
+  //  違う場合は、destの末尾にresource.hrefの末尾を追加してmove
+  // ファイルの場合:
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'があった場合削除してmove
+  //  違う場合は、destをディレクトリと見なし、destの末尾に'/'を補完してから
+  //  resource.hrefの末尾を追加してmove
 };
 
 /**
@@ -180,6 +200,11 @@ xhrdav.lib.ResourceGenerator.prototype.move = function(
 xhrdav.lib.ResourceGenerator.rename = function(
   resource, dest, handler, opt_headers, opt_params, debugHandler) {
   // TODO: Implements
+  // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
+  // ディレクトリの場合:
+  //  先頭にresource.hrefのディレクトリパスを追加し、destの末尾に'/'を補完してrename
+  // ファイルの場合:
+  //  先頭にresource.hrefのディレクトリパスを追加してrename
 };
 
 /**
