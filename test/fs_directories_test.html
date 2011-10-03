@@ -85,7 +85,7 @@
         assertFalse('No Errors', errors.hasRequest());
         assertFalse('No Errors', errors.hasProps());
         assertNotNullNorUndefined('Get collection', content);
-        assertTrue('xhrdav.lib.Resource?', content.root instanceof xhrdav.lib.Resource);
+        assertFalse('Not xhrdav.lib.Resource?', content.root instanceof xhrdav.lib.Resource);
 
         logger.config(goog.json.serialize(errors));
         logger.config(goog.json.serialize(content));

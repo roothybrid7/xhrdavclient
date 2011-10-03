@@ -1,5 +1,5 @@
 /**
- * resource.js - xhrdavclient resource object
+ * resource.js - xhrdavclient resource object and resource type catalog.
  *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */

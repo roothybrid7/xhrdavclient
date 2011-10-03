@@ -24,20 +24,38 @@ xhrdav.lib.ResourceGenerator = function(resource) {
 };
 
 /**
- * Serialize resource
+ * Serialize resource [Class method]
  *
- * @return {xhrdav.lib.Resource} converted Json/Hash object for WebDAV resource.
+ * @param {(xhrdav.lib.ResourceGenerator|xhrdavlib.Resource|Object)} resource
+ * @param {boolean} isClassbase true: xhrdav.lib.Resource, false: {}
+ * @return {(xhrdav.lib.Resource|Object)} converted Json/Hash object for WebDAV resource.
  * @see xhrdav.lib.Resource
  */
-xhrdav.lib.ResourceGenerator.prototype.serialize = function() {
-  var resource = new xhrdav.lib.Resource();
-//  resource.href = this.href;
-  goog.object.forEach(this, function(val, key) {
-    if (goog.object.containsKey(resource, key)) {
-      goog.object.set(resource, key, val);
+xhrdav.lib.ResourceGenerator.serialize = function(resource, isClassbase) {
+  var newResource;
+  if (!!isClassbase) {
+    newResource = new xhrdav.lib.Resource();
+  } else {
+    newResource = {}, goog.mixin(newResource, new xhrdav.lib.Resource());
+  }
+
+  goog.object.forEach(resource, function(val, key) {
+    if (goog.object.containsKey(newResource, key)) {
+      goog.object.set(newResource, key, val);
     }
   });
-  return resource;
+  return newResource;
+};
+
+/**
+ * Serialize resource
+ *
+ * @param {boolean} isClassbase true: xhrdav.lib.Resource, false: {}
+ * @return {(xhrdav.lib.Resource|Object)} converted Json/Hash object for WebDAV resource.
+ * @see xhrdav.lib.ResourceGenerator.serialize
+ */
+xhrdav.lib.ResourceGenerator.prototype.serialize = function(isClassbase) {
+  return xhrdav.lib.ResourceGenerator.serialize(this, isClassbase);
 };
 
 /**
@@ -225,6 +243,8 @@ xhrdav.lib.ResourceGenerator.prototype.rename = function(
 
 /* Entry point for closure compiler */
 goog.exportSymbol('xhrdav.lib.ResourceGenerator', xhrdav.lib.ResourceGenerator);
+goog.exportSymbol('xhrdav.lib.ResourceGenerator.serialize',
+  xhrdav.lib.ResourceGenerator.serialize);
 goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'serialize',
   xhrdav.lib.ResourceGenerator.prototype.serialize);
 goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'setDestination',
