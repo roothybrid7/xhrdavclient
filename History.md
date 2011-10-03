@@ -1,4 +1,14 @@
 
+0.0.10 / 2011-10-03 
+==================
+
+  * Modified returning resource object type.
+  * Add todo list
+  * Add converted multistatus resource object fixtures
+  * Add rename method in ResoruceGenerator
+  * Merge branch 'release/v0.0.9' into develop
+  * update changelog
+
 0.0.9 / 2011-10-03 
 ==================
 
