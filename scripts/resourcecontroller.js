@@ -1,39 +1,51 @@
 /**
- * resourcegenerator.js - xhrdavclient resource object generator
+ * resourcecontroller.js - xhrdavclient resource object controller
  *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.ResourceGenerator');
+goog.provide('xhrdav.lib.ResourceController');
 goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.Resource');
 
 /**
- * xhrdavclient resource generator
+ * xhrdavclient resource controller
+ *
+ * This is a WebDAV resource controller.
+ * A single resource simply copy, move, rename, delete support.
  *
  * @constructor
- * @param {xhrdav.lib.Resource=} resource  Json/Hash object for WebDAV resource.
+ * @param {(xhrdav.lib.Resource|Object}=} resource  Json/Hash object for WebDAV resource.
  * @see xhrdav.lib.Resource
  */
-xhrdav.lib.ResourceGenerator = function(resource) {
-  if (goog.isDefAndNotNull(resource) && resource instanceof xhrdav.lib.Resource) {
+xhrdav.lib.ResourceController = function(resource) {
+  if (resource instanceof xhrdav.lib.Resource) {
+    // Mixin model property and data.
     goog.mixin(this, resource);
   } else {
-    goog.mixin(this, new xhrdav.lib.Resource());
+    var model;
+    if (goog.isDefAndNotNull(resource)) {
+      // Mixin model property and import supported property data.
+      model = xhrdav.lib.ResourceController.serialize(resource, true);
+    } else {
+      // Mixin model property and create new.
+      model = new xhrdav.lib.Resource();
+    }
+    goog.mixin(this, model);
   }
 };
 
 /**
  * Serialize resource [Class method]
  *
- * @param {(xhrdav.lib.ResourceGenerator|xhrdavlib.Resource|Object)} resource
- * @param {boolean} isClassbase true: xhrdav.lib.Resource, false: {}
+ * @param {(xhrdav.lib.ResourceController|xhrdavlib.Resource|Object)} resource
+ * @param {boolean} asModel true: xhrdav.lib.Resource, false: {}
  * @return {(xhrdav.lib.Resource|Object)} converted Json/Hash object for WebDAV resource.
  * @see xhrdav.lib.Resource
  */
-xhrdav.lib.ResourceGenerator.serialize = function(resource, isClassbase) {
+xhrdav.lib.ResourceController.serialize = function(resource, asModel) {
   var newResource;
-  if (!!isClassbase) {
+  if (!!asModel) {
     newResource = new xhrdav.lib.Resource();
   } else {
     newResource = {}, goog.mixin(newResource, new xhrdav.lib.Resource());
@@ -50,12 +62,12 @@ xhrdav.lib.ResourceGenerator.serialize = function(resource, isClassbase) {
 /**
  * Serialize resource
  *
- * @param {boolean} isClassbase true: xhrdav.lib.Resource, false: {}
+ * @param {boolean} asModel true: xhrdav.lib.Resource, false: {}
  * @return {(xhrdav.lib.Resource|Object)} converted Json/Hash object for WebDAV resource.
- * @see xhrdav.lib.ResourceGenerator.serialize
+ * @see xhrdav.lib.ResourceController.serialize
  */
-xhrdav.lib.ResourceGenerator.prototype.serialize = function(isClassbase) {
-  return xhrdav.lib.ResourceGenerator.serialize(this, isClassbase);
+xhrdav.lib.ResourceController.prototype.serialize = function(asModel) {
+  return xhrdav.lib.ResourceController.serialize(this, asModel);
 };
 
 /**
@@ -63,7 +75,7 @@ xhrdav.lib.ResourceGenerator.prototype.serialize = function(isClassbase) {
  *
  * @param {string} dest Destination path.
  */
-xhrdav.lib.ResourceGenerator.prototype.setDestination = function(dest) {
+xhrdav.lib.ResourceController.prototype.setDestination = function(dest) {
   /** @type {string} */
   this.destination_ = dest;
 };
@@ -73,14 +85,14 @@ xhrdav.lib.ResourceGenerator.prototype.setDestination = function(dest) {
  *
  * @return {string} Destination path.
  */
-xhrdav.lib.ResourceGenerator.prototype.getDestination = function() {
+xhrdav.lib.ResourceController.prototype.getDestination = function() {
   return this.destination_ || null;
 };
 
 /**
  * Remove resource [Class method]
  *
- * @param {(xhrdav.lib.ResourceGenerator|xhrdav.lib.Resource)} resoruce
+ * @param {(xhrdav.lib.ResourceController|xhrdav.lib.Resource)} resoruce
  *                                        Json/Hash object for WebDAV resoruce.
  * @param {Function=} handler callback handler function
  *                            [callback args: errors object]
@@ -89,7 +101,7 @@ xhrdav.lib.ResourceGenerator.prototype.getDestination = function() {
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
  */
-xhrdav.lib.ResourceGenerator.remove = function(
+xhrdav.lib.ResourceController.remove = function(
   resource, handler, opt_headers, opt_params, debugHandler) {
   // TODO: Implements
   // resource.hrefのパスを削除する
@@ -104,9 +116,9 @@ xhrdav.lib.ResourceGenerator.remove = function(
  * @param {object=} opt_params  Request query params.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
- * @see xhrdav.lib.ResourceGenerator.remove
+ * @see xhrdav.lib.ResourceController.remove
  */
-xhrdav.lib.ResourceGenerator.prototype.remove = function(
+xhrdav.lib.ResourceController.prototype.remove = function(
   handler, opt_headers, opt_params, debugHandler) {
   // TODO: Implements
   // 同名のクラスメソッドに投げる
@@ -115,7 +127,7 @@ xhrdav.lib.ResourceGenerator.prototype.remove = function(
 /**
  * Copy resource [Class method]
  *
- * @param {(xhrdav.lib.ResourceGenerator|xhrdav.lib.Resource)} resoruce
+ * @param {(xhrdav.lib.ResourceController|xhrdav.lib.Resource)} resoruce
  *                                        Json/Hash object for WebDAV resoruce.
  * @param {string} dest Copy destination Path <code>/mydav/bar/</code>.
  * @param {Function=} handler callback handler function
@@ -125,7 +137,7 @@ xhrdav.lib.ResourceGenerator.prototype.remove = function(
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
  */
-xhrdav.lib.ResourceGenerator.copy = function(
+xhrdav.lib.ResourceController.copy = function(
   resource, dest, handler, opt_headers, opt_params, debugHandler) {
 //  if (!this.destination) // Errors
   // TODO: Implements
@@ -148,9 +160,9 @@ xhrdav.lib.ResourceGenerator.copy = function(
  * @param {object=} opt_params  Request query params.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
- * @see xhrdav.lib.ResourceGenerator.copy
+ * @see xhrdav.lib.ResourceController.copy
  */
-xhrdav.lib.ResourceGenerator.prototype.copy = function(
+xhrdav.lib.ResourceController.prototype.copy = function(
   handler, opt_headers, opt_params, debugHandler) {
 //  if (!this.destination) // Errors
   // TODO: Implements
@@ -159,7 +171,7 @@ xhrdav.lib.ResourceGenerator.prototype.copy = function(
 /**
  * Move resoruce [Class method]
  *
- * @param {(xhrdav.lib.ResourceGenerator|xhrdav.lib.Resource)} resoruce
+ * @param {(xhrdav.lib.ResourceController|xhrdav.lib.Resource)} resoruce
  *                                        Json/Hash object for WebDAV resoruce.
  * @param {string} dest Move destination Path <code>/mydav/bar/</code>.
  * @param {Function=} handler callback handler function
@@ -169,7 +181,7 @@ xhrdav.lib.ResourceGenerator.prototype.copy = function(
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
  */
-xhrdav.lib.ResourceGenerator.move = function(
+xhrdav.lib.ResourceController.move = function(
   resoruce, dest, handler, opt_headers, opt_params, debugHandler) {
 //  if (!this.destination) // Errors
   // TODO: Implements
@@ -194,9 +206,9 @@ xhrdav.lib.ResourceGenerator.move = function(
  * @param {object=} opt_params  Request query params.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found of Resource or #destination
- * @see xhrdav.lib.ResourceGenerator.move
+ * @see xhrdav.lib.ResourceController.move
  */
-xhrdav.lib.ResourceGenerator.prototype.move = function(
+xhrdav.lib.ResourceController.prototype.move = function(
   handler, opt_headers, opt_params, debugHandler) {
 //  if (!this.destination) // Errors
   // TODO: Implements
@@ -205,7 +217,7 @@ xhrdav.lib.ResourceGenerator.prototype.move = function(
 /**
  * Rename resource [Class method]
  *
- * @param {(xhrdav.lib.ResourceGenerator|xhrdav.lib.Resource)} resource
+ * @param {(xhrdav.lib.ResourceController|xhrdav.lib.Resource)} resource
  *                                        Json/Hash object for WebDAV resource.
  * @param {string} dest New resource name.
  * @param {Function=} handler callback handler function
@@ -215,7 +227,7 @@ xhrdav.lib.ResourceGenerator.prototype.move = function(
  * @param {Function=} debugHandler  [Callback args: errors object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
  */
-xhrdav.lib.ResourceGenerator.rename = function(
+xhrdav.lib.ResourceController.rename = function(
   resource, dest, handler, opt_headers, opt_params, debugHandler) {
   // TODO: Implements
   // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
@@ -235,32 +247,32 @@ xhrdav.lib.ResourceGenerator.rename = function(
  * @param {Function=} debugHandler  [Callback args: errors object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
  */
-xhrdav.lib.ResourceGenerator.prototype.rename = function(
+xhrdav.lib.ResourceController.prototype.rename = function(
   handler, opt_headers, opt_params, debugHandler) {
   // TODO: Implements
 };
 
 
 /* Entry point for closure compiler */
-goog.exportSymbol('xhrdav.lib.ResourceGenerator', xhrdav.lib.ResourceGenerator);
-goog.exportSymbol('xhrdav.lib.ResourceGenerator.serialize',
-  xhrdav.lib.ResourceGenerator.serialize);
-goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'serialize',
-  xhrdav.lib.ResourceGenerator.prototype.serialize);
-goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'setDestination',
-  xhrdav.lib.ResourceGenerator.prototype.setDestination);
-goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'getDestination',
-  xhrdav.lib.ResourceGenerator.prototype.getDestination);
-goog.exportSymbol('xhrdav.lib.ResourceGenerator.remove',
-  xhrdav.lib.ResourceGenerator.remove);
-goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'remove',
-  xhrdav.lib.ResourceGenerator.prototype.remove);
-goog.exportSymbol('xhrdav.lib.ResourceGenerator.copy',
-  xhrdav.lib.ResourceGenerator.copy);
-goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'copy',
-  xhrdav.lib.ResourceGenerator.prototype.copy);
-goog.exportSymbol('xhrdav.lib.ResourceGenerator.move',
-  xhrdav.lib.ResourceGenerator.move);
-goog.exportProperty(xhrdav.lib.ResourceGenerator.prototype, 'move',
-  xhrdav.lib.ResourceGenerator.prototype.move);
+goog.exportSymbol('xhrdav.lib.ResourceController', xhrdav.lib.ResourceController);
+goog.exportSymbol('xhrdav.lib.ResourceController.serialize',
+  xhrdav.lib.ResourceController.serialize);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'serialize',
+  xhrdav.lib.ResourceController.prototype.serialize);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'setDestination',
+  xhrdav.lib.ResourceController.prototype.setDestination);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'getDestination',
+  xhrdav.lib.ResourceController.prototype.getDestination);
+goog.exportSymbol('xhrdav.lib.ResourceController.remove',
+  xhrdav.lib.ResourceController.remove);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'remove',
+  xhrdav.lib.ResourceController.prototype.remove);
+goog.exportSymbol('xhrdav.lib.ResourceController.copy',
+  xhrdav.lib.ResourceController.copy);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'copy',
+  xhrdav.lib.ResourceController.prototype.copy);
+goog.exportSymbol('xhrdav.lib.ResourceController.move',
+  xhrdav.lib.ResourceController.move);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'move',
+  xhrdav.lib.ResourceController.prototype.move);
 

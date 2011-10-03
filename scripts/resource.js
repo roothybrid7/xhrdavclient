@@ -11,6 +11,9 @@ goog.require('goog.object');
 /**
  * xhrdavclient resource object
  *
+ * This is a WebDAV resoruce model and property catalog class.
+ * Create assosiate Map by goog.mixin or use data model.
+ *
  * @constructor
  */
 xhrdav.lib.Resource = function() {
