@@ -92,10 +92,12 @@
       assertNotUndefined('Define class method remove?', genKlass.remove);
       assertNotUndefined('Define class method copy?', genKlass.copy);
       assertNotUndefined('Define class method move?', genKlass.move);
+      assertNotUndefined('Define class method rename?', genKlass.rename);
       var generator = new genKlass();
       assertNotUndefined('Define method remove?', generator.remove);
       assertNotUndefined('Define method copy?', generator.copy);
       assertNotUndefined('Define method move?', generator.move);
+      assertNotUndefined('Define method rename?', generator.rename);
     }
 
     function testSerialize() {
