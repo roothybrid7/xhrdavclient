@@ -160,12 +160,16 @@ xhrdav.lib.DavFs.prototype.simpleErrorHandler_ = function(
  * Build Directory tree from multistatus
  *
  * @param {Object} content  multistatus response data.
- * @return {xhrdav.lib.Resource}  converted object for WebDAV resources.
+ * @param {Object=} opt_helper Returning resource controller.
+ * @return {(xhrdav.lib.Resource|xhrdav.lib.ResourceController|Object)}
+ *         converted object for WebDAV resources.
  * @see xhrdav.lib.ResourceBuilder.createCollection
  */
-xhrdav.lib.DavFs.getListDirFromMultistatus = function(content) {
+xhrdav.lib.DavFs.getListDirFromMultistatus = function(content, opt_helper) {
+  if (!goog.isDefAndNotNull(opt_helper)) opt_helper = {};
   var builder = xhrdav.lib.ResourceBuilder.createCollection(content);
-  return builder.serialize();
+  return (!!opt_helper.hasCtrl) ?
+    builder.getResources() : builder.serialize(opt_helper.asModel);
 };
 
 /**
@@ -201,14 +205,14 @@ xhrdav.lib.DavFs.prototype.updateRequestHandler_ = function(
  * @see xhrdav.lib.Errors
  */
 xhrdav.lib.DavFs.prototype.processMultistatus_ = function(
-  path, statusCode, content, headers) {
+  opt_helper, path, statusCode, content, headers) {
   var config = xhrdav.lib.Config.getInstance();
   var httpStatus = xhrdav.lib.HttpStatus;
   var errors = new xhrdav.lib.Errors();
 
   var args = [];
   if (statusCode == httpStatus.MULTI_STATUS) {
-    content = xhrdav.lib.DavFs.getListDirFromMultistatus(content);
+    content = xhrdav.lib.DavFs.getListDirFromMultistatus(content, opt_helper);
   } else {
     errors.setRequest({message: httpStatus.text[statusCode], path: path});
   }
@@ -241,16 +245,16 @@ xhrdav.lib.DavFs.prototype.createRequestParameters_ = function(
  * @param {Object=} opt_headers Request headers options.
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
+ * @param {{hasCtrl:boolean, asModel:boolean}=} opt_helper  response options.
  * @param {Function=} debugHandler
  */
 xhrdav.lib.DavFs.prototype.listDir = function(
-  path, handler, opt_headers, opt_params, context, debugHandler) {
+  path, handler, opt_headers, opt_params, context, opt_helper, debugHandler) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   opt_request.headers['Depth'] = 1;  // listing directory
-  this.client_.propfind(path,
-    goog.bind(this.responseHandler_, this,
-      handler, this.processMultistatus_, path, context),
+  var dataHandler = goog.bind(this.processMultistatus_, this, opt_helper);
+  this.client_.propfind(path, goog.bind(this.responseHandler_, this, handler, dataHandler, path, context),
     opt_request, debugHandler);
 };
 

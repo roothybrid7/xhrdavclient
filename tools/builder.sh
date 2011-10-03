@@ -66,7 +66,7 @@ NAMESPACES=(
   'xhrdav.lib.HttpStatus'
   'xhrdav.lib.Resource'
   'xhrdav.lib.ResourceBuilder'
-  'xhrdav.lib.ResourceGenerator'
+  'xhrdav.lib.ResourceController'
 )
 
 rootdir=
