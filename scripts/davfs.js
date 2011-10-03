@@ -96,6 +96,33 @@ xhrdav.lib.DavFs.prototype.responseHandler_ = function(
 };
 
 /**
+ * Content read Handler
+ *
+ * @private
+ * @param {string} path HTTP Requst path.
+ * @param {number} statusCode HTTP Status code.
+ * @param {Object} content Response body data.
+ * @param {Object} headers Response headers.
+ * @return {Array.<xhrdav.lib.Errors, string=>} Errors, new Location
+ * @see xhrdav.lib.Errors
+ */
+xhrdav.lib.DavFs.prototype.contentReadHandler_ = function(
+  path, statusCode, content, headers) {
+  var config = xhrdav.lib.Config.getInstance();
+  var httpStatus = xhrdav.lib.HttpStatus;
+  var errors = new xhrdav.lib.Errors();
+
+  var args = [];
+  if (statusCode != httpStatus.OK) {
+    errors.setRequest({message: httpStatus.text[statusCode], path: path});
+  }
+  args.push(errors);
+  args.push(content);
+
+  return args;
+};
+
+/**
  * Error Handler
  *
  * @private
@@ -135,6 +162,28 @@ xhrdav.lib.DavFs.prototype.simpleErrorHandler_ = function(
 xhrdav.lib.DavFs.getListDirFromMultistatus = function(content) {
   var builder = xhrdav.lib.ResourceBuilder.createCollection(content);
   return builder.serialize();
+};
+
+/**
+ * Update(move, copy) request handler.
+ *
+ * @param {string} method Method name of xhrdav.lib.Client instance.
+ * @param {string} path Update src file path.
+ * @param {string} dstPath Update destination path.
+ * @param {Function} handler  callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler
+ */
+xhrdav.lib.DavFs.prototype.updateRequestHandler_ = function(
+  method, path, dstPath, handler, opt_request, context, debugHandler) {
+  var api = goog.getObjectByName(method, this.client_);
+
+  api.call(this.client_, path, dstPath,
+    goog.bind(this.responseHandler_, this,
+      handler, this.simpleErrorHandler_, path, context),
+    opt_request, debugHandler);
 };
 
 /**
@@ -235,7 +284,7 @@ xhrdav.lib.DavFs.prototype.rmDir = function(
   path, handler, opt_headers, opt_params, context, debugHandler) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
-  this.client_._delete(goog.string.endsWith(path, '/') ? path : path + '/',
+  this.client_._delete(xhrdav.lib.functions.path.addLastSlash(path),
     goog.bind(this.responseHandler_, this,
       handler, this.simpleErrorHandler_, path, context),
     opt_request, debugHandler);
@@ -256,11 +305,11 @@ xhrdav.lib.DavFs.prototype.moveDir = function(
   path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
-  this.client_.move(goog.string.endsWith(path, '/') ? path : path + '/',
-    goog.string.endsWith(dstPath, '/') ? dstPath : dstPath + '/',
-    goog.bind(this.responseHandler_, this,
-      handler, this.simpleErrorHandler_, path, context),
-    opt_request, debugHandler);
+  var path = xhrdav.lib.functions.path.addLastSlash(path);
+  var dstPath = xhrdav.lib.functions.path.addLastSlash(dstPath);
+
+  this.updateRequestHandler_('move',
+    path, dstPath, handler, opt_request, context, debugHandler);
 };
 
 /**
@@ -273,15 +322,38 @@ xhrdav.lib.DavFs.prototype.moveDir = function(
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler
+ * @see #updateRequestHandler_
  */
 xhrdav.lib.DavFs.prototype.copyDir = function(
   path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
-  this.client_.copy(goog.string.endsWith(path, '/') ? path : path + '/',
-    goog.string.endsWith(dstPath, '/') ? dstPath : dstPath + '/',
+  path = xhrdav.lib.functions.path.addLastSlash(path);
+  dstPath = xhrdav.lib.functions.path.addLastSlash(dstPath);
+
+  this.updateRequestHandler_('copy',
+    path, dstPath, handler, opt_request, context, debugHandler);
+};
+
+/**
+ * Read data from WebDAV server
+ *
+ * @param {string} path read file path.
+ * @param {Function} handler callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler
+ */
+xhrdav.lib.DavFs.prototype.read = function(
+  path, handler, opt_headers, opt_params, context, debugHandler) {
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
+  path = xhrdav.lib.functions.path.removeLastSlash(path);
+
+  this.client_.get(path,
     goog.bind(this.responseHandler_, this,
-      handler, this.simpleErrorHandler_, path, context),
+      handler, this.contentReadHandler_, path, context),
     opt_request, debugHandler);
 };
 
@@ -299,6 +371,8 @@ xhrdav.lib.DavFs.prototype.copyDir = function(
 xhrdav.lib.DavFs.prototype.write = function(
   path, content, handler, opt_headers, opt_params, context, debugHandler) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
+  path = xhrdav.lib.functions.path.removeLastSlash(path);
 
   this.client_.put(path, content,
     goog.bind(this.responseHandler_, this,
@@ -320,17 +394,58 @@ xhrdav.lib.DavFs.prototype.removeFile = function(
   path, handler, opt_headers, opt_params, context, debugHandler) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
-  if (path.match(/^(.+)\/$/)) {
-    path = RegExp.$1;
-  } else {
-    path = path;
-  } // Preserve GET
+  path = xhrdav.lib.functions.path.removeLastSlash(path);
 
   this.client_._delete(path,
     goog.bind(this.responseHandler_, this,
       handler, this.simpleErrorHandler_, path, context),
     opt_request, debugHandler);
 };
+
+/**
+ * Move file.
+ *
+ * @param {string} path Move src file path.
+ * @param {string} dstPath Move destination path.
+ * @param {Function} handler  callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler
+ * @see #updateRequestHandler_
+ */
+xhrdav.lib.DavFs.prototype.moveFile = function(
+  path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
+  path = xhrdav.lib.functions.path.removeLastSlash(path);
+
+  this.updateRequestHandler_('move',
+    path, dstPath, handler, opt_request, context, debugHandler);
+};
+
+/**
+ * Copy file.
+ *
+ * @param {string} path Copy src file path.
+ * @param {string} dstPath Copy destination path.
+ * @param {Function} handler callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler
+ * @see #updateRequestHandler_
+ */
+xhrdav.lib.DavFs.prototype.copyFile = function(
+  path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
+  path = xhrdav.lib.functions.path.removeLastSlash(path);
+
+  this.updateRequestHandler_('copy',
+    path, dstPath, handler, opt_request, context, debugHandler);
+};
+
 
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs.getInstance);

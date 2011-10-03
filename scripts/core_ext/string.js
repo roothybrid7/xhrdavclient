@@ -23,7 +23,7 @@ xhrdav.lib.string.LetterType = {
  *
  * @return {string} Capitalized string.
  */
-String.prototype.$capitalize = function() {
+String.prototype.capitalize = function() {
   return (this.charAt(0).toUpperCase() + this.slice(1));
 };
 
@@ -33,7 +33,7 @@ String.prototype.$capitalize = function() {
  * @param {number} firstLetter type(Lower OR Upper)
  * @return {string} Camelized string.
  */
-String.prototype.$camelize = function(firstLetter) {
+String.prototype.camelize = function(firstLetter) {
   var self = this;
   var lType = xhrdav.lib.string.LetterType;
   if (!goog.isDefAndNotNull(firstLetter) || firstLetter > lType.UPPER) {
@@ -59,8 +59,8 @@ String.prototype.$camelize = function(firstLetter) {
 
 /* Entry point for closure compiler */
 goog.exportSymbol('xhrdav.lib.string.LetterType', xhrdav.lib.string.LetterType);
-goog.exportProperty(String.prototype, '$capitalize',
-  String.prototype.$capitalize);
-goog.exportProperty(String.prototype, '$camelize',
-  String.prototype.$camelize);
+goog.exportProperty(String.prototype, 'capitalize',
+  String.prototype.capitalize);
+goog.exportProperty(String.prototype, 'camelize',
+  String.prototype.camelize);
 

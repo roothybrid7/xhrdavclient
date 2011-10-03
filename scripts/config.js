@@ -17,6 +17,7 @@ goog.require('xhrdav.lib.functions');
 goog.require('xhrdav.lib.Errors');
 goog.require('xhrdav.lib.string');
 goog.require('xhrdav.lib.HttpStatus');
+goog.require('xhrdav.lib.functions.path');
 goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');
 
