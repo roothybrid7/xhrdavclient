@@ -14,7 +14,6 @@
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
 
-    goog.require('goog.object');
     goog.require('goog.net.XhrManager');
     goog.require('xhrdav.lib.Client');
     goog.require('xhrdav.lib.HttpStatus');
@@ -31,17 +30,15 @@
     };
 
     var parentDir = '/mydav/DirClientTest/';
+    var dav = new xhrdav.lib.Client();
+    var xmgr = goog.net.XhrManager();
 
     function setUp() {
-      var dav = new xhrdav.lib.Client();
-
       asyncTestCase.waitForAsync('setUp');
       dav.mkcol(parentDir, asyncContinue);
     }
 
     function tearDown() {
-      var dav = new xhrdav.lib.Client();
-
       asyncTestCase.waitForAsync('tearDown');
       dav._delete(parentDir, asyncContinue);
     }
@@ -53,7 +50,6 @@
       asyncTestCase.waitForAsync();
 
       var dir = '/mydav/';
-      var dav = new xhrdav.lib.Client();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
 
@@ -66,7 +62,8 @@
         asyncContinue();
       };
 
-      dav.propfind(dir, assertList, null, goog.partial(xhrLogging, logger));
+      var opt_request = {xhrId: goog.string.createUniqueString(), xhrMgr: xmgr};
+      dav.propfind(dir, assertList, opt_request, goog.partial(xhrLogging, logger));
     }
 
     function testPropfindDepth1() {
@@ -76,7 +73,6 @@
       asyncTestCase.waitForAsync(testId);
 
       var dir = '/mydav/';
-      var dav = new xhrdav.lib.Client();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
 
@@ -89,7 +85,9 @@
         asyncContinue();
       };
 
-      dav.propfind(dir, assertList, {depth: 1}, goog.partial(xhrLogging, logger));
+      var opt_request = {headers: {'Depth': 1},
+        xhrId: goog.string.createUniqueString(), xhrMgr: xmgr};
+      dav.propfind(dir, assertList, opt_request, goog.partial(xhrLogging, logger));
     }
 
     function testCreateAndDelete() {
@@ -100,10 +98,9 @@
 
       var dir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'foo/')) + '/';
-      var mgr = new goog.net.XhrManager();
-      var dav = new xhrdav.lib.Client();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
+      var opt_request = {xhrMgr: xmgr};
 
       var assertDelete = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
@@ -115,14 +112,35 @@
         assertNotNullNorUndefined('Location?', headers['Location']);
         assertTrue('Location match:',
           goog.string.endsWith(headers['Location'], dir));
-        dav._delete(dir, assertDelete, {
-          xhrId: goog.string.createUniqueString(), request: mgr},
+
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav._delete(dir, assertDelete, opt_request,
           goog.partial(xhrLogging, logger));
       };
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.mkcol(dir, assertCreate, opt_request, goog.partial(xhrLogging, logger));
+    }
 
-      dav.mkcol(dir, assertCreate, {
-        xhrId: goog.string.createUniqueString(), request: mgr},
-        goog.partial(xhrLogging, logger));
+    function testForgetLastSlash() {
+      var testId = 'ForgetLastSlash';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var dir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, 'foo'));
+      var httpStatus = xhrdav.lib.HttpStatus;
+      var httpStatusText = xhrdav.lib.HttpStatus.text;
+      var opt_request = {xhrMgr: xmgr};
+      logger.config(dir);
+
+      var assertCreate = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        logger.config(headers['Location']);
+        asyncContinue();
+      };
+      dav.mkcol(dir, assertCreate, opt_request, goog.partial(xhrLogging, logger));
     }
 
     function testRename() {
@@ -135,10 +153,9 @@
         goog.string.path.join(parentDir, 'bar/')) + '/';
       var dstDir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'buz/')) + '/';
-      var mgr = new goog.net.XhrManager();
-      var dav = new xhrdav.lib.Client();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
+      var opt_request = {xhrMgr: xmgr};
 
       var assertRename = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
@@ -148,13 +165,13 @@
         asyncContinue();
       };
       var callbackCreate = function(statusCode, content, headers) {
-        dav.move(dir, dstDir, assertRename, {
-          xhrId: goog.string.createUniqueString(), request: mgr},
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.move(dir, dstDir, assertRename, opt_request,
           goog.partial(xhrLogging, logger));
       };
 
-      dav.mkcol(dir, callbackCreate, {
-        xhrId: goog.string.createUniqueString(), request: mgr});
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.mkcol(dir, callbackCreate, opt_request);
     }
 
     function testMove() {
@@ -167,10 +184,9 @@
       var dir2 = '/mydav/move2/';
       var dstDir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'move/')) + '/';
-      var mgr = new goog.net.XhrManager();
-      var dav = new xhrdav.lib.Client();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
+      var opt_request = {xhrMgr: xmgr};
 
       var assertMoveAnotherTreeOverWrite = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
@@ -181,66 +197,52 @@
         assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
         assertNotNullNorUndefined('Location?', headers['Location']);
         assertTrue('Location match:', goog.string.endsWith(headers['Location'], dstDir));
-        dav.move(dir2, dstDir, assertMoveAnotherTreeOverWrite, {
-          xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: true},
+
+        opt_request.xhrId = goog.string.createUniqueString();
+        opt_request.headers = {}, opt_request.headers['Overwrite'] = true;
+        dav.move(dir2, dstDir, assertMoveAnotherTreeOverWrite, opt_request,
           goog.partial(xhrLogging, logger));
       };
       var executeMove = function(statusCode, content, headers) {
-        dav.move(dir, dstDir, assertMove, {
-          xhrId: goog.string.createUniqueString(), request: mgr},
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.move(dir, dstDir, assertMove, opt_request,
           goog.partial(xhrLogging, logger));
       };
       var createOtherDir = function(statusCode, content, headers) {
-        dav.mkcol(dir2, executeMove, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.mkcol(dir2, executeMove, opt_request);
       };
 
-      dav.mkcol(dir, createOtherDir, {
-        xhrId: goog.string.createUniqueString(), request: mgr});
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.mkcol(dir, createOtherDir, opt_request);
     }
 
     function testMoveFail() {
       var testId = 'MoveFail';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var dir = '/mydav/moveFail/';
-      var dir2 = '/mydav/moveFail2/';
-      var dstDir = goog.string.path.normalizePath(
+      var dir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'moveFail/')) + '/';
-      var mgr = new goog.net.XhrManager();
-      var dav = new xhrdav.lib.Client();
+      var dstDir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, '/foo/moveFail/')) + '/';
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
+      var opt_request = {xhrMgr: xmgr};
 
       asyncTestCase.waitForAsync(testId);
 
-      var assertMoveAnotherTreeFalse = function(statusCode, content, headers) {
-        assertNotContains('StatusCode?', statusCode,
-          [httpStatus.CREATED, httpStatus.NO_CONTENT]);
+      var assertMove = function(statusCode, content, headers) {
+        assertNotEquals('StatusCode?', httpStatus.CREATED, statusCode);
         asyncContinue();
       };
-      var assertMove = function(statusCode, content, headers) {
-        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
-        assertNotNullNorUndefined('Location?', headers['Location']);
-        assertTrue('Location match:', goog.string.endsWith(headers['Location'], dstDir));
-        dav.move(dir2, dstDir, assertMoveAnotherTreeFalse, {
-          xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: false},
-          goog.partial(xhrLogging, logger));
-      };
       var executeMove = function(statusCode, content, headers) {
-        dav.move(dir, dstDir, assertMove, {
-          xhrId: goog.string.createUniqueString(), request: mgr},
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.move(dir, dstDir, assertMove, opt_request,
           goog.partial(xhrLogging, logger));
-      };
-      var createOtherDir = function(statusCode, content, headers) {
-        dav.mkcol(dir2, executeMove, {
-          xhrId: goog.string.createUniqueString(), request: mgr});
       };
 
-      dav.mkcol(dir, createOtherDir, {
-        xhrId: goog.string.createUniqueString(), request: mgr});
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.mkcol(dir, executeMove, opt_request);
     }
 
     function testCopy() {
@@ -251,10 +253,9 @@
         goog.string.path.join(parentDir, 'copySrc/')) + '/';
       var dstDir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'copyDst/')) + '/';
-      var mgr = new goog.net.XhrManager();
-      var dav = new xhrdav.lib.Client();
       var httpStatus = xhrdav.lib.HttpStatus;
       var httpStatusText = xhrdav.lib.HttpStatus.text;
+      var opt_request = {xhrMgr: xmgr};
 
       asyncTestCase.waitForAsync(testId);
 
@@ -265,9 +266,10 @@
       var assertCopyOverWrite = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
         assertTrue('No Content?', goog.string.isEmptySafe(content));
-        dav.copy(dir, dstDir, assertCopyOverWriteFalse, {
-          xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: false},
+
+        opt_request.xhrId = goog.string.createUniqueString();
+        opt_request.headers['Overwrite'] = false;
+        dav.copy(dir, dstDir, assertCopyOverWriteFalse, opt_request,
           goog.partial(xhrLogging, logger));
       };
       var assertCopy = function(statusCode, content, headers) {
@@ -275,18 +277,19 @@
         assertNotNullNorUndefined('Location?', headers['Location']);
         assertTrue('Location match:',
           goog.string.endsWith(headers['Location'], dstDir));
-        dav.copy(dstDir, dir, assertCopyOverWrite, {
-          xhrId: goog.string.createUniqueString(), request: mgr,
-          overwrite: true},
+
+        opt_request.xhrId = goog.string.createUniqueString();
+        opt_request.headers = {}, opt_request.headers['Overwrite'] = true;
+        dav.copy(dstDir, dir, assertCopyOverWrite, opt_request,
           goog.partial(xhrLogging, logger));
       };
       var callbackRequest1 = function(statusCode, content, headers) {
-        dav.copy(dir, dstDir, assertCopy, {
-          xhrId: goog.string.createUniqueString(), request: mgr},
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.copy(dir, dstDir, assertCopy, opt_request,
           goog.partial(xhrLogging, logger));
       };
-      dav.mkcol(dir, callbackRequest1, {
-        xhrId: goog.string.createUniqueString(), request: mgr});
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.mkcol(dir, callbackRequest1, opt_request);
     }
   </script>
 </body>

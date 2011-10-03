@@ -7,13 +7,17 @@
 goog.provide('xhrdav.lib');
 goog.provide('xhrdav.lib.Config');
 goog.require('goog.Disposable');
+goog.require('goog.dom');
+goog.require('goog.array');
 goog.require('goog.object');
+goog.require('goog.json');
 goog.require('goog.functions');
 goog.require('goog.string.path');
 goog.require('xhrdav.lib.functions');
 goog.require('xhrdav.lib.Errors');
 goog.require('xhrdav.lib.string');
 goog.require('xhrdav.lib.HttpStatus');
+goog.require('xhrdav.lib.functions.path');
 goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');
 
@@ -58,9 +62,18 @@ xhrdav.lib.Config.prototype.initialize_ = function() {
 
   /**
    * @private
-   * @type {xhrdav.lib.Errors}
+   * @type {Object}
    */
-  this.errors_ = xhrdav.lib.Errors.getInstance();
+  this.xmgr_ = {};
+};
+
+/**
+ * Get XhrManager
+ *
+ * @return {Object} XhrManager config Map.
+ */
+xhrdav.lib.Config.prototype.getXhrMgrConfig = function() {
+  return this.xmgr_;
 };
 
 /**
@@ -74,23 +87,14 @@ xhrdav.lib.Config.prototype.getLogger = function(level) {
   return this.logger_;
 };
 
-/**
- * Get Errors object.
- *
- * @return {xhrdav.lib.Errors} Errors.object
- */
-xhrdav.lib.Config.prototype.getErrors = function() {
-  return this.errors_;
-};
-
 // Load Config
 xhrdav.lib.Config.getInstance();
 
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.LIBNAME', xhrdav.lib.LIBNAME);
 goog.exportSymbol('xhrdav.lib.Config.getInstance', xhrdav.lib.Config.getInstance);
+goog.exportProperty(xhrdav.lib.Config.prototype, 'getXhrMgrConfig',
+  xhrdav.lib.Config.prototype.getXhrMgrConfig);
 goog.exportProperty(xhrdav.lib.Config.prototype, 'getLogger',
   xhrdav.lib.Config.prototype.getLogger);
-goog.exportProperty(xhrdav.lib.Config.prototype, 'getErrors',
-  xhrdav.lib.Config.prototype.getErrors);
 

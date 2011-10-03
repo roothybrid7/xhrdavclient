@@ -49,7 +49,7 @@
       var jsonData = goog.json.serialize(obj);
 //      console.log(obj);
 //      console.log(jsonData);
-      var funcName = filenameWithoutExt.$camelize();
+      var funcName = filenameWithoutExt.camelize();
 //      console.log(funcName);
       var jsonpData = goog.string.buildString(funcName, '(', jsonData, ')');
 //      console.log(jsonpData);

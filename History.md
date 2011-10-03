@@ -1,4 +1,35 @@
 
+0.0.9 / 2011-10-03 
+==================
+
+  * Add file read method
+  * Add remove file method
+  * Add directory method
+  * Add remove dir
+  * Add mkdir
+  * skip dot file
+  * Implements getListDir and refactor request params
+  * Update testcase
+  * Implments WebDAV resource data serialize
+  * Add serialize method for resource object
+  * Modified destination property scope, because of request only.
+  * Modified private to public in errors property.
+  * Fixed errors object
+  * Fixed last slash at mkcol method of testcase.
+  * fixed delete last slash at put method
+  * Refactor for namespace
+  * remove create XhrManager from davclient.js
+  * Fixed call XhrManager in testcase of directories_test
+  * Fixed create method of XhrManager.
+  * rename params
+  * mistake ignore args
+  * Add resource generator
+  * Use XhrManager
+  * modified create instance of davclient
+  * Add resourcebuilder to build webdav response
+  * Merge branch 'release/v0.0.8' into develop
+  * update changelog
+
 0.0.8 / 2011-09-30 
 ==================
 

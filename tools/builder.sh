@@ -62,8 +62,11 @@ NAMESPACES=(
   'xhrdav.lib.Errors'
   'xhrdav.lib.functions'
   'xhrdav.lib.functions.domparse'
+  'xhrdav.lib.functions.path'
   'xhrdav.lib.HttpStatus'
   'xhrdav.lib.Resource'
+  'xhrdav.lib.ResourceBuilder'
+  'xhrdav.lib.ResourceGenerator'
 )
 
 rootdir=

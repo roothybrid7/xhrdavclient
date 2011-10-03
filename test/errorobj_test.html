@@ -21,6 +21,8 @@
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
 
+    var httpStatus = xhrdav.lib.HttpStatus;
+    var httpStatusText = xhrdav.lib.HttpStatus.text;
     /*
       Json/Hash repr
       {request: {},
@@ -30,7 +32,7 @@
       var testId = 'CreateErrorsObject';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var errors = xhrdav.lib.Errors.getInstance();
+      var errors = new xhrdav.lib.Errors();
       assertNotNullNorUndefined('Get Error Object?', errors);
       assertTrue('xhrdav.lib.Errors?', errors instanceof xhrdav.lib.Errors);
 
@@ -53,14 +55,14 @@
     }
 
     /* Json/Hash repr
-      {request: {msg: 'Forbidden', path: '/mydav/foo/'},
+      {request: {message: 'Forbidden', path: '/mydav/foo/'},
       props: []}
      */
     function testRequestErrors() {
       var testId = 'RequestErrors';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var errors = xhrdav.lib.Errors.getInstance();
+      var errors = new xhrdav.lib.Errors();
 
       var assertReqErrsNull = function(errs) {
         errors.setRequest(errs);
@@ -69,9 +71,13 @@
       assertReqErrsNull();
       assertReqErrsNull(null);
       assertReqErrsNull({});
-      var ocurred_errs = {msg: 'Forbidden', path: '/mydav/foo/'};
+      var ocurred_errs = {
+        message: httpStatusText[httpStatus.FORBIDDEN], path: '/mydav/foo/'};
       errors.setRequest(ocurred_errs);
       assertTrue('Request error?', errors.hasRequest());
+      logger.config(goog.json.serialize(errors));
+      assertEquals('Forbidden?',
+        httpStatusText[httpStatus.FORBIDDEN], errors.request.message);
 
       errors.clear();
       assertFalse('Clear errors?', errors.hasRequest());
@@ -80,15 +86,15 @@
     /* Json/Hash repr
       {request: {},
       props: [
-        {msg: 'Not Found', path: '/mydav/foo/a.png'},
-        {msg: 'Locked', path: '/mydav/foo/b.txt'}
+        {message: 'Not Found', path: '/mydav/foo/a.png'},
+        {message: 'Locked', path: '/mydav/foo/b.txt'}
       ]}
      */
     function testPropsErrors() {
       var testId = 'PropsErrors';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var errors = xhrdav.lib.Errors.getInstance();
+      var errors = new xhrdav.lib.Errors();
 
       var assertPropsNull = function(errs) {
         errors.addProps(errs);
@@ -98,16 +104,29 @@
       assertPropsNull(null);
       assertPropsNull([]);
 
-      var occured_errs = {msg: 'Not Found', path: '/mydav/foo/a.png'};
-      var occured_errs2 = {msg: 'Locked', path: '/mydav/foo/b.txt'};
+      var occured_errs = {
+        message: httpStatusText[httpStatus.NOT_FOUND], path: '/mydav/foo/a.png'};
+      var occured_errs2 = {
+        message: httpStatusText[httpStatus.LOCKED], path: '/mydav/foo/b.txt'};
 
       errors.addProps(occured_errs);
       assertTrue('Error occured', errors.hasProps());
       errors.addProps(occured_errs2);
       assertTrue('Error occured', errors.hasProps());
+      logger.config(goog.json.serialize(errors));
+      assertEquals('Props error count = 2?',
+        2, errors.props.length);
+      assertArrayEquals('Error messages match:',
+        [httpStatusText[httpStatus.NOT_FOUND], httpStatusText[httpStatus.LOCKED]],
+        goog.array.map(errors.props, function(v, i) {
+          return v.message;
+        })
+      );
 
       errors.clear();
       assertFalse('Error occured', errors.hasProps());
+      assertEquals('Props error count = 0?',
+        0, errors.props.length);
     }
   </script>
 </body>

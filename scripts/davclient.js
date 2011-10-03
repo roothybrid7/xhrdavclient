@@ -9,36 +9,35 @@ goog.require('xhrdav.lib.Config');
 goog.require('goog.dom');
 goog.require('goog.Uri');
 goog.require('goog.net.XhrIo');
-goog.require('goog.net.XhrManager');
 
 /**
  * WebDAV Client library by Google Closure library.
  *
  * @constructor
- * @param {Object=} options URI Parameters(options: scheme, domain, port)
+ * @param {Object=} opt_uri URI Parameters(opt_uri: scheme, domain, port)
  * @see #initialize_
  */
-xhrdav.lib.Client = function(options) {
-  this.initialize_(options);
+xhrdav.lib.Client = function(opt_uri) {
+  this.initialize_(opt_uri);
 };
 
 /**
  * WebDAV Client initialize
  *
  * @private
- * @param {Object=} options URI Parameters(options: scheme, domain, port)
+ * @param {Object=} opt_uri URI Parameters(opt_uri: scheme, domain, port)
  */
-xhrdav.lib.Client.prototype.initialize_ = function(options) {
-  if (!goog.isDefAndNotNull(options)) {
-    options = {};
+xhrdav.lib.Client.prototype.initialize_ = function(opt_uri) {
+  if (!goog.isDefAndNotNull(opt_uri)) {
+    opt_uri = {};
   }
   var locationUrl = goog.Uri.parse(location);
   /** @type {string} */
-  this.scheme_ = options.scheme || locationUrl.getScheme() || 'http';
+  this.scheme_ = opt_uri.scheme || locationUrl.getScheme() || 'http';
   /** @type {string} */
-  this.domain_ = options.domain || locationUrl.getDomain();
+  this.domain_ = opt_uri.domain || locationUrl.getDomain();
   /** @type {number} */
-  this.port_ = options.port || locationUrl.getPort() || 80;
+  this.port_ = opt_uri.port || locationUrl.getPort() || 80;
 };
 
 /**
@@ -126,35 +125,57 @@ xhrdav.lib.Client.prototype.generateUrl_ = function(path) {
 };
 
 /**
+ * Set Query parameters for url.
+ *
+ * @param {goog.net.Uri} url  Uri object.
+ * @param {Object=} query Json/Hash object for query.
+ * @return {goog.net.Uri}
+ */
+xhrdav.lib.Client.prototype.setParameters_ = function(url, query) {
+  if (goog.isDefAndNotNull(query) && !goog.object.isEmpty(query)) {
+    goog.object.forEach(query, function(val, key) {
+      if (val instanceof Array && !goog.array.isEmpty(val)) {
+        url.setParameterValues(key, val);
+      } else if (goog.string.isEmptySafe(val)) {
+        url.setParameterValue(key, val);
+      }
+    });
+  }
+  return url;
+};
+
+/**
  * Send XHTTPRequest
  *
  * @private
  * @param {string} method HTTP method(GET, POST, etc).
  * @param {string} url request url.
  * @param {Function} handler option function of processing after XHTTPRequest.
- * @param {Object=} options option parameters(xhrId, body, headers, etc).
+ * @param {{xhrMgr:goog.net.XhrManager, xhrId,
+ *         headers:Object, query:Object}=} opt_request
+ *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 xhrdav.lib.Client.prototype.request_ = function(
-  method, url, handler, options, debugHandler) {
-  if (!goog.isDefAndNotNull(options)) options = {};
-  if (goog.isDefAndNotNull(options.request)) {
-    options.request.send(
-      options.xhrId || goog.string.createUniqueString(),
+  method, url, handler, opt_request, debugHandler) {
+  if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
+  if (goog.isDefAndNotNull(opt_request.xhrMgr)) {
+    opt_request.xhrMgr.send(
+      opt_request.xhrId || goog.string.createUniqueString(),
       url,
       method,
-      options.body,
-      options.headers,
-      options.priority || 0,
+      opt_request.body,
+      opt_request.headers,
+      opt_request.priority || 0,
       goog.bind(this.processRequest_, this, handler, debugHandler),
-      options.maxRetries || 1);
+      opt_request.maxRetries || 1);
   } else {
     goog.net.XhrIo.send(
       url,
       goog.bind(this.processRequest_, this, handler, debugHandler),
       method,
-      options.body,
-      options.headers);
+      opt_request.body,
+      opt_request.headers);
   }
 };
 
@@ -163,161 +184,135 @@ xhrdav.lib.Client.prototype.request_ = function(
  *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
  * @param {Function} handler Callback chain after request processing.
- * @param {Object=} options Option params(headers, etc);
+ * @param {{xhrMgr:goog.net.XhrManager, xhrId,
+ *         headers:Object, query:Object}=} opt_request
+ *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 xhrdav.lib.Client.prototype.options = function(
-  path, handler, options, debugHandler) {
-  if (!goog.isDefAndNotNull(options)) options = {};
+  path, handler, opt_request, debugHandler) {
+  if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
   var url = this.generateUrl_(path);
-  this.request_('OPTIONS', url, handler, options, debugHandler);
+  this.setParameters_(url, opt_request.query);
+  this.request_('OPTIONS', url, handler, opt_request, debugHandler);
 };
 
 /**
  * Check Resource(WebDAV: HEAD)
  *
- * Example:
- *   var dav = new xhrdav.lib.Client();
- *   dav.head('/foo/bar.txt', function(status, content, headers) {
- *     // Receive response
- *     var statusCode = status, response = content, responseheaders = headers;
- *     => 200, '', #Object: {'Content-Length': 0, ...}
- *   });
- *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
  * @param {Function} handler Callback chain after request processing.
- * @param {Object=} options Option params(headers, etc);
+ * @param {{xhrMgr:goog.net.XhrManager, xhrId,
+ *         headers:Object, query:Object}=} opt_request
+ *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 // TODO: UNFIXED code
-xhrdav.lib.Client.prototype.head = function(path, handler, options, debugHandler) {
-  if (!goog.isDefAndNotNull(options)) options = {};
-  var url = this.generateUrl_(path);
+xhrdav.lib.Client.prototype.head = function(path, handler, opt_request, debugHandler) {
+  if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  if (goog.isDefAndNotNull(options.headers)) {
-    goog.object.extend(options.headers, {
+  var url = this.generateUrl_(path);
+  this.setParameters_(url, opt_request.query);
+
+  if (goog.isDefAndNotNull(opt_request.headers)) {
+    goog.object.extend(opt_request.headers, {
       'Cache-Control': 'max-age=0',
       'If-Modified-Since': 'Thu, 01 Jan 1970 00:00:00 GMT'});
   } else {
-    goog.object.extend(options, {headers: {
+    goog.object.extend(opt_request, {headers: {
       'Cache-Control': 'max-age=0',
       'If-Modified-Since': 'Thu, 01 Jan 1970 00:00:00 GMT'}});
   }
 
-  this.request_('HEAD', url, handler, options, debugHandler);
+  this.request_('HEAD', url, handler, opt_request, debugHandler);
 };
 
 /**
  * Get Resource(WebDAV: GET)
  *
- * Example:
- *   var debugHandler = function(requestObject) { // Debug code here };
- *
- *   var dav = new xhrdav.lib.Client();
- *   dav.get('/foo/bar.txt', function(status, content, headers) {
- *     // Receive response
- *     var statusCode = status, response = content, responseheaders = headers;
- *     => 200, 'GET CONTENT FROM WEBDAV.', #Object: {'Content-Length': 48, ...}
- *   }, null, debugHandler);
- *
  * @param {string} path Path(<code>/foo/bar.xml</code>, <code>/foo/bar.txt</code>).
  * @param {Function} handler Callback chain after request processing.
- * @param {Object=} options Option params(headers, etc);
+ * @param {{xhrMgr:goog.net.XhrManager, xhrId,
+ *         headers:Object, query:Object}=} opt_request
+ *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-xhrdav.lib.Client.prototype.get = function(path, handler, options, debugHandler) {
-  if (!goog.isDefAndNotNull(options)) options = {};
+xhrdav.lib.Client.prototype.get = function(path, handler, opt_request, debugHandler) {
+  if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
+
   var url = this.generateUrl_(path);
-  this.request_('GET', url, handler, options, debugHandler);
+  this.setParameters_(url, opt_request.query);
+  this.setParameters_(url, opt_request.query);
+  this.request_('GET', url, handler, opt_request, debugHandler);
 };
 
 /**
  * Upload Resource(WebDAV: PUT)
  *
- * Example:
- *   var mgr = new goog.net.XhrManager();
- *   var id = goog.string.createUniqueString();
- *   var options = {xhrId: id, request: mgr};
- *   var dav = new xhrdav.lib.Client();
- *   dav.put('/foo/upload.txt', 'UPLOAD test', function(status, content, headers) {
- *     // Receive response
- *     var statusCode = status, response = content, responseheaders = headers;
- *     => 201, string: <html> ...</html>, #Object: {'Location': http:// ...}
- *   }, options);
- *
  * @param {string} path Path(<code>/foo/bar.xml</code>, <code>/foo/bar.txt</code>).
  * @param {Object} data Upload filedata(text OR binary)
  * @param {Function} handler Callback chain after request processing.
- * @param {Object=} options Option params(xhrId, xhrManager, etc);
+ * @param {{xhrMgr:goog.net.XhrManager, xhrId,
+ *         headers:Object, query:Object}=} opt_request
+ *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 xhrdav.lib.Client.prototype.put = function(
-  path, data, handler, options, debugHandler) {
-  if (!goog.isDefAndNotNull(options)) options = {};
-  var url = this.generateUrl_(path);
+  path, data, handler, opt_request, debugHandler) {
+  if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  if (goog.isDefAndNotNull(options.headers)) {
-    goog.object.extend(options.headers, {'Content-Type': 'text/xml'});
+  var url;
+  if (path.match(/^(.+)\/$/)) {
+    url = this.generateUrl_(RegExp.$1);
   } else {
-    goog.object.extend(options, {headers: {'Content-Type': 'text/xml'}});
-  }
-  goog.object.extend(options, {body: data});
+    url = this.generateUrl_(path);
+  } // Preserve GET
+  this.setParameters_(url, opt_request.query);
 
-  this.request_('PUT', url, handler, options, debugHandler);
+  if (goog.isDefAndNotNull(opt_request.headers) &&
+    !goog.object.isEmpty(opt_request.headers)) {
+    goog.object.extend(opt_request.headers, {'Content-Type': 'text/xml'});
+  } else {
+    opt_request.headers = {'Content-Type': 'text/xml'};
+  }
+  opt_request.body = data;
+
+  this.request_('PUT', url, handler, opt_request, debugHandler);
 };
 
 /**
  * Get Collection list and Resource property(WebDAV: PROPFIND)
  *
- * Example: Receive Response and debug
- *   var options = {depth: 1};
- *   var myPrefix = 'PROPFIND#';
- *   var debugHandler = function(prefix, requestObject) { // Debug code here };
- *
- *   var dav = new xhrdav.lib.Client();
- *   dav.propfind('/foo/', function(status, content, headers) {
- *     // Receive response
- *     var statusCode = status, response = content, responseheaders = headers;
- *     => 207, #Document: <?xml ....</D:multistatus>,
- *        #Object: {'Content-Length': 48, ...}
- *   }, options, goog.partial(debugHandler, myPrefix));
- *
- * Example2: Parse response
- *   var options = {depth: 1};
- *   var parseXml = function(handler, status, content, headers) {
- *       // [... parse xml ...]
- *      handler(responseObj);
- *   };
- *   var modelHandler = function(object) { // [... building models ...] };
- *
- *   var dav = new xhrdav.lib.Client();
- *   dav.propfind('/foo/', goog.partial(parseXml, modelHandler), options);
- *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
  * @param {Function} handler Callback chain after request processing.
- * @param {Object=} options Option params(depth, etc);
+ * @param {{xhrMgr:goog.net.XhrManager, xhrId,
+ *         headers:Object, query:Object}=} opt_request
+ *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 xhrdav.lib.Client.prototype.propfind = function(
-  path, handler, options, debugHandler) {
-  if (!goog.isDefAndNotNull(options)) options = {};
+  path, handler, opt_request, debugHandler) {
+  if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
+
   var url = this.generateUrl_(path);
+  this.setParameters_(url, opt_request.query);
 
   // 0(path only) or 1(current directory)
-  if (goog.isDefAndNotNull(options.headers)) {
-    goog.object.extend(options.headers, {
+  if (goog.isDefAndNotNull(opt_request.headers) &&
+    !goog.object.isEmpty(opt_request.headers)) {
+    goog.object.extend(opt_request.headers, {
       'Content-Type': 'text/xml',
-      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0});
+      'Depth': goog.isDefAndNotNull(opt_request.headers['Depth']) ?
+        opt_request.headers['Depth'] : 0});
   } else {
-    goog.object.extend(options, {headers: {
-      'Content-Type': 'text/xml',
-      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0}});
+    goog.object.extend(opt_request, {headers: {
+      'Content-Type': 'text/xml', 'Depth': 0}});
   }
-  goog.object.extend(options, {body:
+  goog.object.extend(opt_request, {body:
     '<?xml version="1.0" encoding="UTF-8"?>' +
     '<D:propfind xmlns:D="DAV:"><D:allprop /></D:propfind>'});
 
-  this.request_('PROPFIND', url, handler, options, debugHandler);
+  this.request_('PROPFIND', url, handler, opt_request, debugHandler);
 };
 
 /**
@@ -325,18 +320,22 @@ xhrdav.lib.Client.prototype.propfind = function(
  *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
  * @param {Function} handler Callback chain after request processing.
- * @param {Object=} options Option params(depth, etc);
+ * @param {{xhrMgr:goog.net.XhrManager, xhrId,
+ *         headers:Object, query:Object}=} opt_request
+ *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 // TODO: UNFIXED
-xhrdav.lib.Client.prototype.proppatch = function(path, handler, options, debugHandler) {
-  if (!goog.isDefAndNotNull(options)) options = {};
-  var url = this.generateUrl_(path);
+xhrdav.lib.Client.prototype.proppatch = function(path, handler, opt_request, debugHandler) {
+  if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  if (goog.isDefAndNotNull(options.headers)) {
-    goog.object.extend(options.headers, {'Content-Type': 'text/xml'});
+  var url = this.generateUrl_(path);
+  this.setParameters_(url, opt_request.query);
+
+  if (goog.isDefAndNotNull(opt_request.headers)) {
+    goog.object.extend(opt_request.headers, {'Content-Type': 'text/xml'});
   } else {
-    goog.object.extend(options, {headers: {'Content-Type': 'text/xml'}});
+    goog.object.extend(opt_request, {headers: {'Content-Type': 'text/xml'}});
   }
 };
 
@@ -345,84 +344,75 @@ xhrdav.lib.Client.prototype.proppatch = function(path, handler, options, debugHa
  *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
  * @param {Function} handler Callback chain after request processing.
- * @param {Object=} options Option params(depth, etc);
+ * @param {{xhrMgr:goog.net.XhrManager, xhrId,
+ *         headers:Object, query:Object}=} opt_request
+ *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 // TODO: UNFIXED
-xhrdav.lib.Client.prototype.lock = function(path, handler, options, debugHandler) {
-  if (!goog.isDefAndNotNull(options)) options = {};
-  var url = this.generateUrl_(path);
+xhrdav.lib.Client.prototype.lock = function(path, handler, opt_request, debugHandler) {
+  if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  if (goog.isDefAndNotNull(options.headers)) {
-    goog.object.extend(options.headers, {
+  var url = this.generateUrl_(path);
+  this.setParameters_(url, opt_request.query);
+
+  if (goog.isDefAndNotNull(opt_request.headers) &&
+    !goog.object.isEmpty(opt_request.headers)) {
+    goog.object.extend(opt_request.headers, {
       'Content-Type': 'text/xml',
-      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0});
+      'Depth': goog.isDefAndNotNull(opt_request.headers['Depth']) ?
+        opt_request.headers['Depth'] : 0});
   } else {
-    goog.object.extend(options, {headers: {
-      'Content-Type': 'text/xml',
-      'Depth': goog.isDefAndNotNull(options.depth) ? options.depth : 0}});
+    goog.object.extend(opt_request, {headers: {
+      'Content-Type': 'text/xml', 'Depth': 0}});
   }
-  goog.object.extend(options, {body:
+  goog.object.extend(opt_request, {body:
     '<?xml version="1.0" encoding="UTF-8"?>' +
     '<D:lockinfo xmlns:D="DAV:">\n'+
-    '<D:lockscope><D:' + (options.scope || 'exclusive') + ' /></D:lockscope>\n' +
-    '<D:locktype><D:' + (options.type || 'write') + ' /></D:locktype>\n' +
+    '<D:lockscope><D:' + (opt_request.scope || 'exclusive') + ' /></D:lockscope>\n' +
+    '<D:locktype><D:' + (opt_request.type || 'write') + ' /></D:locktype>\n' +
     '<D:owner></D:owner>\n</D:lockinfo>\n'});
 
-  this.request_('LOCK', url, handler, options, debugHandler);
+  this.request_('LOCK', url, handler, opt_request, debugHandler);
 };
 
 /**
  * Create Collection(WebDAV: MKCOL)
  *
- * Example:
- *   var mgr = new goog.net.XhrManager();
- *   var id = goog.string.createUniqueString();
- *   var options = {xhrId: id, request: mgr};
- *   var dav = new xhrdav.lib.Client();
- *   dav.mkcol('/foo/bar/', function(status, content, headers) {
- *     // Receive response
- *     var statusCode = status, response = content, responseheaders = headers;
- *     => 201, string: '<html> ... </html>', #Object: {'Location': 'http:// ...}
- *   }, options);
- *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar/</code>).
  * @param {Function} handler Callback chain after request processing.
- * @param {Object=} options Option params(xhrId, xhrManager, etc);
+ * @param {{xhrMgr:goog.net.XhrManager, xhrId,
+ *         headers:Object, query:Object}=} opt_request
+ *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
-xhrdav.lib.Client.prototype.mkcol = function(path, handler, options, debugHandler) {
-  if (!goog.isDefAndNotNull(options)) options = {};
+xhrdav.lib.Client.prototype.mkcol = function(path, handler, opt_request, debugHandler) {
+  if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
+
   path = goog.string.endsWith(path, '/') ? path : path + '/'; // Preserve GET
   var url = this.generateUrl_(path);
+  this.setParameters_(url, opt_request.query);
 //      var url = goog.Uri.parse('http://localhost:8001/foo/');
-  this.request_('MKCOL', url, handler, options, debugHandler);
+  this.request_('MKCOL', url, handler, opt_request, debugHandler);
 };
 
 /**
  * Delete Collection or Resource(WebDAV: DELETE)
  *
- * Example:
- *   var mgr = new goog.net.XhrManager();
- *   var id = goog.string.createUniqueString();
- *   var options = {xhrId: id, request: mgr};
- *   var dav = new xhrdav.lib.Client();
- *   dav._delete('/foo/bar/', function(status, content, headers) {
- *     // Receive response
- *     var statusCode = status, response = content, responseheaders = headers;
- *     => 204, string: '', #Object: {'Content-Length': 0, ...}
- *   }, options);
- *
  * @param {string} path Path(<code>/foo/</code>, <code>/foo/bar.txt</code>).
  * @param {Function} handler Callback chain after request processing.
- * @param {Object=} options Option params(xhrId, xhrManager, etc);
+ * @param {{xhrMgr:goog.net.XhrManager, xhrId,
+ *         headers:Object, query:Object}=} opt_request
+ *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 xhrdav.lib.Client.prototype._delete = function(
-  path, handler, options, debugHandler) {
-  if (!goog.isDefAndNotNull(options)) options = {};
+  path, handler, opt_request, debugHandler) {
+  if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
+
   var url = this.generateUrl_(path);
-  this.request_('DELETE', url, handler, options, debugHandler);
+  this.setParameters_(url, opt_request.query);
+  this.request_('DELETE', url, handler, opt_request, debugHandler);
 };
 
 /**
@@ -433,74 +423,57 @@ xhrdav.lib.Client.prototype._delete = function(
  * @param {string} path Source Path(<code>/foo/</code>).
  * @param {string} dstPath Destination Path(<code>/bar/</code>).
  * @param {Function} handler Callback chain after request processing.
- * @param {Object=} options Option params(xhrId, xhrManager, etc);
+ * @param {{xhrMgr:goog.net.XhrManager, xhrId,
+ *         headers:Object, query:Object}=} opt_request
+ *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} debugHandler Callback debugHandler method.
  */
 xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
-  method, path, dstPath, handler, options, debugHandler) {
-  if (!goog.isDefAndNotNull(options)) options = {};
-  var url = this.generateUrl_(path);
+  method, path, dstPath, handler, opt_request, debugHandler) {
+  if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  if (goog.isDefAndNotNull(options.headers)) {
-    goog.object.extend(options.headers, {
+  var url = this.generateUrl_(path);
+  this.setParameters_(url, opt_request.query);
+
+  if (goog.isDefAndNotNull(opt_request.headers) &&
+    !goog.object.isEmpty(opt_request.headers)) {
+    goog.object.extend(opt_request.headers, {
       'Content-Type': 'text/xml',
       'Destination': this.generateUrl_(dstPath)});
   } else {
-    goog.object.extend(options, {headers: {
+    goog.object.extend(opt_request, {headers: {
       'Content-Type': 'text/xml',
       'Destination': this.generateUrl_(dstPath)}});
   }
-  if (goog.isBoolean(options.overwrite)) {
-    if (options.overwrite) {
-      options.headers['Overwrite'] = 'T';
+  if (goog.isBoolean(opt_request.headers['Overwrite'])) {
+    if (opt_request.headers['Overwrite']) {
+      opt_request.headers['Overwrite'] = 'T';
     } else {
-      options.headers['Overwrite'] = 'F';
+      opt_request.headers['Overwrite'] = 'F';
     }
   }
 
-  this.request_(method, url, handler, options, debugHandler);
+  this.request_(method, url, handler, opt_request, debugHandler);
 };
 
 /**
  * Move Collection(WebDAV: MOVE)
  *
- * Example:
- *   var mgr = new goog.net.XhrManager();
- *   var id = goog.string.createUniqueString();
- *   var options = {xhrId: id, request: mgr};
- *   var dav = new xhrdav.lib.Client();
- *   dav.move('/foo/bar.txt', '/hoge/', function(status, content, headers) {
- *     // Receive response
- *     var statusCode = status, response = content, responseheaders = headers;
- *     => 201, string: '<html> ... </html>', #Object: {'Location': 'http:// ...}
- *   }, options);
- *
  * @see #copyOrMovePath_
  */
 xhrdav.lib.Client.prototype.move = function(
-  path, dstPath, handler, options, debugHandler) {
-  this.copyOrMovePath_('MOVE', path, dstPath, handler, options, debugHandler);
+  path, dstPath, handler, opt_request, debugHandler) {
+  this.copyOrMovePath_('MOVE', path, dstPath, handler, opt_request, debugHandler);
 };
 
 /**
  * Copy Collection(WebDAV: COPY)
  *
- * Example:
- *   var mgr = new goog.net.XhrManager();
- *   var id = goog.string.createUniqueString();
- *   var options = {xhrId: id, request: mgr};
- *   var dav = new xhrdav.lib.Client();
- *   dav.copy('/foo/bar.txt', '/hoge/bar.txt', function(status, content, headers) {
- *     // Receive response
- *     var statusCode = status, response = content, responseheaders = headers;
- *     => 201, string: '<html> ... </html>', #Object: {'Location': 'http:// ...}
- *   }, options);
- *
  * @see #copyOrMovePath_
  */
 xhrdav.lib.Client.prototype.copy = function(
-  path, dstPath, handler, options, debugHandler) {
-  this.copyOrMovePath_('COPY', path, dstPath, handler, options, debugHandler);
+  path, dstPath, handler, opt_request, debugHandler) {
+  this.copyOrMovePath_('COPY', path, dstPath, handler, opt_request, debugHandler);
 };
 
 /* Entry Point for closure compiler */
