@@ -1,4 +1,11 @@
 
+0.0.11 / 2011-10-03 
+==================
+
+  * Bugfixed resoruce serialize
+  * Merge branch 'release/v0.0.10' into develop
+  * update changelog
+
 0.0.10 / 2011-10-03 
 ==================
 
