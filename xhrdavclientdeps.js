@@ -7,7 +7,7 @@ goog.addDependency('../../../scripts/davfs.js', ['xhrdav.lib.DavFs'], ['goog.net
 goog.addDependency('../../../scripts/domhandler.js', ['xhrdav.lib.DomHandler'], []);
 goog.addDependency('../../../scripts/domparser.js', ['xhrdav.lib.DomParser'], ['goog.dom.xml', 'goog.functions']);
 goog.addDependency('../../../scripts/errors.js', ['xhrdav.lib.Errors'], ['goog.array', 'goog.json', 'goog.object']);
-goog.addDependency('../../../scripts/functions.js', ['xhrdav.lib.functions'], ['xhrdav.lib.functions.domparse']);
+goog.addDependency('../../../scripts/functions.js', ['xhrdav.lib.functions'], ['xhrdav.lib.functions.domparse', 'xhrdav.lib.functions.path']);
 goog.addDependency('../../../scripts/functions/domparse.js', ['xhrdav.lib.functions.domparse'], ['xhrdav.lib.DomHandler', 'xhrdav.lib.DomParser']);
 goog.addDependency('../../../scripts/functions/path.js', ['xhrdav.lib.functions.path'], ['goog.array', 'goog.string', 'goog.string.path']);
 goog.addDependency('../../../scripts/httpstatus.js', ['xhrdav.lib.HttpStatus'], []);
