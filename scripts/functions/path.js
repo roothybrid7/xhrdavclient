@@ -36,10 +36,26 @@ xhrdav.lib.functions.path.addLastSlash = function(path) {
   return converted;
 };
 
+/**
+ * Split path.
+ *
+ * @param {string} path
+ * @return {Array.<string>} split path list.
+ */
+xhrdav.lib.functions.path.split = function(path) {
+  var pathlist = goog.array.filter(path.split('/'), function(v, i) {
+    return (!goog.string.isEmptySafe(v));
+  });
+  if (pathlist.length == 0) pathlist.push('/');
+  return pathlist;
+};
+
 /* Entry point for closure compiler */
 goog.exportSymbol('xhrdav.lib.functions.path', xhrdav.lib.functions.path);
 goog.exportSymbol('xhrdav.lib.functions.path.removeLastSlash',
   xhrdav.lib.functions.path.removeLastSlash);
 goog.exportSymbol('xhrdav.lib.functions.path.addLastSlash',
   xhrdav.lib.functions.path.addLastSlash);
+goog.exportSymbol('xhrdav.lib.functions.path.split',
+  xhrdav.lib.functions.path.split);
 
