@@ -137,7 +137,7 @@
 
       asyncTestCase.waitForAsync(testId);
 
-      var assertRename = function(errors, newLoc) {
+      var assertRemove = function(errors, newLoc) {
         assertFalse('No errors', errors.hasRequest());
         asyncContinue();
       };
@@ -149,7 +149,7 @@
         var dstPath = childDir;
         logger.config(dstPath);
         copySrcObj.setDestination(dstPath);
-        copySrcObj.remove(assertRename, null, null, this, goog.partial(xhrLogging, logger));
+        copySrcObj.remove(assertRemove, null, null, this, goog.partial(xhrLogging, logger));
       };
 
       var mkDirFn = function(errors, newLoc) {
@@ -161,6 +161,36 @@
           goog.partial(xhrLogging, logger));
       };
       davFs.mkDir(newDir, mkDirFn, null, null, this,
+        goog.partial(xhrLogging, logger));
+    }
+
+    function testResourceMkDir() {
+      var testId = 'ResourceMkdir';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      var mkdirName = 'MkDir';
+      var newDir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, mkdirName)) + '/';
+
+      asyncTestCase.waitForAsync(testId);
+
+      var callbackNewResource = function(errors, content) {
+        assertFalse('No errors', errors.hasRequest());
+        asyncContinue();
+      };
+
+      var mkDirAssert = function(errors, newLoc) {
+      logger.config('FOO');
+        logger.config(newLoc);
+        var newPath = goog.Uri.parse(newLoc);
+        logger.config('New Location: ' + newPath.getPath());
+
+        davFs.getProps(newPath.getPath(), callbackNewResource, null, null, this,
+          goog.partial(xhrLogging, logger));
+      };
+      var mkdirResource = new xhrdav.lib.ResourceController();
+      mkdirResource.href = newDir;
+      mkdirResource.mkDir(mkDirAssert, null, null, this,
         goog.partial(xhrLogging, logger));
     }
   </script>

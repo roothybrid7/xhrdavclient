@@ -135,9 +135,8 @@ xhrdav.lib.ResourceController.prototype.buildNewDestination_ = function() {
  *                            [callback args: errors object]
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
- * @throws {Error} Not found of xhrdav.lib.Resource or #destination
- * @see xhrdav.lib.ResourceController.remove
  */
 xhrdav.lib.ResourceController.prototype.remove = function(
   handler, opt_headers, opt_params, context, debugHandler) {
@@ -153,12 +152,34 @@ xhrdav.lib.ResourceController.prototype.remove = function(
 };
 
 /**
+ * Create Directory before parameters validate.
+ *
+ * @param {Function=} handler callback handler function
+ *                            [callback args: errors, object]
+ * @param {Object=} opt_headers Request headers.
+ * @param {Object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
+ * @param {Fuction=} debugHandler [Callback args: xhr event object]
+ * @throws {Error} Not found href(Directory path).
+ */
+xhrdav.lib.ResourceController.prototype.mkDir = function(
+  handler, opt_headers, opt_params, context, debugHandler) {
+  if (!goog.isDefAndNotNull(this.href)) {
+    return goog.functions.error(
+      'Not found Directory path: obj.href = directoryPath')();
+  }
+  this.href = xhrdav.lib.functions.path.addLastSlash(this.href);
+  this.getConnection_().mkDir(this.href,
+    handler, opt_headers, opt_params, context, debugHandler);
+};
+/**
  * Copy resource
  *
  * @param {Function=} handler callback handler function
  *                            [callback args: errors object]
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  */
 xhrdav.lib.ResourceController.prototype.copy = function(
@@ -183,6 +204,7 @@ xhrdav.lib.ResourceController.prototype.copy = function(
  *                            [callback args: errors object]
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found destination.
  * @see #copy
@@ -203,6 +225,7 @@ xhrdav.lib.ResourceController.prototype.copyBeforeValidate = function(
  *                            [callback args: errors object]
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  */
 xhrdav.lib.ResourceController.prototype.move = function(
@@ -227,6 +250,7 @@ xhrdav.lib.ResourceController.prototype.move = function(
  *                            [callback args: errors object]
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
  * @throws {Error} Not found destination.
  * @see #move
@@ -247,6 +271,7 @@ xhrdav.lib.ResourceController.prototype.moveBeforeValidate = function(
  *                            [callback args: errors object]
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler  [Callback args: errors object]
  * @Deprecated  NOT IMPLEMNTS
  */
@@ -270,6 +295,7 @@ xhrdav.lib.ResourceController.prototype.rename = function(
  *                            [callback args: errors object]
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler  [Callback args: errors object]
  * @throws {Error} Not found of xhrdav.lib.Resource or #destination
  * @see #rename
@@ -304,6 +330,8 @@ goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'getDestination',
   xhrdav.lib.ResourceController.prototype.getDestination);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'remove',
   xhrdav.lib.ResourceController.prototype.remove);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'mkDir',
+  xhrdav.lib.ResourceController.prototype.mkDir);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'copy',
   xhrdav.lib.ResourceController.prototype.copy);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'copyBeforeValidate',
