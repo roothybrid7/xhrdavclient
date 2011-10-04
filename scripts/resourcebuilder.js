@@ -7,7 +7,7 @@
 goog.provide('xhrdav.lib.ResourceBuilder');
 goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.Resource');
-goog.require('xhrdav.lib.ResourceGenerator');
+goog.require('xhrdav.lib.ResourceController');
 
 /**
  * xhrdavclient resource object
@@ -19,9 +19,9 @@ xhrdav.lib.ResourceBuilder = function() {
   this.rawData_ = null;
 
   /**
-   * @type {{root:xhrdav.lib.ResourceGenerator,
-   *          childs:Array.<xhrdav.lib.ResourceGenerator}}
-   * @see xhrdav.lib.ResourceGenerator
+   * @type {{root:xhrdav.lib.ResourceController,
+   *          childs:Array.<xhrdav.lib.ResourceController}}
+   * @see xhrdav.lib.ResourceController
    */
   this.resources_ = null;
 };
@@ -56,7 +56,7 @@ xhrdav.lib.ResourceBuilder.prototype.convertRaw2Models = function() {
   // get properties from respnse data
   var resList = [];
   goog.array.forEach(resp, function(val, key) {
-    var res = new xhrdav.lib.ResourceGenerator();
+    var res = new xhrdav.lib.ResourceController();
 
     res.href = val.D$href.$t;
     res.pathlist = goog.array.filter(res.href.split('/'), function(v, i) {
@@ -127,8 +127,8 @@ xhrdav.lib.ResourceBuilder.prototype.convertRaw2Models = function() {
  * Building tree from response data
  *
  * @private
- * @param {Array.<xhrdav.lib.ResourceGenerator>} resList
- * @see xhrdav.lib.ResourceGenerator
+ * @param {Array.<xhrdav.lib.ResourceController>} resList
+ * @see xhrdav.lib.ResourceController
  */
 xhrdav.lib.ResourceBuilder.prototype.buildTree_ = function(resList) {
   goog.array.stableSort(resList, function(obj1, obj2) {
@@ -152,9 +152,9 @@ xhrdav.lib.ResourceBuilder.prototype.getRawData = function() {
 /**
  * Getter resources
  *
- * @return {{root:xhrdav.lib.ResourceGenerator,
- *          childs:Array.<xhrdav.lib.ResourceGenerator}}
- * @see xhrdav.lib.ResourceGenerator
+ * @return {{root:xhrdav.lib.ResourceController,
+ *          childs:Array.<xhrdav.lib.ResourceController}}
+ * @see xhrdav.lib.ResourceController
  */
 xhrdav.lib.ResourceBuilder.prototype.getResources = function() {
   return this.resources_;
@@ -163,21 +163,21 @@ xhrdav.lib.ResourceBuilder.prototype.getResources = function() {
 /**
  * Serialize resources [Class method]
  *
- * @param {{root:xhrdav.lib.ResourceGenerator,
- *          childs:Array.<xhrdav.lib.ResourceGenerator}} resources
- * @param {boolean} isClassbase TRUE: xhrdav.lib.Resource FALSE: {}
+ * @param {{root:xhrdav.lib.ResourceController,
+ *          childs:Array.<xhrdav.lib.ResourceController}} resources
+ * @param {boolean} asModel TRUE: xhrdav.lib.Resource FALSE: {}
  * @return {{root:xhrdav.lib.Resource, childs:Array.<xhrdav.lib.Resource}}
  */
-xhrdav.lib.ResourceBuilder.serialize = function(resources, isClassbase) {
+xhrdav.lib.ResourceBuilder.serialize = function(resources, asModel) {
   var serializedResources = {};
 
   var root = resources.root;
   var childs = resources.childs;
 
-  serializedResources.root = root.serialize(isClassbase);
+  serializedResources.root = root.serialize(asModel);
   serializedResources.childs =
     goog.array.map(childs, function(v, i) {
-      return v.serialize(isClassbase); }) || [];
+      return v.serialize(asModel); }) || [];
 
   return serializedResources;
 };
@@ -185,12 +185,12 @@ xhrdav.lib.ResourceBuilder.serialize = function(resources, isClassbase) {
 /**
  * Serialize resources
  *
- * @param {boolean} isClassbase TRUE: xhrdav.lib.Resource FALSE: {}
+ * @param {boolean} asModel TRUE: xhrdav.lib.Resource FALSE: {}
  * @return {{root:xhrdav.lib.Resource, childs:Array.<xhrdav.lib.Resource}}
  * @see xhrdav.lib.ResourceBuilder.serialize
  */
-xhrdav.lib.ResourceBuilder.prototype.serialize = function(isClassbase) {
-  return xhrdav.lib.ResourceBuilder.serialize(this.getResources(), isClassbase);
+xhrdav.lib.ResourceBuilder.prototype.serialize = function(asModel) {
+  return xhrdav.lib.ResourceBuilder.serialize(this.getResources(), asModel);
 };
 
 /* Entry point for closure compiler */

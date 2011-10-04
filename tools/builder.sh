@@ -66,7 +66,7 @@ NAMESPACES=(
   'xhrdav.lib.HttpStatus'
   'xhrdav.lib.Resource'
   'xhrdav.lib.ResourceBuilder'
-  'xhrdav.lib.ResourceGenerator'
+  'xhrdav.lib.ResourceController'
 )
 
 rootdir=
@@ -99,3 +99,4 @@ fi
 command="$PYTHON closure-library/closure/bin/build/closurebuilder.py --output_file=$OUTPUTFILE"
 echo $command $rootdir $entries $options | bash
 [ $? -ne 0 ] && usage
+

@@ -1,6 +1,9 @@
 /**
  * davclient.js - XHTTPRequest Low-level WebDAV Client API.
  *
+ * WebDAV Ajax client api by XhrIo and XhrManager of google closure library.
+ * (HTTP: GET, PUT, HEAD, OPTIONS, MKCOL, PROPFIND, PROPPATCH, LOCK, UNLOCK)
+ *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 

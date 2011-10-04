@@ -1,6 +1,8 @@
 /**
  * domhandler.js - WebDAV Client dom handler.
  *
+ * This is a xml dom parse handler.
+ *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
@@ -41,6 +43,7 @@ xhrdav.lib.DomHandler.prototype.endDocument = function() {};
  *
  * @param {xhrdav.lib.DomParser} parser
  * @param {Object} xml
+ * @see xhrdav.lib.DomParser
  */
 xhrdav.lib.DomHandler.prototype.execute = function(parser, xml) {
   this.resources_ = parser.parseDocument(xml);

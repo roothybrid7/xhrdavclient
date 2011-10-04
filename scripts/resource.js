@@ -1,6 +1,9 @@
 /**
  * resource.js - xhrdavclient resource object and resource type catalog.
  *
+ * This is a WebDAV resoruce model and property catalog class.
+ * Create assosiate Map by goog.mixin or use data model.
+ *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 

@@ -1,6 +1,8 @@
 /**
  * config.js - xhrdavclient config
  *
+ * Configuration of Library parameters.
+ *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 

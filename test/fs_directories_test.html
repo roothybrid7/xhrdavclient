@@ -69,7 +69,7 @@
         asyncContinue();
       };
 
-      davFs.listDir(dir, assertListDir, null, null, this,
+      davFs.listDir(dir, assertListDir, null, null, this, null,
         goog.partial(xhrLogging, logger));
     }
 
@@ -92,8 +92,55 @@
 
         asyncContinue();
       };
-      davFs.listDir(dir, assertListDir, {'Depth': 1}, null, this,
+      davFs.listDir(dir, assertListDir, {'Depth': 1}, null, this, null,
         goog.partial(xhrLogging, logger));
+    }
+
+    function testListDirWOptsAsModel() {
+      var testId = 'ListDirWOptsAsModel';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var dir = '/mydav/';
+
+      var assertListDir = function(errors, content) {
+        assertFalse('No Errors', errors.hasRequest());
+        assertFalse('No Errors', errors.hasProps());
+        assertNotNullNorUndefined('Get collection', content);
+        assertTrue('Not xhrdav.lib.Resource?',
+          content.root instanceof xhrdav.lib.Resource);
+
+        logger.config(goog.json.serialize(errors));
+        logger.config(goog.json.serialize(content));
+
+        asyncContinue();
+      };
+      davFs.listDir(dir, assertListDir, null, null, this, {asModel: true});
+    }
+
+    function testListDirWOptsHasCtrl() {
+      var testId = 'ListDirWOptsHasCtrl';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var dir = '/mydav/';
+
+      var assertListDir = function(errors, content) {
+        assertFalse('No Errors', errors.hasRequest());
+        assertFalse('No Errors', errors.hasProps());
+        assertNotNullNorUndefined('Get collection', content);
+        assertTrue('Not xhrdav.lib.ResourceController?',
+          content.root instanceof xhrdav.lib.ResourceController);
+
+        logger.config(goog.json.serialize(errors));
+        logger.config(goog.json.serialize(content));
+
+        asyncContinue();
+      };
+
+      davFs.listDir(dir, assertListDir, null, null, this, {hasCtrl: true});
     }
 
     function testMkDir() {

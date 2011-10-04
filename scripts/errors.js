@@ -1,6 +1,8 @@
 /**
  * error.js - xhrdavclient error object
  *
+ * This is a Error object for Request and WebDAV resources.
+ *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
