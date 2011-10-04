@@ -1,4 +1,13 @@
 
+0.0.14 / 2011-10-04 
+==================
+
+  * Fixed bug url decode at creating goog.Uri
+  * Add logging method
+  * refactor
+  * Merge branch 'release/v0.0.13' into develop
+  * update changelog
+
 0.0.13 / 2011-10-04 
 ==================
 
