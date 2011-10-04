@@ -89,10 +89,6 @@
       var logger = new goog.debug.Logger.getLogger(testId);
 
       var genKlass = xhrdav.lib.ResourceController;
-      assertNotUndefined('Define class method remove?', genKlass.remove);
-      assertNotUndefined('Define class method copy?', genKlass.copy);
-      assertNotUndefined('Define class method move?', genKlass.move);
-      assertNotUndefined('Define class method rename?', genKlass.rename);
       var controller = new genKlass();
       assertNotUndefined('Define method remove?', controller.remove);
       assertNotUndefined('Define method copy?', controller.copy);

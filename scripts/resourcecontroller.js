@@ -90,24 +90,6 @@ xhrdav.lib.ResourceController.prototype.getDestination = function() {
 };
 
 /**
- * Remove resource [Class method]
- *
- * @param {(xhrdav.lib.ResourceController|xhrdav.lib.Resource)} resoruce
- *                                        Json/Hash object for WebDAV resoruce.
- * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
- * @param {Object=} opt_headers Request headers.
- * @param {object=} opt_params  Request query params.
- * @param {Fuction=} debugHandler [Callback args: xhr event object]
- * @throws {Error} Not found of xhrdav.lib.Resource or #destination
- */
-xhrdav.lib.ResourceController.remove = function(
-  resource, handler, opt_headers, opt_params, debugHandler) {
-  // TODO: Implements
-  // resource.hrefのパスを削除する
-};
-
-/**
  * Remove resource
  *
  * @param {Function=} handler callback handler function
@@ -121,34 +103,7 @@ xhrdav.lib.ResourceController.remove = function(
 xhrdav.lib.ResourceController.prototype.remove = function(
   handler, opt_headers, opt_params, debugHandler) {
   // TODO: Implements
-  // 同名のクラスメソッドに投げる
-};
-
-/**
- * Copy resource [Class method]
- *
- * @param {(xhrdav.lib.ResourceController|xhrdav.lib.Resource)} resoruce
- *                                        Json/Hash object for WebDAV resoruce.
- * @param {string} dest Copy destination Path <code>/mydav/bar/</code>.
- * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
- * @param {Object=} opt_headers Request headers.
- * @param {object=} opt_params  Request query params.
- * @param {Fuction=} debugHandler [Callback args: xhr event object]
- * @throws {Error} Not found of xhrdav.lib.Resource or #destination
- */
-xhrdav.lib.ResourceController.copy = function(
-  resource, dest, handler, opt_headers, opt_params, debugHandler) {
-//  if (!this.destination) // Errors
-  // TODO: Implements
-  // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
-  // ディレクトリの場合:
-  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'を補完してcopy
-  //  違う場合は、destの末尾にresource.hrefの末尾を追加してcopy
-  // ファイルの場合:
-  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'があった場合削除してcopy
-  //  違う場合は、destをディレクトリと見なし、destの末尾に'/'を補完してから
-  //  resource.hrefの末尾を追加してcopy
+  // resource.hrefのパスを削除する
 };
 
 /**
@@ -164,37 +119,17 @@ xhrdav.lib.ResourceController.copy = function(
  */
 xhrdav.lib.ResourceController.prototype.copy = function(
   handler, opt_headers, opt_params, debugHandler) {
-//  if (!this.destination) // Errors
-  // TODO: Implements
-};
-
-/**
- * Move resoruce [Class method]
- *
- * @param {(xhrdav.lib.ResourceController|xhrdav.lib.Resource)} resoruce
- *                                        Json/Hash object for WebDAV resoruce.
- * @param {string} dest Move destination Path <code>/mydav/bar/</code>.
- * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
- * @param {Object=} opt_headers Request headers.
- * @param {object=} opt_params  Request query params.
- * @param {Fuction=} debugHandler [Callback args: xhr event object]
- * @throws {Error} Not found of xhrdav.lib.Resource or #destination
- */
-xhrdav.lib.ResourceController.move = function(
-  resoruce, dest, handler, opt_headers, opt_params, debugHandler) {
-//  if (!this.destination) // Errors
   // TODO: Implements
 //  if (!this.destination) // Errors
   // TODO: Implements
   // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
   // ディレクトリの場合:
-  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'を補完してmove
-  //  違う場合は、destの末尾にresource.hrefの末尾を追加してmove
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'を補完してcopy
+  //  違う場合は、destの末尾にresource.hrefの末尾を追加してcopy
   // ファイルの場合:
-  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'があった場合削除してmove
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'があった場合削除してcopy
   //  違う場合は、destをディレクトリと見なし、destの末尾に'/'を補完してから
-  //  resource.hrefの末尾を追加してmove
+  //  resource.hrefの末尾を追加してcopy
 };
 
 /**
@@ -210,32 +145,18 @@ xhrdav.lib.ResourceController.move = function(
  */
 xhrdav.lib.ResourceController.prototype.move = function(
   handler, opt_headers, opt_params, debugHandler) {
-//  if (!this.destination) // Errors
   // TODO: Implements
-}
-
-/**
- * Rename resource [Class method]
- *
- * @param {(xhrdav.lib.ResourceController|xhrdav.lib.Resource)} resource
- *                                        Json/Hash object for WebDAV resource.
- * @param {string} dest New resource name.
- * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
- * @param {Object=} opt_headers Request headers.
- * @param {object=} opt_params  Request query params.
- * @param {Function=} debugHandler  [Callback args: errors object]
- * @throws {Error} Not found of xhrdav.lib.Resource or #destination
- */
-xhrdav.lib.ResourceController.rename = function(
-  resource, dest, handler, opt_headers, opt_params, debugHandler) {
+//  if (!this.destination) // Errors
   // TODO: Implements
   // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
   // ディレクトリの場合:
-  //  先頭にresource.hrefのディレクトリパスを追加し、destの末尾に'/'を補完してrename
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'を補完してmove
+  //  違う場合は、destの末尾にresource.hrefの末尾を追加してmove
   // ファイルの場合:
-  //  先頭にresource.hrefのディレクトリパスを追加してrename
-};
+  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'があった場合削除してmove
+  //  違う場合は、destをディレクトリと見なし、destの末尾に'/'を補完してから
+  //  resource.hrefの末尾を追加してmove
+}
 
 /**
  * Rename resource
@@ -250,6 +171,11 @@ xhrdav.lib.ResourceController.rename = function(
 xhrdav.lib.ResourceController.prototype.rename = function(
   handler, opt_headers, opt_params, debugHandler) {
   // TODO: Implements
+  // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
+  // ディレクトリの場合:
+  //  先頭にresource.hrefのディレクトリパスを追加し、destの末尾に'/'を補完してrename
+  // ファイルの場合:
+  //  先頭にresource.hrefのディレクトリパスを追加してrename
 };
 
 
@@ -263,16 +189,12 @@ goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'setDestination',
   xhrdav.lib.ResourceController.prototype.setDestination);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'getDestination',
   xhrdav.lib.ResourceController.prototype.getDestination);
-goog.exportSymbol('xhrdav.lib.ResourceController.remove',
-  xhrdav.lib.ResourceController.remove);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'remove',
   xhrdav.lib.ResourceController.prototype.remove);
-goog.exportSymbol('xhrdav.lib.ResourceController.copy',
-  xhrdav.lib.ResourceController.copy);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'copy',
   xhrdav.lib.ResourceController.prototype.copy);
-goog.exportSymbol('xhrdav.lib.ResourceController.move',
-  xhrdav.lib.ResourceController.move);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'move',
   xhrdav.lib.ResourceController.prototype.move);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'rename',
+  xhrdav.lib.ResourceController.prototype.rename);
 
