@@ -195,6 +195,26 @@ xhrdav.lib.DavFs.prototype.updateRequestHandler_ = function(
 };
 
 /**
+ * Propfind request(listDir, getProps) handler.
+ *
+ * @param {string} method Method name of xhrdav.lib.Client instance.
+ * @param {string} path propfind request path.
+ * @param {Function} handler  callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {{hasCtrl:boolean, asModel:boolean}=} opt_helper  response options.
+ * @param {Function=} debugHandler
+ */
+xhrdav.lib.DavFs.prototype.propfindRequestHandler_ = function(
+  path, handler, opt_request, context, opt_helper, debugHandler) {
+  var dataHandler = goog.bind(this.processMultistatus_, this, opt_helper);
+  this.client_.propfind(path,
+    goog.bind(this.responseHandler_, this, handler, dataHandler, path, context),
+    opt_request, debugHandler);
+};
+
+/**
  * Processing Reponse Multi-Status Data
  *
  * @param {string} path HTTP Request path.
@@ -247,15 +267,34 @@ xhrdav.lib.DavFs.prototype.createRequestParameters_ = function(
  * @param {Object=} context Callback scope.
  * @param {{hasCtrl:boolean, asModel:boolean}=} opt_helper  response options.
  * @param {Function=} debugHandler
+ * @see #propfindRequestHandler_
  */
 xhrdav.lib.DavFs.prototype.listDir = function(
   path, handler, opt_headers, opt_params, context, opt_helper, debugHandler) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   opt_request.headers['Depth'] = 1;  // listing directory
-  var dataHandler = goog.bind(this.processMultistatus_, this, opt_helper);
-  this.client_.propfind(path, goog.bind(this.responseHandler_, this, handler, dataHandler, path, context),
-    opt_request, debugHandler);
+  this.propfindRequestHandler_(path, handler, opt_request,
+    context, opt_helper, debugHandler);
+};
+
+/**
+ * Get property for a single resource.
+ *
+ * @param {string} path
+ * @param {Function} handler callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {{hasCtrl:boolean, asModel:boolean}=} opt_helper  response options.
+ * @param {Function=} debugHandler
+ * @see #propfindRequestHandler_
+ */
+xhrdav.lib.DavFs.prototype.getProps = function(
+  path, handler, opt_headers, opt_params, context, opt_helper, debugHandler) {
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
+  this.propfindRequestHandler_(path, handler, opt_request, context, debugHandler);
 };
 
 /**
@@ -465,6 +504,8 @@ goog.exportSymbol('xhrdav.lib.DavFs.getListDirFromMultistatus',
   xhrdav.lib.DavFs.getListDirFromMultistatus);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'listDir',
   xhrdav.lib.DavFs.prototype.listDir);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'getProps',
+  xhrdav.lib.DavFs.prototype.getProps);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'mkDir',
   xhrdav.lib.DavFs.prototype.mkDir);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'rmDir',

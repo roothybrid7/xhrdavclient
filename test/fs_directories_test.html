@@ -73,6 +73,28 @@
         goog.partial(xhrLogging, logger));
     }
 
+    function testGetProps() {
+      var testId = 'GetProps';
+      var logger = new goog.debug.Logger.getLogger(testId);
+      var dir = '/mydav/';
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertListDir = function(errors, content) {
+        assertFalse('No errors', errors.hasRequest());
+        assertFalse('No errors', errors.hasProps());
+        assertNotNullNorUndefined('Get props', content);
+        logger.config(goog.json.serialize(content));
+        assertEquals('path is same?', dir, content.root.href);
+        assertTrue('No child', goog.array.isEmpty(content.childs));
+
+        asyncContinue();
+      };
+
+      davFs.getProps(dir, assertListDir, null, null, this, null,
+        goog.partial(xhrLogging, logger));
+    }
+
     function testListDir() {
       var testId = 'ListDir';
       var logger = new goog.debug.Logger.getLogger(testId);
@@ -108,7 +130,7 @@
         assertFalse('No Errors', errors.hasRequest());
         assertFalse('No Errors', errors.hasProps());
         assertNotNullNorUndefined('Get collection', content);
-        assertTrue('Not xhrdav.lib.Resource?',
+        assertTrue('xhrdav.lib.Resource?',
           content.root instanceof xhrdav.lib.Resource);
 
         logger.config(goog.json.serialize(errors));

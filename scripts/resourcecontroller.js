@@ -36,6 +36,18 @@ xhrdav.lib.ResourceController = function(resource) {
 };
 
 /**
+ * Get DavFs
+ *
+ * @return {xhrdav.lib.DavFs}
+ */
+xhrdav.lib.ResourceController.prototype.getConnection_ = function() {
+  if (!goog.isDefAndNotNull(this.davFs_)) {
+    this.davFs_ = xhrdav.lib.DavFs.getInstance().initialize();
+  }
+  return this.davFs_;
+};
+
+/**
  * Serialize resource [Class method]
  *
  * @param {(xhrdav.lib.ResourceController|xhrdavlib.Resource|Object)} resource
@@ -90,38 +102,9 @@ xhrdav.lib.ResourceController.prototype.getDestination = function() {
 };
 
 /**
- * Remove resource
- *
- * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
- * @param {Object=} opt_headers Request headers.
- * @param {object=} opt_params  Request query params.
- * @param {Fuction=} debugHandler [Callback args: xhr event object]
- * @throws {Error} Not found of xhrdav.lib.Resource or #destination
- * @see xhrdav.lib.ResourceController.remove
+ * build destination path.
  */
-xhrdav.lib.ResourceController.prototype.remove = function(
-  handler, opt_headers, opt_params, debugHandler) {
-  // TODO: Implements
-  // resource.hrefのパスを削除する
-};
-
-/**
- * Copy resource
- *
- * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
- * @param {Object=} opt_headers Request headers.
- * @param {object=} opt_params  Request query params.
- * @param {Fuction=} debugHandler [Callback args: xhr event object]
- * @throws {Error} Not found of xhrdav.lib.Resource or #destination
- * @see xhrdav.lib.ResourceController.copy
- */
-xhrdav.lib.ResourceController.prototype.copy = function(
-  handler, opt_headers, opt_params, debugHandler) {
-  // TODO: Implements
-//  if (!this.destination) // Errors
-  // TODO: Implements
+xhrdav.lib.ResourceController.prototype.buildNewDestination_ = function() {
   // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
   // ディレクトリの場合:
   //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'を補完してcopy
@@ -130,6 +113,108 @@ xhrdav.lib.ResourceController.prototype.copy = function(
   //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'があった場合削除してcopy
   //  違う場合は、destをディレクトリと見なし、destの末尾に'/'を補完してから
   //  resource.hrefの末尾を追加してcopy
+  if (goog.isDefAndNotNull(this.destination_)) {
+    var dstlist = xhrdav.lib.functions.path.split(this.destination_);
+
+    if (dstlist[dstlist.length - 1] != this.pathlist[this.pathlist.length - 1]) {
+      dstlist.push(this.pathlist[this.pathlist.length - 1]);
+    }
+    if (dstlist[0] == '/') {
+      this.destination_ = dstlist.join('/');
+    } else {
+      this.destination_ = '/' + dstlist.join('/');
+    }
+  }
+};
+
+/**
+ * Remove resource
+ *
+ * @param {Function=} handler callback handler function
+ *                            [callback args: errors object]
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
+ * @param {Fuction=} debugHandler [Callback args: xhr event object]
+ */
+xhrdav.lib.ResourceController.prototype.remove = function(
+  handler, opt_headers, opt_params, context, debugHandler) {
+  // Directory
+  if (this.resourcetype == 'collection') {
+    this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
+    this.getConnection_().rmDir(this.href,
+      handler, opt_headers, opt_params, context, debugHandler);
+  } else {
+    this.getConnection_().removeFile(this.href, this.destination_,
+      handler, opt_headers, opt_params, context, debugHandler);
+  }
+};
+
+/**
+ * Create Directory before parameters validate.
+ *
+ * @param {Function=} handler callback handler function
+ *                            [callback args: errors, object]
+ * @param {Object=} opt_headers Request headers.
+ * @param {Object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
+ * @param {Fuction=} debugHandler [Callback args: xhr event object]
+ * @throws {Error} Not found href(Directory path).
+ */
+xhrdav.lib.ResourceController.prototype.mkDir = function(
+  handler, opt_headers, opt_params, context, debugHandler) {
+  if (!goog.isDefAndNotNull(this.href)) {
+    return goog.functions.error(
+      'Not found Directory path: obj.href = directoryPath')();
+  }
+  this.href = xhrdav.lib.functions.path.addLastSlash(this.href);
+  this.getConnection_().mkDir(this.href,
+    handler, opt_headers, opt_params, context, debugHandler);
+};
+/**
+ * Copy resource
+ *
+ * @param {Function=} handler callback handler function
+ *                            [callback args: errors object]
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
+ * @param {Fuction=} debugHandler [Callback args: xhr event object]
+ */
+xhrdav.lib.ResourceController.prototype.copy = function(
+  handler, opt_headers, opt_params, context, debugHandler) {
+  this.buildNewDestination_();
+
+  // Directory
+  if (this.resourcetype == 'collection') {
+    this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
+    this.getConnection_().copyDir(this.href, this.destination_,
+      handler, opt_headers, opt_params, context, debugHandler);
+  } else {
+    this.getConnection_().copyFile(this.href, this.destination_,
+      handler, opt_headers, opt_params, context, debugHandler);
+  }
+};
+
+/**
+ * Copy resource before parameter validate.
+ *
+ * @param {Function=} handler callback handler function
+ *                            [callback args: errors object]
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
+ * @param {Fuction=} debugHandler [Callback args: xhr event object]
+ * @throws {Error} Not found destination.
+ * @see #copy
+ */
+xhrdav.lib.ResourceController.prototype.copyBeforeValidate = function(
+  handler, opt_headers, opt_params, context, debugHandler) {
+  if (!goog.isDefAndNotNull(this.destination_)) {
+    return goog.functions.error(
+      'Not found destination: obj.setDestination = destPath')();
+  }
+  return this.copy(handler, opt_headers, opt_params, context, debugHandler);
 };
 
 /**
@@ -139,24 +224,44 @@ xhrdav.lib.ResourceController.prototype.copy = function(
  *                            [callback args: errors object]
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
  * @param {Fuction=} debugHandler [Callback args: xhr event object]
- * @throws {Error} Not found of Resource or #destination
- * @see xhrdav.lib.ResourceController.move
  */
 xhrdav.lib.ResourceController.prototype.move = function(
-  handler, opt_headers, opt_params, debugHandler) {
-  // TODO: Implements
-//  if (!this.destination) // Errors
-  // TODO: Implements
-  // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
-  // ディレクトリの場合:
-  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'を補完してmove
-  //  違う場合は、destの末尾にresource.hrefの末尾を追加してmove
-  // ファイルの場合:
-  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'があった場合削除してmove
-  //  違う場合は、destをディレクトリと見なし、destの末尾に'/'を補完してから
-  //  resource.hrefの末尾を追加してmove
-}
+  handler, opt_headers, opt_params, context, debugHandler) {
+  this.buildNewDestination_();
+
+  // Directory
+  if (this.resourcetype == 'collection') {
+    this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
+    this.getConnection_().moveDir(this.href, this.destination_,
+      handler, opt_headers, opt_params, context, debugHandler);
+  } else {
+    this.getConnection_().moveFile(this.href, this.destination_,
+      handler, opt_headers, opt_params, context, debugHandler);
+  }
+};
+
+/**
+ * Move resource before parameter validate.
+ *
+ * @param {Function=} handler callback handler function
+ *                            [callback args: errors object]
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
+ * @param {Fuction=} debugHandler [Callback args: xhr event object]
+ * @throws {Error} Not found destination.
+ * @see #move
+ */
+xhrdav.lib.ResourceController.prototype.moveBeforeValidate = function(
+  handler, opt_headers, opt_params, context, debugHandler) {
+  if (!goog.isDefAndNotNull(this.destination_)) {
+    return goog.functions.error(
+      'Not found destination: obj.setDestination = destPath')();
+  }
+  return this.move(handler, opt_headers, opt_params, context, debugHandler);
+};
 
 /**
  * Rename resource
@@ -165,17 +270,50 @@ xhrdav.lib.ResourceController.prototype.move = function(
  *                            [callback args: errors object]
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler  [Callback args: errors object]
- * @throws {Error} Not found of xhrdav.lib.Resource or #destination
+ * @Deprecated  NOT IMPLEMNTS
  */
 xhrdav.lib.ResourceController.prototype.rename = function(
-  handler, opt_headers, opt_params, debugHandler) {
-  // TODO: Implements
-  // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
-  // ディレクトリの場合:
-  //  先頭にresource.hrefのディレクトリパスを追加し、destの末尾に'/'を補完してrename
-  // ファイルの場合:
-  //  先頭にresource.hrefのディレクトリパスを追加してrename
+  handler, opt_headers, opt_params, context, debugHandler) {
+  // Directory
+  if (this.resourcetype == 'collection') {
+    this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
+    this.getConnection_().moveDir(this.href, this.destination_,
+      handler, opt_headers, opt_params, context, debugHandler);
+  } else {
+    this.getConnection_().moveFile(this.href, this.destination_,
+      handler, opt_headers, opt_params, context, debugHandler);
+  }
+};
+
+/**
+ * Rename resource before parameters validate.
+ *
+ * @param {Function=} handler callback handler function
+ *                            [callback args: errors object]
+ * @param {Object=} opt_headers Request headers.
+ * @param {object=} opt_params  Request query params.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler  [Callback args: errors object]
+ * @throws {Error} Not found of xhrdav.lib.Resource or #destination
+ * @see #rename
+ * @Deprecated  NOT IMPLEMNTS
+ */
+xhrdav.lib.ResourceController.prototype.renameBeforeValidate = function(
+  handler, opt_headers, opt_params, context, debugHandler) {
+  if (!goog.isDefAndNotNull(this.destination_)) {
+    return goog.functions.error(
+      'Not found destination: obj.setDestination = destPath')();
+  } else {
+    var dstlist = xhrdav.lib.functions.path.split(this.destination_);
+
+    if (dstlist[dstlist.length - 1] == this.pathlist[this.pathlist.length - 1]) {
+      return goog.functions.error(
+        'Duplicate destination: obj.href and  obj.destination is same!!')();
+    }
+  }
+  return this.rename(handler, opt_headers, opt_params, context, debugHandler);
 };
 
 
@@ -191,10 +329,18 @@ goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'getDestination',
   xhrdav.lib.ResourceController.prototype.getDestination);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'remove',
   xhrdav.lib.ResourceController.prototype.remove);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'mkDir',
+  xhrdav.lib.ResourceController.prototype.mkDir);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'copy',
   xhrdav.lib.ResourceController.prototype.copy);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'copyBeforeValidate',
+  xhrdav.lib.ResourceController.prototype.copyBeforeValidate);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'move',
   xhrdav.lib.ResourceController.prototype.move);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'moveBeforeValidate',
+  xhrdav.lib.ResourceController.prototype.moveBeforeValidate);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'rename',
   xhrdav.lib.ResourceController.prototype.rename);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'renameBeforeValidate',
+  xhrdav.lib.ResourceController.prototype.renameBeforeValidate);
 
