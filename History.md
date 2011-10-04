@@ -1,4 +1,17 @@
 
+0.0.13 / 2011-10-04 
+==================
+
+  * bugfix require dependency
+  * Add mkDir method of model controller
+  * Add resource controller method
+  * fixed require
+  * Apply split path function
+  * Add split path method
+  * Add getProps method for a single resource.
+  * Merge branch 'release/v0.0.12' into develop
+  * update changelog
+
 0.0.12 / 2011-10-04 
 ==================
 
