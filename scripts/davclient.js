@@ -116,6 +116,7 @@ xhrdav.lib.Client.prototype.processRequest_ = function(
  * @param {string} path Path(<code>/foo</code>, <code>/foo/bar.txt</code>).
  */
 xhrdav.lib.Client.prototype.generateUrl_ = function(path) {
+  xhrdav.lib.Config.logging({'Client#generateUrl_': path});
   // scheme, userinfo, domain, port, path, query, fragment
   return goog.Uri.create(
     this.scheme_,
@@ -195,7 +196,7 @@ xhrdav.lib.Client.prototype.request_ = function(
 xhrdav.lib.Client.prototype.options = function(
   path, handler, opt_request, debugHandler) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
-  var url = this.generateUrl_(path);
+  var url = this.generateUrl_(goog.string.urlDecode(path));
   this.setParameters_(url, opt_request.query);
   this.request_('OPTIONS', url, handler, opt_request, debugHandler);
 };
@@ -214,7 +215,7 @@ xhrdav.lib.Client.prototype.options = function(
 xhrdav.lib.Client.prototype.head = function(path, handler, opt_request, debugHandler) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  var url = this.generateUrl_(path);
+  var url = this.generateUrl_(goog.string.urlDecode(path));
   this.setParameters_(url, opt_request.query);
 
   if (goog.isDefAndNotNull(opt_request.headers)) {
@@ -243,7 +244,7 @@ xhrdav.lib.Client.prototype.head = function(path, handler, opt_request, debugHan
 xhrdav.lib.Client.prototype.get = function(path, handler, opt_request, debugHandler) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  var url = this.generateUrl_(path);
+  var url = this.generateUrl_(goog.string.urlDecode(path));
   this.setParameters_(url, opt_request.query);
   this.setParameters_(url, opt_request.query);
   this.request_('GET', url, handler, opt_request, debugHandler);
@@ -266,9 +267,9 @@ xhrdav.lib.Client.prototype.put = function(
 
   var url;
   if (path.match(/^(.+)\/$/)) {
-    url = this.generateUrl_(RegExp.$1);
+    url = this.generateUrl_(goog.string.urlDecode(RegExp.$1));
   } else {
-    url = this.generateUrl_(path);
+    url = this.generateUrl_(goog.string.urlDecode(path));
   } // Preserve GET
   this.setParameters_(url, opt_request.query);
 
@@ -297,7 +298,7 @@ xhrdav.lib.Client.prototype.propfind = function(
   path, handler, opt_request, debugHandler) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  var url = this.generateUrl_(path);
+  var url = this.generateUrl_(goog.string.urlDecode(path));
   this.setParameters_(url, opt_request.query);
 
   // 0(path only) or 1(current directory)
@@ -332,7 +333,7 @@ xhrdav.lib.Client.prototype.propfind = function(
 xhrdav.lib.Client.prototype.proppatch = function(path, handler, opt_request, debugHandler) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  var url = this.generateUrl_(path);
+  var url = this.generateUrl_(goog.string.urlDecode(path));
   this.setParameters_(url, opt_request.query);
 
   if (goog.isDefAndNotNull(opt_request.headers)) {
@@ -356,7 +357,7 @@ xhrdav.lib.Client.prototype.proppatch = function(path, handler, opt_request, deb
 xhrdav.lib.Client.prototype.lock = function(path, handler, opt_request, debugHandler) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  var url = this.generateUrl_(path);
+  var url = this.generateUrl_(goog.string.urlDecode(path));
   this.setParameters_(url, opt_request.query);
 
   if (goog.isDefAndNotNull(opt_request.headers) &&
@@ -393,7 +394,7 @@ xhrdav.lib.Client.prototype.mkcol = function(path, handler, opt_request, debugHa
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   path = goog.string.endsWith(path, '/') ? path : path + '/'; // Preserve GET
-  var url = this.generateUrl_(path);
+  var url = this.generateUrl_(goog.string.urlDecode(path));
   this.setParameters_(url, opt_request.query);
 //      var url = goog.Uri.parse('http://localhost:8001/foo/');
   this.request_('MKCOL', url, handler, opt_request, debugHandler);
@@ -413,7 +414,7 @@ xhrdav.lib.Client.prototype._delete = function(
   path, handler, opt_request, debugHandler) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  var url = this.generateUrl_(path);
+  var url = this.generateUrl_(goog.string.urlDecode(path));
   this.setParameters_(url, opt_request.query);
   this.request_('DELETE', url, handler, opt_request, debugHandler);
 };
@@ -435,7 +436,7 @@ xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
   method, path, dstPath, handler, opt_request, debugHandler) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  var url = this.generateUrl_(path);
+  var url = this.generateUrl_(goog.string.urlDecode(path));
   this.setParameters_(url, opt_request.query);
 
   if (goog.isDefAndNotNull(opt_request.headers) &&
