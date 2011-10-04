@@ -1,4 +1,15 @@
 
+0.0.12 / 2011-10-04 
+==================
+
+  * remove class method.
+  * Add response data option
+  * rename parameter and add comments
+  * Rename and fixed mixin property.
+  * add trailing space.
+  * Merge branch 'release/v0.0.11' into develop
+  * update changelog
+
 0.0.11 / 2011-10-03 
 ==================
 
