@@ -10,7 +10,6 @@
 goog.provide('xhrdav.lib.ResourceController');
 goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.Resource');
-goog.require('xhrdav.lib.DavFs');
 
 /**
  * xhrdavclient resource controller
