@@ -13,4 +13,4 @@ goog.addDependency('../../../scripts/functions/path.js', ['xhrdav.lib.functions.
 goog.addDependency('../../../scripts/httpstatus.js', ['xhrdav.lib.HttpStatus'], []);
 goog.addDependency('../../../scripts/resource.js', ['xhrdav.lib.Resource'], ['goog.array', 'goog.object']);
 goog.addDependency('../../../scripts/resourcebuilder.js', ['xhrdav.lib.ResourceBuilder'], ['xhrdav.lib.Config', 'xhrdav.lib.Resource', 'xhrdav.lib.ResourceController']);
-goog.addDependency('../../../scripts/resourcecontroller.js', ['xhrdav.lib.ResourceController'], ['xhrdav.lib.Config', 'xhrdav.lib.Resource']);
+goog.addDependency('../../../scripts/resourcecontroller.js', ['xhrdav.lib.ResourceController'], ['xhrdav.lib.Config', 'xhrdav.lib.DavFs', 'xhrdav.lib.Resource']);
