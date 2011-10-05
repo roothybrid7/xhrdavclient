@@ -1,4 +1,11 @@
 
+0.0.17 / 2011-10-06 
+==================
+
+  * refactor
+  * Merge branch 'release/v0.0.16' into develop
+  * update changelog
+
 0.0.16 / 2011-10-05 
 ==================
 
