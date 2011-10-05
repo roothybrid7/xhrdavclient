@@ -48,7 +48,7 @@
       var testId = 'Connection';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var fs = xhrdav.lib.DavFs.getInstance().initialize();
+      var fs = xhrdav.lib.DavFs.getInstance();
       var conn = fs.getConnection();
       assertNotNullNorUndefined('Create Connection?', conn);
       var conn2 = fs.getConnection();
@@ -61,7 +61,7 @@
       var testId = 'ParseXmlSet';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var fs = xhrdav.lib.DavFs.getInstance().initialize();
+      var fs = xhrdav.lib.DavFs.getInstance();
       var conn = fs.getConnection();
       assertTrue('Can ParseXml?', conn.canParseXml());
     }

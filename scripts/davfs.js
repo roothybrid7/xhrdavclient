@@ -54,15 +54,14 @@ xhrdav.lib.DavFs.prototype.initXhrMgr_ = function() {
 /**
  * Init with calling low-level client API.
  *
+ * @private
  * @param {Object=} opt_uri davclient Parameters(options: scheme, domain, port)
- * @return {xhrdav.lib.DavFs}
  */
-xhrdav.lib.DavFs.prototype.initialize = function(opt_uri) {
+xhrdav.lib.DavFs.prototype.initClient_ = function(opt_uri) {
   var config = xhrdav.lib.Config.getInstance();
   this.client_ = new xhrdav.lib.Client(opt_uri);
   this.client_.setXmlParseFunction(
     goog.getObjectByName(config.xmlParseFuncObj));
-  return this;
 };
 
 /**
@@ -74,7 +73,7 @@ xhrdav.lib.DavFs.prototype.initialize = function(opt_uri) {
  * @see #initialize
  */
 xhrdav.lib.DavFs.prototype.getConnection = function(refresh, opt_uri) {
-  if (!!refresh || goog.isNull(this.client_)) this.initialize(opt_uri);
+  if (!!refresh || goog.isNull(this.client_)) this.initClient_(opt_uri);
   return this.client_;
 };
 
@@ -186,9 +185,9 @@ xhrdav.lib.DavFs.getListDirFromMultistatus = function(content, opt_helper) {
  */
 xhrdav.lib.DavFs.prototype.updateRequestHandler_ = function(
   method, path, dstPath, handler, opt_request, context, debugHandler) {
-  var api = goog.getObjectByName(method, this.client_);
+  var api = goog.getObjectByName(method, this.getConnection());
 
-  api.call(this.client_, path, dstPath,
+  api.call(this.getConnection(), path, dstPath,
     goog.bind(this.responseHandler_, this,
       handler, this.simpleErrorHandler_, path, context),
     opt_request, debugHandler);
@@ -209,7 +208,7 @@ xhrdav.lib.DavFs.prototype.updateRequestHandler_ = function(
 xhrdav.lib.DavFs.prototype.propfindRequestHandler_ = function(
   path, handler, opt_request, context, opt_helper, debugHandler) {
   var dataHandler = goog.bind(this.processMultistatus_, this, opt_helper);
-  this.client_.propfind(path,
+  this.getConnection().propfind(path,
     goog.bind(this.responseHandler_, this, handler, dataHandler, path, context),
     opt_request, debugHandler);
 };
@@ -311,7 +310,7 @@ xhrdav.lib.DavFs.prototype.mkDir = function(
   path, handler, opt_headers, opt_params, context, debugHandler) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
-  this.client_.mkcol(path,
+  this.getConnection().mkcol(path,
     goog.bind(this.responseHandler_, this,
       handler, this.simpleErrorHandler_, path, context),
     opt_request, debugHandler);
@@ -331,7 +330,7 @@ xhrdav.lib.DavFs.prototype.rmDir = function(
   path, handler, opt_headers, opt_params, context, debugHandler) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
-  this.client_._delete(xhrdav.lib.functions.path.addLastSlash(path),
+  this.getConnection()._delete(xhrdav.lib.functions.path.addLastSlash(path),
     goog.bind(this.responseHandler_, this,
       handler, this.simpleErrorHandler_, path, context),
     opt_request, debugHandler);
@@ -398,7 +397,7 @@ xhrdav.lib.DavFs.prototype.read = function(
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
 
-  this.client_.get(path,
+  this.getConnection().get(path,
     goog.bind(this.responseHandler_, this,
       handler, this.contentReadHandler_, path, context),
     opt_request, debugHandler);
@@ -421,7 +420,7 @@ xhrdav.lib.DavFs.prototype.write = function(
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
 
-  this.client_.put(path, content,
+  this.getConnection().put(path, content,
     goog.bind(this.responseHandler_, this,
       handler, this.simpleErrorHandler_, path, context),
     opt_request, debugHandler);
@@ -443,7 +442,7 @@ xhrdav.lib.DavFs.prototype.removeFile = function(
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
 
-  this.client_._delete(path,
+  this.getConnection()._delete(path,
     goog.bind(this.responseHandler_, this,
       handler, this.simpleErrorHandler_, path, context),
     opt_request, debugHandler);
@@ -496,8 +495,6 @@ xhrdav.lib.DavFs.prototype.copyFile = function(
 
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs.getInstance);
-goog.exportProperty(xhrdav.lib.DavFs.prototype, 'initialize',
-  xhrdav.lib.DavFs.prototype.initialize);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'getConnection',
   xhrdav.lib.DavFs.prototype.getConnection);
 goog.exportSymbol('xhrdav.lib.DavFs.getListDirFromMultistatus',

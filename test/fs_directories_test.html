@@ -36,7 +36,7 @@
 
     var httpStatus = xhrdav.lib.HttpStatus;
     var httpStatusText = xhrdav.lib.HttpStatus.text;
-    var davFs = xhrdav.lib.DavFs.getInstance().initialize();
+    var davFs = xhrdav.lib.DavFs.getInstance();
 
     var parentDir = '/mydav/FsDirTest/';
     var dav = new xhrdav.lib.Client();
