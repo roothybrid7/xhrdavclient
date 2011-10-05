@@ -140,7 +140,7 @@ xhrdav.lib.ResourceController.prototype.buildNewDestination_ = function() {
 xhrdav.lib.ResourceController.prototype.remove = function(
   handler, opt_headers, opt_params, context, debugHandler) {
   // Directory
-  if (this.resourcetype == 'collection') {
+  if ('collection' == this.resourcetype) {
     this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
     this.getConnection_().rmDir(this.href,
       handler, opt_headers, opt_params, context, debugHandler);
@@ -186,7 +186,7 @@ xhrdav.lib.ResourceController.prototype.copy = function(
   this.buildNewDestination_();
 
   // Directory
-  if (this.resourcetype == 'collection') {
+  if ('collection' == this.resourcetype) {
     this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
     this.getConnection_().copyDir(this.href, this.destination_,
       handler, opt_headers, opt_params, context, debugHandler);
@@ -232,7 +232,7 @@ xhrdav.lib.ResourceController.prototype.move = function(
   this.buildNewDestination_();
 
   // Directory
-  if (this.resourcetype == 'collection') {
+  if ('collection' == this.resourcetype) {
     this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
     this.getConnection_().moveDir(this.href, this.destination_,
       handler, opt_headers, opt_params, context, debugHandler);
@@ -277,7 +277,7 @@ xhrdav.lib.ResourceController.prototype.moveBeforeValidate = function(
 xhrdav.lib.ResourceController.prototype.rename = function(
   handler, opt_headers, opt_params, context, debugHandler) {
   // Directory
-  if (this.resourcetype == 'collection') {
+  if ('collection' == this.resourcetype) {
     this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
     this.getConnection_().moveDir(this.href, this.destination_,
       handler, opt_headers, opt_params, context, debugHandler);
