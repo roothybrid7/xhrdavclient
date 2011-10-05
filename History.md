@@ -1,4 +1,11 @@
 
+0.0.16 / 2011-10-05 
+==================
+
+  * move namespace LIBNAME
+  * Merge branch 'release/v0.0.15' into develop
+  * update changelog
+
 0.0.15 / 2011-10-05 
 ==================
 

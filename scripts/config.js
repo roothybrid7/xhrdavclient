@@ -27,6 +27,9 @@ goog.require('goog.debug.Logger');
  * Refs: goog.DEBUG=true|false
  */
 
+/** @type {string} */
+xhrdav.lib.LIBNAME = 'xhrdavclient';
+
 /**
  * xhrdavclient Global config
  *
@@ -37,9 +40,6 @@ xhrdav.lib.Config = function() {
   this.initialize_();
 };
 goog.addSingletonGetter(xhrdav.lib.Config);
-
-/** @type {string} */
-xhrdav.lib.Config.LIBNAME = 'xhrdavclient';
 
 /**
  * Initiaze config
@@ -52,7 +52,7 @@ xhrdav.lib.Config.prototype.initialize_ = function() {
    @ @private
    * @type {goog.debug.Logger}
    */
-  this.logger_ = new goog.debug.Logger.getLogger(xhrdav.lib.Config.LIBNAME);
+  this.logger_ = new goog.debug.Logger.getLogger(xhrdav.lib.LIBNAME);
 
   if (goog.DEBUG) {
     this.logger_.setLevel(goog.debug.Logger.Level.ALL);
