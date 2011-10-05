@@ -42,7 +42,7 @@ xhrdav.lib.ResourceController = function(resource) {
  */
 xhrdav.lib.ResourceController.prototype.getConnection_ = function() {
   if (!goog.isDefAndNotNull(this.davFs_)) {
-    this.davFs_ = xhrdav.lib.DavFs.getInstance().initialize();
+    this.davFs_ = xhrdav.lib.DavFs.getInstance();
   }
   return this.davFs_;
 };

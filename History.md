@@ -1,4 +1,11 @@
 
+0.0.15 / 2011-10-05 
+==================
+
+  * Delete DavFs#initialize and bugfixed null path request.
+  * Merge branch 'release/v0.0.14' into develop
+  * update changelog
+
 0.0.14 / 2011-10-04 
 ==================
 
