@@ -54,6 +54,7 @@ ROOTS=(
 NAMESPACES=(
   'xhrdav.lib'
   'xhrdav.lib.Config'
+  'xhrdav.lib.XmlHttp'
   'xhrdav.lib.string'
   'xhrdav.lib.Client'
   'xhrdav.lib.DavFs'

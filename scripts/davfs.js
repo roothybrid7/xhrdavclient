@@ -317,6 +317,65 @@ xhrdav.lib.DavFs.prototype.mkDir = function(
 };
 
 /**
+ * Remove resource
+ *
+ * @param {string} path Remove resource path.
+ * @param {Function} handler  callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler
+ */
+xhrdav.lib.DavFs.prototype.remove = function(
+  path, handler, opt_headers, opt_params, context, debugHandler) {
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
+  this.getConnection()._delete(path,
+    goog.bind(this.responseHandler_, this,
+      handler, this.simpleErrorHandler_, path, context),
+    opt_request, debugHandler);
+};
+
+/**
+ * Move resource
+ *
+ * @param {string} path Move src resource path.
+ * @param {string} dstPath  Move destination path.
+ * @param {Function} handler  callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler
+ */
+xhrdav.lib.DavFs.prototype.move = function(
+  path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
+  this.updateRequestHandler_('move',
+    path, dstPath, handler, opt_request, context, debugHandler);
+};
+
+/**
+ * Copy resource
+ *
+ * @param {string} path Move src resource path.
+ * @param {string} dstPath  Move destination path.
+ * @param {Function} handler  callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} debugHandler
+ * @see #updateRequestHandler_
+ */
+xhrdav.lib.DavFs.prototype.copy = function(
+  path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
+  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+
+  this.updateRequestHandler_('copy',
+    path, dstPath, handler, opt_request, context, debugHandler);
+};
+
+/**
  * Remove directory
  *
  * @param {string} path Remove dierctory path.
@@ -325,9 +384,13 @@ xhrdav.lib.DavFs.prototype.mkDir = function(
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler
+ * @deprecated Use {@link #remove}.
  */
 xhrdav.lib.DavFs.prototype.rmDir = function(
   path, handler, opt_headers, opt_params, context, debugHandler) {
+  xhrdav.lib.Config.getInstance().getLogger().warning(
+    'xhrdav.lib.DavFs#rmDir has been deprecated '+
+    'in favor of xhrdav.lib.DavFs#remove.');
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   this.getConnection()._delete(xhrdav.lib.functions.path.addLastSlash(path),
@@ -346,9 +409,13 @@ xhrdav.lib.DavFs.prototype.rmDir = function(
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler
+ * @deprecated Use {@link #move}.
  */
 xhrdav.lib.DavFs.prototype.moveDir = function(
   path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
+  xhrdav.lib.Config.getInstance().getLogger().warning(
+    'xhrdav.lib.DavFs#moveDir has been deprecated '+
+    'in favor of xhrdav.lib.DavFs#move.');
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   var path = xhrdav.lib.functions.path.addLastSlash(path);
@@ -369,9 +436,13 @@ xhrdav.lib.DavFs.prototype.moveDir = function(
  * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler
  * @see #updateRequestHandler_
+ * @deprecated Use {@link #copy}.
  */
 xhrdav.lib.DavFs.prototype.copyDir = function(
   path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
+  xhrdav.lib.Config.getInstance().getLogger().warning(
+    'xhrdav.lib.DavFs#copyDir has been deprecated '+
+    'in favor of xhrdav.lib.DavFs#copy.');
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   path = xhrdav.lib.functions.path.addLastSlash(path);
@@ -435,9 +506,13 @@ xhrdav.lib.DavFs.prototype.write = function(
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler
+ * @deprecated Use {@link #remove}.
  */
 xhrdav.lib.DavFs.prototype.removeFile = function(
   path, handler, opt_headers, opt_params, context, debugHandler) {
+  xhrdav.lib.Config.getInstance().getLogger().warning(
+    'xhrdav.lib.DavFs#removeFile has been deprecated '+
+    'in favor of xhrdav.lib.DavFs#remove.');
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
@@ -459,9 +534,13 @@ xhrdav.lib.DavFs.prototype.removeFile = function(
  * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler
  * @see #updateRequestHandler_
+ * @deprecated Use {@link #move}.
  */
 xhrdav.lib.DavFs.prototype.moveFile = function(
   path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
+  xhrdav.lib.Config.getInstance().getLogger().warning(
+    'xhrdav.lib.DavFs#moveFile has been deprecated '+
+    'in favor of xhrdav.lib.DavFs#move.');
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
@@ -481,9 +560,13 @@ xhrdav.lib.DavFs.prototype.moveFile = function(
  * @param {Object=} context Callback scope.
  * @param {Function=} debugHandler
  * @see #updateRequestHandler_
+ * @deprecated Use {@link #copy}.
  */
 xhrdav.lib.DavFs.prototype.copyFile = function(
   path, dstPath, handler, opt_headers, opt_params, context, debugHandler) {
+  xhrdav.lib.Config.getInstance().getLogger().warning(
+    'xhrdav.lib.DavFs#copyFile has been deprecated '+
+    'in favor of xhrdav.lib.DavFs#copy.');
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
@@ -505,6 +588,12 @@ goog.exportProperty(xhrdav.lib.DavFs.prototype, 'getProps',
   xhrdav.lib.DavFs.prototype.getProps);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'mkDir',
   xhrdav.lib.DavFs.prototype.mkDir);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'remove',
+  xhrdav.lib.DavFs.prototype.remove);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'move',
+  xhrdav.lib.DavFs.prototype.move);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'copy',
+  xhrdav.lib.DavFs.prototype.copy);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'rmDir',
   xhrdav.lib.DavFs.prototype.rmDir);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'mvDir',
@@ -513,4 +602,10 @@ goog.exportProperty(xhrdav.lib.DavFs.prototype, 'cpDir',
   xhrdav.lib.DavFs.prototype.cpDir);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'write',
   xhrdav.lib.DavFs.prototype.write);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'removeFile',
+  xhrdav.lib.DavFs.prototype.removeFile);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'moveFile',
+  xhrdav.lib.DavFs.prototype.moveFile);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'copyFile',
+  xhrdav.lib.DavFs.prototype.copyFile);
 

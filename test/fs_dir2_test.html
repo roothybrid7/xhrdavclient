@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebDAV FS Directories2 Refactor Test</title>
+  <script src="../closure-library/closure/goog/base.js" type="text/javascript"></script>
+  <script src="../xhrdavclientdeps.js" type="text/javascript"></script>
+  <script src="utils.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    goog.require('goog.testing.AsyncTestCase');
+    goog.require('goog.testing.jsunit');
+    goog.require('goog.debug.Console');
+    goog.require('goog.debug.Logger');
+
+    goog.require('goog.object');
+    goog.require('goog.string.path');
+    goog.require('goog.net.XhrManager');
+    goog.require('xhrdav.lib.DavFs');
+    goog.require('goog.array');
+    goog.require('xhrdav.lib.Resource');
+  </script>
+</head>
+<body>
+  <script type="text/javascript">
+    goog.debug.Console.autoInstall();
+    goog.debug.Console.instance.setCapturing(true);
+
+    // Prepare AsyncTest
+    var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall();
+    var asyncContinue = function() {
+      asyncTestCase.continueTesting();
+    };
+
+    var httpStatus = xhrdav.lib.HttpStatus;
+    var httpStatusText = xhrdav.lib.HttpStatus.text;
+    var davFs = xhrdav.lib.DavFs.getInstance();
+
+    var parentDir = '/mydav/FsDir2Test/';
+    var dav = new xhrdav.lib.Client();
+
+    function setUp() {
+      asyncTestCase.waitForAsync('setUp');
+      dav.mkcol(parentDir, asyncContinue);
+    }
+
+    function tearDown() {
+      asyncTestCase.waitForAsync('tearDown');
+      dav._delete(parentDir, asyncContinue);
+    }
+
+
+    function testRemove() {
+      var testId = 'testRemove';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var dir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, 'rmDir2')) + '/';
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertRetryRmDir = function(errors) {
+        assertTrue('Error', errors.hasRequest());
+        asyncContinue();
+      };
+
+      var assertRmDir = function(errors) {
+        assertFalse('No Error', errors.hasRequest());
+        davFs.remove(dir, assertRetryRmDir, null, null, this,
+          goog.partial(xhrLogging, logger));
+      };
+
+      var assertMkDir = function(errors, newLoc) {
+        davFs.remove(dir, assertRmDir, null, null, this,
+          goog.partial(xhrLogging, logger));
+      };
+
+      davFs.mkDir(dir, assertMkDir, null, null, this,
+        goog.partial(xhrLogging, logger));
+    }
+
+    function testMove() {
+      var testId = 'testMove';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var dirName = 'moveDir2';
+      var dir = goog.string.path.normalizePath(
+        goog.string.path.join('/mydav/', dirName)) + '/';
+      var dstDir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, dirName)) + '/';
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertRetryMoveDir = function(errors, newLoc) {
+        assertTrue('Errors?', errors.hasRequest());
+        assertTrue('Create Location?', goog.string.isEmptySafe(newLoc));
+        logger.config('New location: ' + newLoc);
+
+        asyncContinue();
+      };
+
+      var assertMoveDir = function(errors, newLoc) {
+        assertFalse('No errors?', errors.hasRequest());
+        assertNotNullNorUndefined('Create Location?', newLoc);
+        logger.config('New location: ' + newLoc);
+
+        davFs.move(dir, dstDir, assertRetryMoveDir, null, null, this,
+          goog.partial(xhrLogging, logger));
+      };
+
+      var callbackMkDir = function() {
+        davFs.move(dir, dstDir, assertMoveDir, null, null, this,
+          goog.partial(xhrLogging, logger));
+      };
+
+      davFs.mkDir(dir, callbackMkDir, null, null, this,
+        goog.partial(xhrLogging, logger));
+
+    }
+
+    function testCopy() {
+      var testId = 'testCopy2';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var dirName = 'copyDir';
+      var dstDirName = 'copyDstDir';
+      var dir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, dirName)) + '/';
+      var dstDir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, dstDirName)) + '/';
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertCopyDir = function(errors, newLoc) {
+        assertFalse('No errors?', errors.hasRequest());
+        assertNotNullNorUndefined('Create Location?', newLoc);
+        logger.config('New location: ' + newLoc);
+
+        asyncContinue();
+      };
+
+      var callbackCpDir = function() {
+        davFs.copy(dir, dstDir, assertCopyDir, null, null, this,
+          goog.partial(xhrLogging, logger));
+      };
+
+      davFs.mkDir(dir, callbackCpDir, null, null, this,
+        goog.partial(xhrLogging, logger));
+    }
+  </script>
+</body>
+</html>

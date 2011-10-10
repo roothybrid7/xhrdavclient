@@ -1,4 +1,15 @@
 
+0.0.18 / 2011-10-11 
+==================
+
+  * Add version variable
+  * Refactor: deprecated methods
+  * Fixed string core_ext
+  * Add sendAsBinary in XMLHttpRequest and refactor example
+  * update examples
+  * Merge branch 'release/v0.0.17' into develop
+  * update changelog
+
 0.0.17 / 2011-10-06 
 ==================
 
