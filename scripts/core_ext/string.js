@@ -21,37 +21,68 @@ xhrdav.lib.string.LetterType = {
 /**
  * Capitalize string
  *
+ * Example:
+ *   "foo" # => "Foo", "fOO" # => "Foo"
+ *
  * @return {string} Capitalized string.
  */
 String.prototype.capitalize = function() {
-  return (this.charAt(0).toUpperCase() + this.slice(1));
+  return (this.charAt(0).toUpperCase() + this.slice(1).toLowerCase());
+};
+
+/**
+ * Dasherize stirng
+ *
+ * Example:
+ *   "puni_puni" # => "puni-puni"
+ */
+// underscored_word.gsub(/_/, '-')
+String.prototype.dasherize = function() {
+  return this.split('_').join('-');
 };
 
 /**
  * Camelize string
  *
- * @param {number} firstLetter type(Lower OR Upper)
+ * Example:
+ *   "foo_bar" #=> "FooBar"
+ *   "foo" #=> "Foo"
+ * options firstLetter: xhrdav.lib.string.LetterType.LOWER
+ *   "foo_bar" #=> "fooBar"
+ *   "Foo" #=> "foo"
+ * options with_dasherize: true
+ *   "content_type" #=> "Content-Type"
+ *   "location" #=> "Location"
+ *   "Content-Type" #=> "Content-Type"
+ *
+ * @param {{firstLetter: xhrdav.lib.string.LetterType, with_dasherize: boolean}} options
+ *          ext options
  * @return {string} Camelized string.
+ * @see xhrdav.lib.string.LetterType
  */
-String.prototype.camelize = function(firstLetter) {
+String.prototype.camelize = function(options) {
   var self = this;
   var lType = xhrdav.lib.string.LetterType;
-  if (!goog.isDefAndNotNull(firstLetter) || firstLetter > lType.UPPER) {
-    firstLetter = lType.LOWER;
+  if (!goog.isDef(options)) options = {};
+  if (!goog.isDefAndNotNull(options.firstLetter) || options.firstLetter > lType.UPPER) {
+    options.firstLetter = lType.UPPER;
   }
 
-  var str = '';
-  if (firstLetter == lType.LOWER) {
-    str = goog.array.reduce(this.split('_'), function(result, v, i) {
-      return (result += (i == 0) ? v : v.$capitalize());
-    }, '');
-  } else if (firstLetter == lType.UPPER) {
-    str = goog.array.reduce(this.split('_'), function(result, v, i) {
-      return result += v.$capitalize();
-    }, '');
+  var str = (!!options.with_dasherize) ? this.split('-').join('_') : this;
+  var buf;
+  if (options.firstLetter == lType.LOWER) {
+    buf = goog.array.map(str.split('_'), function(v, i) {
+      return ((i == 0) ? v.toLowerCase() : v.capitalize());
+    });
+  } else if (options.firstLetter == lType.UPPER) {
+    buf = goog.array.map(str.split('_'), function(v, i) {
+      return v.capitalize();
+    });
   }
+
+  str = (!!options.with_dasherize) ? buf.join('-') : buf.join('');
   str = goog.array.reduce(str.split('/'), function(result, v, i) {
-    return (result += (i == 0) ? v : '.' + v.$capitalize());
+    return (result += (i == 0) ? v : '.' + v.capitalize());
   }, '');
 
   return str;
@@ -61,6 +92,8 @@ String.prototype.camelize = function(firstLetter) {
 goog.exportSymbol('xhrdav.lib.string.LetterType', xhrdav.lib.string.LetterType);
 goog.exportProperty(String.prototype, 'capitalize',
   String.prototype.capitalize);
+goog.exportProperty(String.prototype, 'dasherize',
+  String.prototype.dasherize);
 goog.exportProperty(String.prototype, 'camelize',
   String.prototype.camelize);
 
