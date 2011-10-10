@@ -32,7 +32,7 @@ goog.require('goog.debug.Logger');
 xhrdav.lib.LIBNAME = 'xhrdavclient';
 
 /** @type {string} */
-xhrdav.lib.VERSION = '0.0.17';
+xhrdav.lib.VERSION = '0.0.18';
 
 /**
  * xhrdavclient Global config
