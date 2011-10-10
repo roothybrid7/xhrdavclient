@@ -117,6 +117,7 @@ closure-library/closure/goog/events/eventtype.js:72:  DRAGLEAVE: 'dragleave',
 //            var fs = xhrdav.lib.DavFs.getInstance();
             var request = new XMLHttpRequest();
             request.open('PUT', '/mydav/' + file.name, false);
+            console.log(file instanceof File);
             request.sendAsBinary(data);
 //            var callback = function(errors) {
 //              if (errors.hasRequest()) {
