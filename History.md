@@ -1,4 +1,12 @@
 
+0.0.19 / 2011-10-11 
+==================
+
+  * Rename onXhrCompletehandler
+  * Add ErrorHandler for xhr
+  * Merge branch 'release/v0.0.18' into develop
+  * udpate changelog and version string
+
 0.0.18 / 2011-10-11 
 ==================
 

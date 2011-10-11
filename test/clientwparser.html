@@ -74,7 +74,8 @@
       asyncTestCase.waitForAsync(testId);
 
       var rawContent;
-      var rawHandler = function(req) {
+      var rawHandler = function(e) {
+        var req = e.target;
         rawContent = req.getResponse();
         if (goog.string.contains(
           req.getResponseHeader('Content-Type'), 'text/xml')) {

@@ -15,6 +15,7 @@ goog.require('goog.object');
 goog.require('goog.json');
 goog.require('goog.functions');
 goog.require('goog.string.path');
+goog.require('goog.net.XhrIo');
 goog.require('xhrdav.lib.functions');
 goog.require('xhrdav.lib.XmlHttp');
 goog.require('xhrdav.lib.Errors');
@@ -23,6 +24,7 @@ goog.require('xhrdav.lib.HttpStatus');
 goog.require('xhrdav.lib.functions.path');
 goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');
+goog.require('goog.debug.ErrorHandler');
 
 /*
  * Refs: goog.DEBUG=true|false
@@ -32,7 +34,7 @@ goog.require('goog.debug.Logger');
 xhrdav.lib.LIBNAME = 'xhrdavclient';
 
 /** @type {string} */
-xhrdav.lib.VERSION = '0.0.18';
+xhrdav.lib.VERSION = '0.0.19';
 
 /**
  * xhrdavclient Global config
@@ -42,6 +44,7 @@ xhrdav.lib.VERSION = '0.0.18';
  */
 xhrdav.lib.Config = function() {
   this.initialize_();
+  this.initializeErrorHandler_();
 };
 goog.addSingletonGetter(xhrdav.lib.Config);
 
@@ -71,6 +74,37 @@ xhrdav.lib.Config.prototype.initialize_ = function() {
    * @type {Object}
    */
   this.xmgr_ = {};
+
+  /**
+   * @private
+   * @type {goog.debug.ErrorHandler}
+   */
+  this.errorHandler_ = null;
+};
+
+/**
+ * Initialize errorHandler
+ */
+xhrdav.lib.Config.prototype.initializeErrorHandler_ = function() {
+  var handler = goog.bind(function(e) {
+    this.logger_.warning(e.name || 'Throws exception', e);
+  }, this);
+  this.errorHandler_ = new goog.debug.ErrorHandler(handler);
+//  this.errorHandler_.protectWindowSetInterval();
+//  this.errorHandler_.protectWindowSetTimeout();
+  goog.net.XhrIo.protectEntryPoints(this.errorHandler_);
+};
+
+/**
+ * Get errorHandler
+ *
+ * @return {goog.debug.ErrorHandler} errorHandler
+ */
+xhrdav.lib.Config.prototype.getErrorHandler = function() {
+  if (!goog.isDefAndNotNull(this.errorHandler_)) {
+    this.initializeErrorHandler_();
+  }
+  return this.errorHandler_;
 };
 
 /**

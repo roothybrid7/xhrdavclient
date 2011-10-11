@@ -49,6 +49,12 @@
 
       assertTrue(true);
     }
+
+    function testLoggerTwice() {
+      var instance = xhrdav.lib.Config.getInstance();
+      var instance2 = xhrdav.lib.Config.getInstance();
+      assertEquals('Same instance?', instance, instance2);
+    }
   </script>
 </body>
 </html>
