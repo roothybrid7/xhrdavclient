@@ -24,10 +24,11 @@ function loadJson(src) {
  * </code></pre>
  *
  * @param {function(string)} logger
- * @param {Object} req XHTTPRequest object.
+ * @param {Object} xhrEvent XHTTPRequest oncomplete event object.
  * @param {Function} callback Callback function.
  */
-var xhrLogging = function(logger, req, callback) {
+var xhrLogging = function(logger, xhrEvent, callback) {
+  var req = xhrEvent.target;
   logger.config("Status: " + req.getStatus() + " - " + req.getStatusText());
   logger.config("Success?: " + req.isSuccess());
   logger.config("ResponseType: " + req.getResponseType());

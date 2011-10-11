@@ -87,17 +87,16 @@ xhrdav.lib.Client.prototype.setXmlParseFunction = function(funcObj) {
  * Callback XHTTPRequest Processing
  *
  * @private
- * @param {Function} handler Callback chain method.
- * @param {Function} debugHandler Callback debugHandler method.
+ * @param {Function} handler Callback chain function.
+ * @param {Function} onXhrComplete onXhrComplete callback function.
  * @param {Object} event XHR Event Object.
  */
 // TODO: UNFIXED Logic
 xhrdav.lib.Client.prototype.processRequest_ = function(
-  handler, debugHandler, event) {
+  handler, onXhrComplete, event) {
+  if (onXhrComplete && onXhrComplete instanceof Function) onXhrComplete(event);
+
   var xhr = event.target;
-
-  if (debugHandler && debugHandler instanceof Function) debugHandler(xhr);
-
   var xssGuard = 'while(1);';
   var headers = this.parseHeaders_(xhr.getAllResponseHeaders());
   var content = xhr.getResponse(xssGuard);
@@ -158,10 +157,10 @@ xhrdav.lib.Client.prototype.setParameters_ = function(url, query) {
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
  *                                          Option params(xhrId, xhrManager, etc);
- * @param {Function=} debugHandler Callback debugHandler method.
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.lib.Client.prototype.request_ = function(
-  method, url, handler, opt_request, debugHandler) {
+  method, url, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
   if (goog.isDefAndNotNull(opt_request.xhrMgr)) {
     opt_request.xhrMgr.send(
@@ -171,12 +170,12 @@ xhrdav.lib.Client.prototype.request_ = function(
       opt_request.body,
       opt_request.headers,
       opt_request.priority || 0,
-      goog.bind(this.processRequest_, this, handler, debugHandler),
+      goog.bind(this.processRequest_, this, handler, onXhrComplete),
       opt_request.maxRetries || 1);
   } else {
     goog.net.XhrIo.send(
       url,
-      goog.bind(this.processRequest_, this, handler, debugHandler),
+      goog.bind(this.processRequest_, this, handler, onXhrComplete),
       method,
       opt_request.body,
       opt_request.headers);
@@ -191,14 +190,14 @@ xhrdav.lib.Client.prototype.request_ = function(
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
  *                                          Option params(xhrId, xhrManager, etc);
- * @param {Function=} debugHandler Callback debugHandler method.
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.lib.Client.prototype.options = function(
-  path, handler, opt_request, debugHandler) {
+  path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
-  this.request_('OPTIONS', url, handler, opt_request, debugHandler);
+  this.request_('OPTIONS', url, handler, opt_request, onXhrComplete);
 };
 
 /**
@@ -209,10 +208,10 @@ xhrdav.lib.Client.prototype.options = function(
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
  *                                          Option params(xhrId, xhrManager, etc);
- * @param {Function=} debugHandler Callback debugHandler method.
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 // TODO: UNFIXED code
-xhrdav.lib.Client.prototype.head = function(path, handler, opt_request, debugHandler) {
+xhrdav.lib.Client.prototype.head = function(path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
@@ -228,7 +227,7 @@ xhrdav.lib.Client.prototype.head = function(path, handler, opt_request, debugHan
       'If-Modified-Since': 'Thu, 01 Jan 1970 00:00:00 GMT'}});
   }
 
-  this.request_('HEAD', url, handler, opt_request, debugHandler);
+  this.request_('HEAD', url, handler, opt_request, onXhrComplete);
 };
 
 /**
@@ -239,15 +238,15 @@ xhrdav.lib.Client.prototype.head = function(path, handler, opt_request, debugHan
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
  *                                          Option params(xhrId, xhrManager, etc);
- * @param {Function=} debugHandler Callback debugHandler method.
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-xhrdav.lib.Client.prototype.get = function(path, handler, opt_request, debugHandler) {
+xhrdav.lib.Client.prototype.get = function(path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
   this.setParameters_(url, opt_request.query);
-  this.request_('GET', url, handler, opt_request, debugHandler);
+  this.request_('GET', url, handler, opt_request, onXhrComplete);
 };
 
 /**
@@ -259,10 +258,10 @@ xhrdav.lib.Client.prototype.get = function(path, handler, opt_request, debugHand
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
  *                                          Option params(xhrId, xhrManager, etc);
- * @param {Function=} debugHandler Callback debugHandler method.
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.lib.Client.prototype.put = function(
-  path, data, handler, opt_request, debugHandler) {
+  path, data, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url;
@@ -281,7 +280,7 @@ xhrdav.lib.Client.prototype.put = function(
   }
   opt_request.body = data;
 
-  this.request_('PUT', url, handler, opt_request, debugHandler);
+  this.request_('PUT', url, handler, opt_request, onXhrComplete);
 };
 
 /**
@@ -292,10 +291,10 @@ xhrdav.lib.Client.prototype.put = function(
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
  *                                          Option params(xhrId, xhrManager, etc);
- * @param {Function=} debugHandler Callback debugHandler method.
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.lib.Client.prototype.propfind = function(
-  path, handler, opt_request, debugHandler) {
+  path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
@@ -316,7 +315,7 @@ xhrdav.lib.Client.prototype.propfind = function(
     '<?xml version="1.0" encoding="UTF-8"?>' +
     '<D:propfind xmlns:D="DAV:"><D:allprop /></D:propfind>'});
 
-  this.request_('PROPFIND', url, handler, opt_request, debugHandler);
+  this.request_('PROPFIND', url, handler, opt_request, onXhrComplete);
 };
 
 /**
@@ -327,10 +326,10 @@ xhrdav.lib.Client.prototype.propfind = function(
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
  *                                          Option params(xhrId, xhrManager, etc);
- * @param {Function=} debugHandler Callback debugHandler method.
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 // TODO: UNFIXED
-xhrdav.lib.Client.prototype.proppatch = function(path, handler, opt_request, debugHandler) {
+xhrdav.lib.Client.prototype.proppatch = function(path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
@@ -351,10 +350,10 @@ xhrdav.lib.Client.prototype.proppatch = function(path, handler, opt_request, deb
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
  *                                          Option params(xhrId, xhrManager, etc);
- * @param {Function=} debugHandler Callback debugHandler method.
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 // TODO: UNFIXED
-xhrdav.lib.Client.prototype.lock = function(path, handler, opt_request, debugHandler) {
+xhrdav.lib.Client.prototype.lock = function(path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
@@ -377,7 +376,7 @@ xhrdav.lib.Client.prototype.lock = function(path, handler, opt_request, debugHan
     '<D:locktype><D:' + (opt_request.type || 'write') + ' /></D:locktype>\n' +
     '<D:owner></D:owner>\n</D:lockinfo>\n'});
 
-  this.request_('LOCK', url, handler, opt_request, debugHandler);
+  this.request_('LOCK', url, handler, opt_request, onXhrComplete);
 };
 
 /**
@@ -388,16 +387,16 @@ xhrdav.lib.Client.prototype.lock = function(path, handler, opt_request, debugHan
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
  *                                          Option params(xhrId, xhrManager, etc);
- * @param {Function=} debugHandler Callback debugHandler method.
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-xhrdav.lib.Client.prototype.mkcol = function(path, handler, opt_request, debugHandler) {
+xhrdav.lib.Client.prototype.mkcol = function(path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   path = goog.string.endsWith(path, '/') ? path : path + '/'; // Preserve GET
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 //      var url = goog.Uri.parse('http://localhost:8001/foo/');
-  this.request_('MKCOL', url, handler, opt_request, debugHandler);
+  this.request_('MKCOL', url, handler, opt_request, onXhrComplete);
 };
 
 /**
@@ -408,15 +407,15 @@ xhrdav.lib.Client.prototype.mkcol = function(path, handler, opt_request, debugHa
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
  *                                          Option params(xhrId, xhrManager, etc);
- * @param {Function=} debugHandler Callback debugHandler method.
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.lib.Client.prototype._delete = function(
-  path, handler, opt_request, debugHandler) {
+  path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
-  this.request_('DELETE', url, handler, opt_request, debugHandler);
+  this.request_('DELETE', url, handler, opt_request, onXhrComplete);
 };
 
 /**
@@ -430,10 +429,10 @@ xhrdav.lib.Client.prototype._delete = function(
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
  *                                          Option params(xhrId, xhrManager, etc);
- * @param {Function=} debugHandler Callback debugHandler method.
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
-  method, path, dstPath, handler, opt_request, debugHandler) {
+  method, path, dstPath, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
@@ -457,7 +456,7 @@ xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
     }
   }
 
-  this.request_(method, url, handler, opt_request, debugHandler);
+  this.request_(method, url, handler, opt_request, onXhrComplete);
 };
 
 /**
@@ -466,8 +465,8 @@ xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
  * @see #copyOrMovePath_
  */
 xhrdav.lib.Client.prototype.move = function(
-  path, dstPath, handler, opt_request, debugHandler) {
-  this.copyOrMovePath_('MOVE', path, dstPath, handler, opt_request, debugHandler);
+  path, dstPath, handler, opt_request, onXhrComplete) {
+  this.copyOrMovePath_('MOVE', path, dstPath, handler, opt_request, onXhrComplete);
 };
 
 /**
@@ -476,8 +475,8 @@ xhrdav.lib.Client.prototype.move = function(
  * @see #copyOrMovePath_
  */
 xhrdav.lib.Client.prototype.copy = function(
-  path, dstPath, handler, opt_request, debugHandler) {
-  this.copyOrMovePath_('COPY', path, dstPath, handler, opt_request, debugHandler);
+  path, dstPath, handler, opt_request, onXhrComplete) {
+  this.copyOrMovePath_('COPY', path, dstPath, handler, opt_request, onXhrComplete);
 };
 
 /* Entry Point for closure compiler */
