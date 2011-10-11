@@ -34,7 +34,7 @@ goog.require('goog.debug.ErrorHandler');
 xhrdav.lib.LIBNAME = 'xhrdavclient';
 
 /** @type {string} */
-xhrdav.lib.VERSION = '0.0.18';
+xhrdav.lib.VERSION = '0.0.19';
 
 /**
  * xhrdavclient Global config
