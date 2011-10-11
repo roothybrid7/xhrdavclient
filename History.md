@@ -1,4 +1,11 @@
 
+0.0.20 / 2011-10-11 
+==================
+
+  * bugfix: url encode destination path
+  * Merge branch 'release/v0.0.19' into develop
+  * update changelog and version text
+
 0.0.19 / 2011-10-11 
 ==================
 
