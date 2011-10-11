@@ -442,11 +442,11 @@ xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
     !goog.object.isEmpty(opt_request.headers)) {
     goog.object.extend(opt_request.headers, {
       'Content-Type': 'text/xml',
-      'Destination': this.generateUrl_(dstPath)});
+      'Destination': this.generateUrl_(goog.string.urlDecode(dstPath || ''))});
   } else {
     goog.object.extend(opt_request, {headers: {
       'Content-Type': 'text/xml',
-      'Destination': this.generateUrl_(dstPath)}});
+      'Destination': this.generateUrl_(goog.string.urlDecode(dstPath || ''))}});
   }
   if (goog.isBoolean(opt_request.headers['Overwrite'])) {
     if (opt_request.headers['Overwrite']) {
