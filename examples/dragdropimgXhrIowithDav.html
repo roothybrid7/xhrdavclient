@@ -33,6 +33,7 @@
 
     goog.require('xhrdav.lib.DavFs');
     goog.require('xhrdav.lib.Config');
+    goog.require('xhrdav.lib.XhrIoExtBinary');
     goog.require('goog.style');
   </script>
   <script type="text/javascript">
@@ -117,11 +118,16 @@ closure-library/closure/goog/events/eventtype.js:72:  DRAGLEAVE: 'dragleave',
 
             // FileAPIを使ってファイル名とデータ内容を取得
             var data = reader.result;
-            var fs = xhrdav.lib.DavFs.getInstance();
-            var request = new XMLHttpRequest();
-            request.open('PUT', '/mydav/' + file.name, false);
-//            console.log(file instanceof File);
-            request.sendAsBinary(data);
+//            var fs = xhrdav.lib.DavFs.getInstance();
+            xhrdav.lib.XhrIoExtBinary.send('/mydav/' + file.name, function(e) {
+              var xhr = e.target;
+              console.log(e.type);
+              console.log(xhr);
+              console.log(xhr.getAllResponseHeaders());
+            }, 'PUT', data);
+//            var request = new XMLHttpRequest();
+//            request.open('PUT', '/mydav/' + file.name, false);
+//            request.sendAsBinary(data);
 //            var callback = function(errors) {
 //              if (errors.hasRequest()) {
 //                goog.object.forEach(errors.request, function(v,k) {

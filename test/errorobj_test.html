@@ -72,10 +72,13 @@
       assertReqErrsNull(null);
       assertReqErrsNull({});
       var ocurred_errs = {
+        status: httpStatus.FORBIDDEN,
         message: httpStatusText[httpStatus.FORBIDDEN], path: '/mydav/foo/'};
       errors.setRequest(ocurred_errs);
       assertTrue('Request error?', errors.hasRequest());
       logger.config(goog.json.serialize(errors));
+      assertEquals('Forbidden?',
+        httpStatus.FORBIDDEN, errors.request.status);
       assertEquals('Forbidden?',
         httpStatusText[httpStatus.FORBIDDEN], errors.request.message);
 
@@ -105,8 +108,10 @@
       assertPropsNull([]);
 
       var occured_errs = {
+        status: httpStatus.NOT_FOUND,
         message: httpStatusText[httpStatus.NOT_FOUND], path: '/mydav/foo/a.png'};
       var occured_errs2 = {
+        status: httpStatus.LOCKED,
         message: httpStatusText[httpStatus.LOCKED], path: '/mydav/foo/b.txt'};
 
       errors.addProps(occured_errs);
@@ -116,6 +121,10 @@
       logger.config(goog.json.serialize(errors));
       assertEquals('Props error count = 2?',
         2, errors.props.length);
+      assertArrayEquals('Err code match:',
+        [httpStatus.NOT_FOUND, httpStatus.LOCKED], goog.array.map(errors.props, function(v, i) {
+          return v.status;
+        }));
       assertArrayEquals('Error messages match:',
         [httpStatusText[httpStatus.NOT_FOUND], httpStatusText[httpStatus.LOCKED]],
         goog.array.map(errors.props, function(v, i) {

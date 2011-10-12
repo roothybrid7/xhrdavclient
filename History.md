@@ -1,4 +1,16 @@
 
+0.0.21 / 2011-10-12 
+==================
+
+  * bugfix: upload method
+  * Add status code in err to errors object.
+  * Modified errors object
+  * Implement sendAsBinary for xhrdavclient
+  * Implements XhrIo extension for sendAsBinary
+  * Add XhrIo Extension
+  * Merge branch 'release/v0.0.20' into develop
+  * update changelog and version text
+
 0.0.20 / 2011-10-11 
 ==================
 

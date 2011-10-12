@@ -81,7 +81,8 @@ xhrdav.lib.Errors.prototype.clear = function() {
  * Set request error.
  *
  * Structure:
- *    {message: 'Forbidden', path: '/mydav/foo/'}
+ *    {status: 403,
+ *     message: 'Forbidden', path: '/mydav/foo/'}
  *
  * @param {Object=} requestErr Request error object(associate array).
  */
@@ -93,8 +94,8 @@ xhrdav.lib.Errors.prototype.setRequest = function(requestErr) {
  * Add property error.
  *
  * Structure:
- *     [{message: 'Not Found', path: '/mydav/foo/a.png'},
- *      {message: 'Locked', path: '/mydav/foo/b.txt'}]
+ *     [{status: 404, message: 'Not Found', path: '/mydav/foo/a.png'},
+ *      {status: 423, message: 'Locked', path: '/mydav/foo/b.txt'}]
  *
  * @param {Object} propsErr property error.
  */

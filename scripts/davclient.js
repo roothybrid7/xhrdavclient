@@ -172,6 +172,13 @@ xhrdav.lib.Client.prototype.request_ = function(
       opt_request.priority || 0,
       goog.bind(this.processRequest_, this, handler, onXhrComplete),
       opt_request.maxRetries || 1);
+  } else if (goog.isDefAndNotNull(opt_request.xhrIoKls)) {
+    opt_request.xhrIoKls.send(
+      url,
+      goog.bind(this.processRequest_, this, handler, onXhrComplete),
+      method,
+      opt_request.body,
+      opt_request.headers);
   } else {
     goog.net.XhrIo.send(
       url,
@@ -272,12 +279,12 @@ xhrdav.lib.Client.prototype.put = function(
   } // Preserve GET
   this.setParameters_(url, opt_request.query);
 
-  if (goog.isDefAndNotNull(opt_request.headers) &&
-    !goog.object.isEmpty(opt_request.headers)) {
-    goog.object.extend(opt_request.headers, {'Content-Type': 'text/xml'});
-  } else {
-    opt_request.headers = {'Content-Type': 'text/xml'};
-  }
+//  if (goog.isDefAndNotNull(opt_request.headers) &&
+//    !goog.object.isEmpty(opt_request.headers)) {
+//    goog.object.extend(opt_request.headers, {'Content-Type': 'text/xml'});
+//  } else {
+//    opt_request.headers = {'Content-Type': 'text/xml'};
+//  }
   opt_request.body = data;
 
   this.request_('PUT', url, handler, opt_request, onXhrComplete);

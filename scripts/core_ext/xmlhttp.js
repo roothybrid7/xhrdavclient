@@ -10,6 +10,11 @@ goog.require('goog.array');
 /**
  * XMLHttpRequest extend by userAgent product type.
  *
+ * Example: Override sendAsBinary
+ *   var xhr = new XMLHttpRequest();
+ *   xhr.beforeSend = xhr.send;
+ *   xhr.send = xhr.sendAsBinary;
+ *
  * @constructor
  */
 xhrdav.lib.XmlHttp = function() {
@@ -25,10 +30,14 @@ xhrdav.lib.XmlHttp.prototype.initialize_ = function() {
         function byteValue(x) {
           return x.charCodeAt(0) & 0xff;
         }
-  //      var ords = Array.prototype.map.call(datastr, byteValue);
+//        var ords = Array.prototype.map.call(datastr, byteValue);
         var ords = goog.array.map(datastr, byteValue);
         var ui8a = new Uint8Array(ords);
-        this.send(ui8a.buffer);
+        if (goog.isDef(this.beforeSend)) {
+          this.beforeSend(ui8a.buffer);
+        } else {
+          this.send(ui8a.buffer);
+        }
       };
   }
 };

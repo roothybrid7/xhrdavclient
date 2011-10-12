@@ -36,7 +36,6 @@
 
     var initData;
     var parentDir = '/mydav/parentforfsfile2/';
-    var srcFile = './testwebdav.txt';
 
     var file = goog.string.path.normalizePath(
       goog.string.path.join(parentDir, 'testwebdav.txt'));
@@ -81,12 +80,12 @@
           goog.partial(xhrLogging, logger));
       };
 
-      var callbackUpload = function(errors, newLoc) {
+      var callbackWrite = function(errors, newLoc) {
         fs.remove(file, assertRemoveFile, null, null, this,
           goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackUpload, null, null, this,
+      fs.write(file, initData, callbackWrite, null, null, this,
         goog.partial(xhrLogging, logger));
     }
 
@@ -105,12 +104,12 @@
         asyncContinue();
       };
 
-      var callbackUpload = function(errors, newLoc) {
+      var callbackWrite = function(errors, newLoc) {
         fs.move(file, dstPath, assertRename, null, null, this,
           goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackUpload, null, null, this,
+      fs.write(file, initData, callbackWrite, null, null, this,
         goog.partial(xhrLogging, logger));
     }
 
@@ -144,12 +143,12 @@
           goog.partial(xhrLogging, logger));
       };
 
-      var callbackUpload = function(errors, newLoc) {
+      var callbackWrite = function(errors, newLoc) {
         fs.copy(file, dstPath, assertCopy, null, null, this,
           goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackUpload, null, null, this,
+      fs.write(file, initData, callbackWrite, null, null, this,
         goog.partial(xhrLogging, logger));
     }
 
@@ -172,12 +171,12 @@
           goog.partial(xhrLogging, logger));
       };
 
-      var callbackUpload = function(errors, newLoc) {
+      var callbackWrite = function(errors, newLoc) {
         fs.read(file, assertRead, null, null, this,
           goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackUpload, null, null, this,
+      fs.write(file, initData, callbackWrite, null, null, this,
         goog.partial(xhrLogging, logger));
     }
   </script>
