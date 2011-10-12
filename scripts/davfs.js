@@ -13,6 +13,7 @@ goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.Client');
 goog.require('goog.net.XhrManager');
 goog.require('xhrdav.lib.ResourceBuilder');
+goog.require('xhrdav.lib.XhrIoExtBinary');
 
 /**
  * high-level WebDAV client API Singleton
@@ -252,9 +253,7 @@ xhrdav.lib.DavFs.prototype.processMultistatus_ = function(
 xhrdav.lib.DavFs.prototype.createRequestParameters_ = function(
   isMgr,
   opt_headers, opt_params) {
-  var opt_request = {
-    xhrId: goog.string.createUniqueString(), xhrMgr: this.xhrMgr_,
-    headers: opt_headers || {}, query: opt_params || {}};
+  var opt_request = {headers: opt_headers || {}, query: opt_params || {}};
   if (!!isMgr) {
     goog.object.extend(opt_request,
       {xhrId: goog.string.createUniqueString(), xhrMgr: this.xhrMgr_});
@@ -516,7 +515,9 @@ xhrdav.lib.DavFs.prototype.write = function(
  */
 xhrdav.lib.DavFs.prototype.upload = function(
   path, content, handler, opt_headers, opt_params, context, onXhrComplete) {
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(false, opt_headers, opt_params);
+  // XMLHttpRequest extension for SendAsBinary
+  goog.object.extend(opt_request, {xhrIoKls: xhrdav.lib.XhrIoExtBinary});
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
 

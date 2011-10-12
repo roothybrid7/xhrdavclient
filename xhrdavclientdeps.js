@@ -4,7 +4,7 @@ goog.addDependency('../../../scripts/config.js', ['xhrdav.lib', 'xhrdav.lib.Conf
 goog.addDependency('../../../scripts/core_ext/string.js', ['xhrdav.lib.string'], ['goog.array', 'goog.functions']);
 goog.addDependency('../../../scripts/core_ext/xmlhttp.js', ['xhrdav.lib.XmlHttp'], ['goog.array']);
 goog.addDependency('../../../scripts/davclient.js', ['xhrdav.lib.Client'], ['goog.Uri', 'goog.dom', 'goog.net.XhrIo', 'xhrdav.lib.Config']);
-goog.addDependency('../../../scripts/davfs.js', ['xhrdav.lib.DavFs'], ['goog.net.XhrManager', 'xhrdav.lib.Client', 'xhrdav.lib.Config', 'xhrdav.lib.ResourceBuilder']);
+goog.addDependency('../../../scripts/davfs.js', ['xhrdav.lib.DavFs'], ['goog.net.XhrManager', 'xhrdav.lib.Client', 'xhrdav.lib.Config', 'xhrdav.lib.ResourceBuilder', 'xhrdav.lib.XhrIoExtBinary']);
 goog.addDependency('../../../scripts/domhandler.js', ['xhrdav.lib.DomHandler'], []);
 goog.addDependency('../../../scripts/domparser.js', ['xhrdav.lib.DomParser'], ['goog.dom.xml', 'goog.functions']);
 goog.addDependency('../../../scripts/errors.js', ['xhrdav.lib.Errors'], ['goog.array', 'goog.json', 'goog.object']);

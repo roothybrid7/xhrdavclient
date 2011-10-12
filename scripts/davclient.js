@@ -279,12 +279,12 @@ xhrdav.lib.Client.prototype.put = function(
   } // Preserve GET
   this.setParameters_(url, opt_request.query);
 
-  if (goog.isDefAndNotNull(opt_request.headers) &&
-    !goog.object.isEmpty(opt_request.headers)) {
-    goog.object.extend(opt_request.headers, {'Content-Type': 'text/xml'});
-  } else {
-    opt_request.headers = {'Content-Type': 'text/xml'};
-  }
+//  if (goog.isDefAndNotNull(opt_request.headers) &&
+//    !goog.object.isEmpty(opt_request.headers)) {
+//    goog.object.extend(opt_request.headers, {'Content-Type': 'text/xml'});
+//  } else {
+//    opt_request.headers = {'Content-Type': 'text/xml'};
+//  }
   opt_request.body = data;
 
   this.request_('PUT', url, handler, opt_request, onXhrComplete);
