@@ -244,15 +244,21 @@ xhrdav.lib.DavFs.prototype.processMultistatus_ = function(
 /**
  * Create Request paramters.
  *
+ * @param {boolean} isMgr Add XhrManager object for request.
  * @param {Object=} opt_headers
  * @param {Object=} opt_params
  * @return {Object}
  */
 xhrdav.lib.DavFs.prototype.createRequestParameters_ = function(
+  isMgr,
   opt_headers, opt_params) {
   var opt_request = {
     xhrId: goog.string.createUniqueString(), xhrMgr: this.xhrMgr_,
     headers: opt_headers || {}, query: opt_params || {}};
+  if (!!isMgr) {
+    goog.object.extend(opt_request,
+      {xhrId: goog.string.createUniqueString(), xhrMgr: this.xhrMgr_});
+  }
   return opt_request;
 };
 
@@ -270,7 +276,7 @@ xhrdav.lib.DavFs.prototype.createRequestParameters_ = function(
  */
 xhrdav.lib.DavFs.prototype.listDir = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   opt_request.headers['Depth'] = 1;  // listing directory
   this.propfindRequestHandler_(path, handler, opt_request,
@@ -291,7 +297,7 @@ xhrdav.lib.DavFs.prototype.listDir = function(
  */
 xhrdav.lib.DavFs.prototype.getProps = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   this.propfindRequestHandler_(path, handler, opt_request, context, onXhrComplete);
 };
@@ -308,7 +314,7 @@ xhrdav.lib.DavFs.prototype.getProps = function(
  */
 xhrdav.lib.DavFs.prototype.mkDir = function(
   path, handler, opt_headers, opt_params, context, onXhrComplete) {
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   this.getConnection().mkcol(path,
     goog.bind(this.responseHandler_, this,
@@ -328,7 +334,7 @@ xhrdav.lib.DavFs.prototype.mkDir = function(
  */
 xhrdav.lib.DavFs.prototype.remove = function(
   path, handler, opt_headers, opt_params, context, onXhrComplete) {
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   this.getConnection()._delete(path,
     goog.bind(this.responseHandler_, this,
@@ -349,7 +355,7 @@ xhrdav.lib.DavFs.prototype.remove = function(
  */
 xhrdav.lib.DavFs.prototype.move = function(
   path, dstPath, handler, opt_headers, opt_params, context, onXhrComplete) {
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   this.updateRequestHandler_('move',
     path, dstPath, handler, opt_request, context, onXhrComplete);
@@ -369,7 +375,7 @@ xhrdav.lib.DavFs.prototype.move = function(
  */
 xhrdav.lib.DavFs.prototype.copy = function(
   path, dstPath, handler, opt_headers, opt_params, context, onXhrComplete) {
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   this.updateRequestHandler_('copy',
     path, dstPath, handler, opt_request, context, onXhrComplete);
@@ -391,7 +397,7 @@ xhrdav.lib.DavFs.prototype.rmDir = function(
   xhrdav.lib.Config.getInstance().getLogger().warning(
     'xhrdav.lib.DavFs#rmDir has been deprecated '+
     'in favor of xhrdav.lib.DavFs#remove.');
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   this.getConnection()._delete(xhrdav.lib.functions.path.addLastSlash(path),
     goog.bind(this.responseHandler_, this,
@@ -416,7 +422,7 @@ xhrdav.lib.DavFs.prototype.moveDir = function(
   xhrdav.lib.Config.getInstance().getLogger().warning(
     'xhrdav.lib.DavFs#moveDir has been deprecated '+
     'in favor of xhrdav.lib.DavFs#move.');
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   var path = xhrdav.lib.functions.path.addLastSlash(path);
   var dstPath = xhrdav.lib.functions.path.addLastSlash(dstPath);
@@ -443,7 +449,7 @@ xhrdav.lib.DavFs.prototype.copyDir = function(
   xhrdav.lib.Config.getInstance().getLogger().warning(
     'xhrdav.lib.DavFs#copyDir has been deprecated '+
     'in favor of xhrdav.lib.DavFs#copy.');
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   path = xhrdav.lib.functions.path.addLastSlash(path);
   dstPath = xhrdav.lib.functions.path.addLastSlash(dstPath);
@@ -464,7 +470,7 @@ xhrdav.lib.DavFs.prototype.copyDir = function(
  */
 xhrdav.lib.DavFs.prototype.read = function(
   path, handler, opt_headers, opt_params, context, onXhrComplete) {
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
 
@@ -478,7 +484,7 @@ xhrdav.lib.DavFs.prototype.read = function(
  * Write data to WebDAV server
  *
  * @param {string} path upload file path.
- * @param {Object} content file content.
+ * @param {Object} content data string.
  * @param {Function} handler callback handler function.
  * @param {Object=} opt_headers Request headers options.
  * @param {Object=} opt_params  Request query paramters.
@@ -486,6 +492,29 @@ xhrdav.lib.DavFs.prototype.read = function(
  * @param {Function=} onXhrComplete onXhrComplete callback function
  */
 xhrdav.lib.DavFs.prototype.write = function(
+  path, content, handler, opt_headers, opt_params, context, onXhrComplete) {
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
+
+  path = xhrdav.lib.functions.path.removeLastSlash(path);
+
+  this.getConnection().put(path, content,
+    goog.bind(this.responseHandler_, this,
+      handler, this.simpleErrorHandler_, path, context),
+    opt_request, onXhrComplete);
+};
+
+/**
+ * Upload data to WebDAV server
+ *
+ * @param {string} path upload file path.
+ * @param {Object} content file content(text OR binary[img etc.].
+ * @param {Function} handler callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} onXhrComplete onXhrComplete callback function
+ */
+xhrdav.lib.DavFs.prototype.upload = function(
   path, content, handler, opt_headers, opt_params, context, onXhrComplete) {
   var opt_request = this.createRequestParameters_(opt_headers, opt_params);
 
@@ -513,7 +542,7 @@ xhrdav.lib.DavFs.prototype.removeFile = function(
   xhrdav.lib.Config.getInstance().getLogger().warning(
     'xhrdav.lib.DavFs#removeFile has been deprecated '+
     'in favor of xhrdav.lib.DavFs#remove.');
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
 
@@ -541,7 +570,7 @@ xhrdav.lib.DavFs.prototype.moveFile = function(
   xhrdav.lib.Config.getInstance().getLogger().warning(
     'xhrdav.lib.DavFs#moveFile has been deprecated '+
     'in favor of xhrdav.lib.DavFs#move.');
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
 
@@ -567,7 +596,7 @@ xhrdav.lib.DavFs.prototype.copyFile = function(
   xhrdav.lib.Config.getInstance().getLogger().warning(
     'xhrdav.lib.DavFs#copyFile has been deprecated '+
     'in favor of xhrdav.lib.DavFs#copy.');
-  var opt_request = this.createRequestParameters_(opt_headers, opt_params);
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
 
