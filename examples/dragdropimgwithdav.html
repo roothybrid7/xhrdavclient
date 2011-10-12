@@ -17,7 +17,7 @@
   </div>
 -->
   <div id="wrapper" style="width:80%; height:200px; background-color:#eee;">
-    <div id="droptarget"></div>
+    <div id="droptarget" name="media"></div>
   </div>
   <div id="filenames"></div>
   <div id="bag"></div>
@@ -105,6 +105,8 @@ closure-library/closure/goog/events/eventtype.js:72:  DRAGLEAVE: 'dragleave',
         var names = goog.array.map(files, function(file) {
           return goog.string.htmlEscape(file.fileName);
         });
+            console.log(e.target);
+//            console.log(e.currentTarget);
 
         var handle = goog.array.map(files, function(file) {
           var bag = document.getElementById("bag");
@@ -115,20 +117,22 @@ closure-library/closure/goog/events/eventtype.js:72:  DRAGLEAVE: 'dragleave',
 
             // FileAPIを使ってファイル名とデータ内容を取得
             var data = reader.result;
-//            var fs = xhrdav.lib.DavFs.getInstance();
+            var fs = xhrdav.lib.DavFs.getInstance();
             var request = new XMLHttpRequest();
-            request.open('PUT', '/mydav/' + file.name, false);
-            console.log(file instanceof File);
-            request.sendAsBinary(data);
-//            var callback = function(errors) {
-//              if (errors.hasRequest()) {
-//                goog.object.forEach(errors.request, function(v,k) {
-//                  alert(k + ': ' + v);
-//                });
+//            request.open('PUT', '/mydav/' + file.name, false);
+//            console.log(file instanceof File);
+//            request.sendAsBinary(data);
+            var callback = function(errors) {
+              if (errors.hasRequest()) {
+                goog.object.forEach(errors.request, function(v,k) {
+                  alert(k + ': ' + v);
+                });
               }
-//            fs.write(goog.string.path.join('/mydav/', file.fileName), data, callback); // WebDAVのディレクトリを指定
-
-//          }
+            }
+            var formData = new FormData();
+            formData.append('website', 'http://google.com/');
+            fs.write('/mydav/' + 'foo.txt', formData, callback, null, null, this); // WebDAVのディレクトリを指定
+          }
 
 //          reader.readAsDataURL(file);
           reader.readAsBinaryString(file);
