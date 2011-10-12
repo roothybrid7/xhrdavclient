@@ -36,7 +36,6 @@
 
     var initData;
     var parentDir = '/mydav/parentforfsfile/';
-    var srcFile = './testwebdav.txt';
 
     var file = goog.string.path.normalizePath(
       goog.string.path.join(parentDir, 'testwebdav.txt'));
@@ -61,13 +60,13 @@
       dav._delete(parentDir, asyncContinue);
     }
 
-    function testUploadFile() {
-      var testId = 'UpdateFile()';
+    function testWriteFile() {
+      var testId = 'WriteFile';
       var logger = goog.debug.Logger.getLogger(testId);
 
       asyncTestCase.waitForAsync(testId);
 
-      var assertUploadFile = function(errors, newLoc) {
+      var assertWriteFile = function(errors, newLoc) {
         logger.config(goog.typeOf(errors));
         assertFalse('No errors?', errors.hasRequest());
         assertNotNullNorUndefined('new resource location?', newLoc);
@@ -79,18 +78,18 @@
         asyncContinue();
       };
 
-      fs.write(file, initData, assertUploadFile, null, null, this,
+      fs.write(file, initData, assertWriteFile, null, null, this,
         goog.partial(xhrLogging, logger));
     }
 
-    function testUploadMissingPath() {
-      var testId = 'UploadMissingPath()';
+    function testWriteMissingPath() {
+      var testId = 'WriteMissingPath';
       var testPath = '/notfound/dummy.txt';
       var logger = goog.debug.Logger.getLogger(testId);
 
       asyncTestCase.waitForAsync(testId);
 
-      var assertUploadFail = function(errors, newLoc) {
+      var assertWriteFail = function(errors, newLoc) {
         assertTrue('xhrdav.lib.Errors?', errors instanceof xhrdav.lib.Errors);
         assertTrue('No request Error?', errors.hasRequest());
         logger.config(goog.debug.expose(errors.request));
@@ -103,18 +102,18 @@
         asyncContinue();
       };
 
-      fs.write(testPath, initData, assertUploadFail, {depth: 1}, {a: 'b'},
+      fs.write(testPath, initData, assertWriteFail, {depth: 1}, {a: 'b'},
         this,
         goog.partial(xhrLogging, logger));
     }
 
-    function testUploadNullData() {
-      var testId = 'UploadNullData()';
+    function testWriteNullData() {
+      var testId = 'testWriteNullData';
       var logger = goog.debug.Logger.getLogger(testId);
 
       asyncTestCase.waitForAsync(testId);
 
-      var assertUploadNull = function(errors, newLoc) {
+      var assertWriteNull = function(errors, newLoc) {
         assertFalse('No errors', errors.hasRequest());
         assertNotNullNorUndefined('new resource location?', newLoc);
         logger.config(newLoc);
@@ -125,7 +124,7 @@
         asyncContinue();
       };
 
-      fs.write(file, null, assertUploadNull, null, null, this,
+      fs.write(file, null, assertWriteNull, null, null, this,
         goog.partial(xhrLogging, logger));
     }
 
@@ -148,12 +147,12 @@
           goog.partial(xhrLogging, logger));
       };
 
-      var callbackUpload = function(errors, newLoc) {
+      var callbackWrite = function(errors, newLoc) {
         fs.removeFile(file, assertRemoveFile, null, null, this,
           goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackUpload, null, null, this,
+      fs.write(file, initData, callbackWrite, null, null, this,
         goog.partial(xhrLogging, logger));
     }
 
@@ -172,12 +171,12 @@
         asyncContinue();
       };
 
-      var callbackUpload = function(errors, newLoc) {
+      var callbackWrite = function(errors, newLoc) {
         fs.moveFile(file, dstPath, assertRename, null, null, this,
           goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackUpload, null, null, this,
+      fs.write(file, initData, callbackWrite, null, null, this,
         goog.partial(xhrLogging, logger));
     }
 
@@ -211,12 +210,12 @@
           goog.partial(xhrLogging, logger));
       };
 
-      var callbackUpload = function(errors, newLoc) {
+      var callbackWrite = function(errors, newLoc) {
         fs.copyFile(file, dstPath, assertCopy, null, null, this,
           goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackUpload, null, null, this,
+      fs.write(file, initData, callbackWrite, null, null, this,
         goog.partial(xhrLogging, logger));
     }
 
@@ -239,12 +238,12 @@
           goog.partial(xhrLogging, logger));
       };
 
-      var callbackUpload = function(errors, newLoc) {
+      var callbackWrite = function(errors, newLoc) {
         fs.read(file, assertRead, null, null, this,
           goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackUpload, null, null, this,
+      fs.write(file, initData, callbackWrite, null, null, this,
         goog.partial(xhrLogging, logger));
     }
   </script>
