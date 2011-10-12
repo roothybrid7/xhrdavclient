@@ -96,6 +96,7 @@
         assertFalse('Occured request errors?',
           goog.object.isEmpty(errors.request));
         assertEquals('Error path', testPath, errors.request.path);
+        assertEquals('Method Not Allowed?', httpStatus.METHOD_NOT_ALLOWED, errors.request.status);
         assertNotNullNorUndefined('Not OK?', errors.request.message);
         assertTrue('Not Create file?', goog.string.isEmptySafe(newLoc));
 

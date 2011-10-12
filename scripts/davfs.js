@@ -117,7 +117,7 @@ xhrdav.lib.DavFs.prototype.contentReadHandler_ = function(
 
   var args = [];
   if (statusCode != httpStatus.OK) {
-    errors.setRequest({message: httpStatus.text[statusCode], path: path});
+    errors.setRequest({status: statusCode, message: httpStatus.text[statusCode], path: path});
   }
   args.push(errors);
   args.push(content);
@@ -146,7 +146,7 @@ xhrdav.lib.DavFs.prototype.simpleErrorHandler_ = function(
   if (!goog.array.contains(
     [httpStatus.OK, httpStatus.CREATED, httpStatus.NO_CONTENT],
     statusCode)) {
-    errors.setRequest({message: httpStatus.text[statusCode], path: path});
+    errors.setRequest({status: statusCode, message: httpStatus.text[statusCode], path: path});
   }
   args.push(errors);
   if (statusCode == httpStatus.CREATED) {
@@ -233,7 +233,7 @@ xhrdav.lib.DavFs.prototype.processMultistatus_ = function(
   if (statusCode == httpStatus.MULTI_STATUS) {
     content = xhrdav.lib.DavFs.getListDirFromMultistatus(content, opt_helper);
   } else {
-    errors.setRequest({message: httpStatus.text[statusCode], path: path});
+    errors.setRequest({status: statusCode, message: httpStatus.text[statusCode], path: path});
   }
   args.push(errors);
   args.push(content);
