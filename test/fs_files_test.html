@@ -17,7 +17,6 @@
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
     goog.require('xhrdav.lib.DavFs');
-    goog.require('goog.ds.JsDataSource');
     goog.require('goog.array');
   </script>
 </head>
@@ -126,97 +125,6 @@
       };
 
       fs.write(file, null, assertWriteNull, null, null, this,
-        goog.partial(xhrLogging, logger));
-    }
-
-    function testRemoveFile() {
-      var testId = 'RemoveFile';
-      var logger = goog.debug.Logger.getLogger(testId);
-
-      asyncTestCase.waitForAsync(testId);
-
-      var assertRetryRemove = function(errors) {
-        assertTrue('Errors', errors.hasRequest());
-
-        asyncContinue();
-      };
-
-      var assertRemoveFile = function(errors) {
-        assertFalse('No errors', errors.hasRequest());
-
-        fs.removeFile(file, assertRetryRemove, null, null, this,
-          goog.partial(xhrLogging, logger));
-      };
-
-      var callbackWrite = function(errors, newLoc) {
-        fs.removeFile(file, assertRemoveFile, null, null, this,
-          goog.partial(xhrLogging, logger));
-      };
-
-      fs.write(file, initData, callbackWrite, null, null, this,
-        goog.partial(xhrLogging, logger));
-    }
-
-    function testRename() {
-      var testId = 'Rename';
-      var logger = goog.debug.Logger.getLogger(testId);
-
-      var dstPath = goog.string.path.normalizePath(
-        goog.string.path.join(parentDir, 'rename.txt'));
-
-      asyncTestCase.waitForAsync(testId);
-
-      var assertRename = function(errors, newLoc) {
-        assertFalse('No errors?', errors.hasRequest());
-        assertNotNullNorUndefined('Create location', newLoc);
-        asyncContinue();
-      };
-
-      var callbackWrite = function(errors, newLoc) {
-        fs.moveFile(file, dstPath, assertRename, null, null, this,
-          goog.partial(xhrLogging, logger));
-      };
-
-      fs.write(file, initData, callbackWrite, null, null, this,
-        goog.partial(xhrLogging, logger));
-    }
-
-    function testCopy() {
-      var testId = 'Copy';
-      var logger = goog.debug.Logger.getLogger(testId);
-
-      var dstPath = goog.string.path.normalizePath(
-        goog.string.path.join(parentDir, 'copy.txt'));
-
-      asyncTestCase.waitForAsync(testId);
-
-      var assertOverwrite = function(errors, newLoc) {
-        assertFalse('No errors?', errors.hasRequest());
-        asyncContinue();
-      };
-
-      var assertRetryCopyErr = function(errors, newLoc) {
-        assertTrue('Errors?', errors.hasRequest());
-        assertTrue('No create?', goog.string.isEmptySafe(newLoc));
-
-        fs.copyFile(file, dstPath, assertOverwrite, null, null, this,
-          goog.partial(xhrLogging, logger));
-      };
-
-      var assertCopy = function(errors, newLoc) {
-        assertFalse('No errors', errors.hasRequest());
-        assertNotNullNorUndefined('Create location?', newLoc);
-
-        fs.copyFile(file, '/foo/bar/', assertRetryCopyErr, null, null, this,
-          goog.partial(xhrLogging, logger));
-      };
-
-      var callbackWrite = function(errors, newLoc) {
-        fs.copyFile(file, dstPath, assertCopy, null, null, this,
-          goog.partial(xhrLogging, logger));
-      };
-
-      fs.write(file, initData, callbackWrite, null, null, this,
         goog.partial(xhrLogging, logger));
     }
 
