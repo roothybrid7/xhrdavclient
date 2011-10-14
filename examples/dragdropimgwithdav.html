@@ -31,7 +31,7 @@
     goog.require('goog.events.FileDropHandler.EventType');
     goog.require('goog.events.EventType');
 
-    goog.require('xhrdav.lib.DavFs');
+//    goog.require('xhrdav.lib.DavFs');
     goog.require('xhrdav.lib.Config');
     goog.require('goog.style');
   </script>
@@ -98,6 +98,7 @@ closure-library/closure/goog/events/eventtype.js:72:  DRAGLEAVE: 'dragleave',
     goog.events.listen(
       handler, goog.events.FileDropHandler.EventType.DROP,
       function(e) {
+      console.log('DROP');
         droptarget.innerHTML = '';
         goog.style.showElement(droptarget, false);
         var dt = e.getBrowserEvent().dataTransfer;
@@ -105,50 +106,24 @@ closure-library/closure/goog/events/eventtype.js:72:  DRAGLEAVE: 'dragleave',
         var names = goog.array.map(files, function(file) {
           return goog.string.htmlEscape(file.fileName);
         });
-            console.log(e.target);
-//            console.log(e.currentTarget);
+        console.log(names);
 
-        var handle = goog.array.map(files, function(file) {
+        goog.array.map(files, function(file) {
           var bag = document.getElementById("bag");
           var img = document.createElement("img");
-          var reader = new FileReader();
-          reader.onloadend = function() {
-//            img.src = reader.result;
+          var request = new XMLHttpRequest();
+          request.open('PUT', '/mydav/' + file.name);
+          request.setRequestHeader('X-File-Name', file.name);
+          request.setRequestHeader('X-File-Size', file.size);
+          request.send(file);
 
-            // FileAPIを使ってファイル名とデータ内容を取得
-            var data = reader.result;
-            var fs = xhrdav.lib.DavFs.getInstance();
-            var request = new XMLHttpRequest();
-            request.open('PUT', '/mydav/' + file.name, false);
-//            console.log(file instanceof File);
-            request.sendAsBinary(data);
-//            var callback = function(errors) {
-//              if (errors.hasRequest()) {
-//                goog.object.forEach(errors.request, function(v,k) {
-//                  alert(k + ': ' + v);
-//                });
-//              }
-//            }
-//            var formData = new FormData();
-//            formData.append('website', 'http://google.com/');
-//            fs.write('/mydav/' + 'foo.txt', formData, callback, null, null, this); // WebDAVのディレクトリを指定
-          }
-
-//          reader.readAsDataURL(file);
-          reader.readAsBinaryString(file);
           img.classList.add("obj");
           bag.insertBefore(img, bag.firstChild);
         });
         goog.dom.getElement('filenames').innerHTML = names.join('<br>');
       });
-//    goog.events.listen(
-//      goog.dom.getElement('wrapper'), goog.events.EventType.DRAGSTART, dragStart);
-//    goog.events.listen(
-//      document, goog.events.EventType.DRAGENTER, dragEnter);
     goog.events.listen(
       goog.dom.getElement('wrapper'), goog.events.EventType.DRAGOVER, dragOver);
-//    goog.events.listen(
-//      document, goog.events.EventType.DRAGLEAVE, dragLeave);
   </script>
 </body>
 </html>

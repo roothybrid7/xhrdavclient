@@ -112,26 +112,18 @@ closure-library/closure/goog/events/eventtype.js:72:  DRAGLEAVE: 'dragleave',
         var handle = goog.array.map(files, function(file) {
           var bag = document.getElementById("bag");
           var img = document.createElement("img");
-          var reader = new FileReader();
-          reader.onloadend = function() {
-//            img.src = reader.result;
-
-            // FileAPIを使ってファイル名とデータ内容を取得
-            var data = reader.result;
-            var fs = xhrdav.lib.DavFs.getInstance();
-            var callback = function(errors, newLoc) {
-              console.log('NewLocation: ' + newLoc);
-              if (errors.hasRequest()) {
-                goog.object.forEach(errors.request, function(v,k) {
-                  alert(k + ': ' + v);
-                });
-              }
+          // FileAPIを使ってファイル名とデータ内容を取得
+          var fs = xhrdav.lib.DavFs.getInstance();
+          var callback = function(errors, newLoc) {
+            console.log('NewLocation: ' + newLoc);
+            if (errors.hasRequest()) {
+              goog.object.forEach(errors.request, function(v,k) {
+                alert(k + ': ' + v);
+              });
             }
-            fs.upload('/mydav/' + file.name, data, callback, null, null, this); // WebDAVのディレクトリを指定
           }
+          fs.upload('/mydav/' + file.name, file, callback, null, null, this); // WebDAVのディレクトリを指定
 
-//          reader.readAsDataURL(file);
-          reader.readAsBinaryString(file);
           img.classList.add("obj");
           bag.insertBefore(img, bag.firstChild);
         });

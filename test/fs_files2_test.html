@@ -122,16 +122,22 @@
 
       asyncTestCase.waitForAsync(testId);
 
+      var assertFailOverwrite = function(errors, newLoc) {
+        assertTrue('Errors?', errors.hasRequest());
+        asyncContinue();
+      };
+
       var assertOverwrite = function(errors, newLoc) {
         assertFalse('No errors?', errors.hasRequest());
-        asyncContinue();
+        fs.copy(file, dstPath, assertFailOverwrite, null, null, this,
+          goog.partial(xhrLogging, logger));
       };
 
       var assertRetryCopyErr = function(errors, newLoc) {
         assertTrue('Errors?', errors.hasRequest());
         assertTrue('No create?', goog.string.isEmptySafe(newLoc));
 
-        fs.copy(file, dstPath, assertOverwrite, null, null, this,
+        fs.copy(file, dstPath, assertOverwrite, {overwrite: true}, null, this,
           goog.partial(xhrLogging, logger));
       };
 
