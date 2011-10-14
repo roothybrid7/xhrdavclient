@@ -1,4 +1,16 @@
 
+0.0.22 / 2011-10-14 
+==================
+
+  * Merge branch 'feature/sendAsBinaryForStandard' into develop
+  * remove old methods
+  * remove old testcase
+  * remove old methods
+  * Add testcase of upload
+  * remove xhr extension and refactor
+  * Merge branch 'release/v0.0.21' into develop
+  * update changelog and version text
+
 0.0.21 / 2011-10-12 
 ==================
 
