@@ -13,7 +13,6 @@ goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.Client');
 goog.require('goog.net.XhrManager');
 goog.require('xhrdav.lib.ResourceBuilder');
-goog.require('xhrdav.lib.XhrIoExtBinary');
 
 /**
  * high-level WebDAV client API Singleton
@@ -506,7 +505,7 @@ xhrdav.lib.DavFs.prototype.write = function(
  * Upload data to WebDAV server
  *
  * @param {string} path upload file path.
- * @param {Object} content file content(text OR binary[img etc.].
+ * @param {File} file File object(File API)
  * @param {Function} handler callback handler function.
  * @param {Object=} opt_headers Request headers options.
  * @param {Object=} opt_params  Request query paramters.
@@ -514,14 +513,21 @@ xhrdav.lib.DavFs.prototype.write = function(
  * @param {Function=} onXhrComplete onXhrComplete callback function
  */
 xhrdav.lib.DavFs.prototype.upload = function(
-  path, content, handler, opt_headers, opt_params, context, onXhrComplete) {
-  var opt_request = this.createRequestParameters_(false, opt_headers, opt_params);
-  // XMLHttpRequest extension for SendAsBinary
-  goog.object.extend(opt_request, {xhrIoKls: xhrdav.lib.XhrIoExtBinary});
+  path, file, handler, opt_headers, opt_params, context, onXhrComplete) {
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
   path = xhrdav.lib.functions.path.removeLastSlash(path);
+  if (!(file instanceof File)) {
+    xhrdav.lib.Config.getInstance().getLogger().warning(
+      'DavFs#upload: Not a file object!![path: ' + path + ']');
+    xhrdav.lib.Config.getInstance().getLogger().warning(file);
+  }
+  if (goog.isDefAndNotNull(file)) {
+    goog.object.extend(opt_request.headers,
+      {x_file_name: file.name, x_file_size: file.size});
+  }
 
-  this.getConnection().put(path, content,
+  this.getConnection().put(path, file,
     goog.bind(this.responseHandler_, this,
       handler, this.simpleErrorHandler_, path, context),
     opt_request, onXhrComplete);

@@ -260,11 +260,11 @@
       asyncTestCase.waitForAsync(testId);
 
       var assertCopyOverWriteFalse = function(statusCode, content, headers) {
-        assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        assertNotEquals('Overwrite false StatusCode?', httpStatus.NO_CONTENT, statusCode);
         asyncContinue();
       };
       var assertCopyOverWrite = function(statusCode, content, headers) {
-        assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        assertEquals('Overwrite true StatusCode?', httpStatus.NO_CONTENT, statusCode);
         assertTrue('No Content?', goog.string.isEmptySafe(content));
 
         opt_request.xhrId = goog.string.createUniqueString();
@@ -273,13 +273,14 @@
           goog.partial(xhrLogging, logger));
       };
       var assertCopy = function(statusCode, content, headers) {
-        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertEquals('New StatusCode?', httpStatus.CREATED, statusCode);
         assertNotNullNorUndefined('Location?', headers['Location']);
         assertTrue('Location match:',
           goog.string.endsWith(headers['Location'], dstDir));
 
         opt_request.xhrId = goog.string.createUniqueString();
         opt_request.headers = {}, opt_request.headers['Overwrite'] = true;
+
         dav.copy(dstDir, dir, assertCopyOverWrite, opt_request,
           goog.partial(xhrLogging, logger));
       };

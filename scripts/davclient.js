@@ -138,13 +138,30 @@ xhrdav.lib.Client.prototype.setParameters_ = function(url, query) {
   if (goog.isDefAndNotNull(query) && !goog.object.isEmpty(query)) {
     goog.object.forEach(query, function(val, key) {
       if (val instanceof Array && !goog.array.isEmpty(val)) {
-        url.setParameterValues(key, val);
+        url.setParameterValues(key.camelize({with_dasherize: true}), val);
       } else if (goog.string.isEmptySafe(val)) {
-        url.setParameterValue(key, val);
+        url.setParameterValue(key.camelize({with_dasherize: true}), val);
       }
     });
   }
   return url;
+};
+
+/**
+ * convert headers keys.
+ *
+ * @param {Object=} headers HTTP headers object.
+ * @return {Object} converted HTTP headers object.
+ */
+xhrdav.lib.Client.prototype.convertHeadersKeys = function(headers) {
+  var converted = {};
+  if (goog.isDefAndNotNull(headers) && !goog.object.isEmpty(headers)) {
+    goog.object.forEach(headers, function(val, key) {
+      var convKey = key.camelize({with_dasherize: true});
+      goog.object.set(converted, convKey, val);
+    });
+  }
+  return converted;
 };
 
 /**
@@ -204,6 +221,8 @@ xhrdav.lib.Client.prototype.options = function(
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
+  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  goog.object.extend(opt_request.headers, {'Cache-Control': 'no-cache'});
   this.request_('OPTIONS', url, handler, opt_request, onXhrComplete);
 };
 
@@ -224,15 +243,8 @@ xhrdav.lib.Client.prototype.head = function(path, handler, opt_request, onXhrCom
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  if (goog.isDefAndNotNull(opt_request.headers)) {
-    goog.object.extend(opt_request.headers, {
-      'Cache-Control': 'max-age=0',
-      'If-Modified-Since': 'Thu, 01 Jan 1970 00:00:00 GMT'});
-  } else {
-    goog.object.extend(opt_request, {headers: {
-      'Cache-Control': 'max-age=0',
-      'If-Modified-Since': 'Thu, 01 Jan 1970 00:00:00 GMT'}});
-  }
+  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  goog.object.extend(opt_request.headers, {'Cache-Control': 'no-cache'});
 
   this.request_('HEAD', url, handler, opt_request, onXhrComplete);
 };
@@ -252,7 +264,8 @@ xhrdav.lib.Client.prototype.get = function(path, handler, opt_request, onXhrComp
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
-  this.setParameters_(url, opt_request.query);
+  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+
   this.request_('GET', url, handler, opt_request, onXhrComplete);
 };
 
@@ -279,12 +292,9 @@ xhrdav.lib.Client.prototype.put = function(
   } // Preserve GET
   this.setParameters_(url, opt_request.query);
 
-//  if (goog.isDefAndNotNull(opt_request.headers) &&
-//    !goog.object.isEmpty(opt_request.headers)) {
-//    goog.object.extend(opt_request.headers, {'Content-Type': 'text/xml'});
-//  } else {
-//    opt_request.headers = {'Content-Type': 'text/xml'};
-//  }
+  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  goog.object.extend(opt_request.headers, {'Cache-Control': 'no-cache'});
+
   opt_request.body = data;
 
   this.request_('PUT', url, handler, opt_request, onXhrComplete);
@@ -307,17 +317,13 @@ xhrdav.lib.Client.prototype.propfind = function(
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
+  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
   // 0(path only) or 1(current directory)
-  if (goog.isDefAndNotNull(opt_request.headers) &&
-    !goog.object.isEmpty(opt_request.headers)) {
-    goog.object.extend(opt_request.headers, {
-      'Content-Type': 'text/xml',
-      'Depth': goog.isDefAndNotNull(opt_request.headers['Depth']) ?
-        opt_request.headers['Depth'] : 0});
-  } else {
-    goog.object.extend(opt_request, {headers: {
-      'Content-Type': 'text/xml', 'Depth': 0}});
-  }
+  goog.object.extend(opt_request.headers, {
+    'Content-Type': 'text/xml',
+    'Depth': goog.isDefAndNotNull(opt_request.headers['Depth']) ?
+      opt_request.headers['Depth'] : 0});
+
   goog.object.extend(opt_request, {body:
     '<?xml version="1.0" encoding="UTF-8"?>' +
     '<D:propfind xmlns:D="DAV:"><D:allprop /></D:propfind>'});
@@ -342,11 +348,7 @@ xhrdav.lib.Client.prototype.proppatch = function(path, handler, opt_request, onX
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  if (goog.isDefAndNotNull(opt_request.headers)) {
-    goog.object.extend(opt_request.headers, {'Content-Type': 'text/xml'});
-  } else {
-    goog.object.extend(opt_request, {headers: {'Content-Type': 'text/xml'}});
-  }
+  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
 };
 
 /**
@@ -366,16 +368,12 @@ xhrdav.lib.Client.prototype.lock = function(path, handler, opt_request, onXhrCom
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  if (goog.isDefAndNotNull(opt_request.headers) &&
-    !goog.object.isEmpty(opt_request.headers)) {
-    goog.object.extend(opt_request.headers, {
-      'Content-Type': 'text/xml',
-      'Depth': goog.isDefAndNotNull(opt_request.headers['Depth']) ?
-        opt_request.headers['Depth'] : 0});
-  } else {
-    goog.object.extend(opt_request, {headers: {
-      'Content-Type': 'text/xml', 'Depth': 0}});
-  }
+  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  goog.object.extend(opt_request.headers, {
+    'Content-Type': 'text/xml',
+    'Depth': goog.isDefAndNotNull(opt_request.headers['Depth']) ?
+      opt_request.headers['Depth'] : 0});
+
   goog.object.extend(opt_request, {body:
     '<?xml version="1.0" encoding="UTF-8"?>' +
     '<D:lockinfo xmlns:D="DAV:">\n'+
@@ -402,7 +400,9 @@ xhrdav.lib.Client.prototype.mkcol = function(path, handler, opt_request, onXhrCo
   path = goog.string.endsWith(path, '/') ? path : path + '/'; // Preserve GET
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
-//      var url = goog.Uri.parse('http://localhost:8001/foo/');
+
+  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+
   this.request_('MKCOL', url, handler, opt_request, onXhrComplete);
 };
 
@@ -422,6 +422,9 @@ xhrdav.lib.Client.prototype._delete = function(
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
+
+  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+
   this.request_('DELETE', url, handler, opt_request, onXhrComplete);
 };
 
@@ -440,28 +443,18 @@ xhrdav.lib.Client.prototype._delete = function(
  */
 xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
   method, path, dstPath, handler, opt_request, onXhrComplete) {
+
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  if (goog.isDefAndNotNull(opt_request.headers) &&
-    !goog.object.isEmpty(opt_request.headers)) {
-    goog.object.extend(opt_request.headers, {
-      'Content-Type': 'text/xml',
-      'Destination': this.generateUrl_(goog.string.urlDecode(dstPath || ''))});
-  } else {
-    goog.object.extend(opt_request, {headers: {
-      'Content-Type': 'text/xml',
-      'Destination': this.generateUrl_(goog.string.urlDecode(dstPath || ''))}});
-  }
-  if (goog.isBoolean(opt_request.headers['Overwrite'])) {
-    if (opt_request.headers['Overwrite']) {
-      opt_request.headers['Overwrite'] = 'T';
-    } else {
-      opt_request.headers['Overwrite'] = 'F';
-    }
-  }
+  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+
+  goog.object.extend(opt_request.headers, {
+    'Cache-Control': 'no-cache',
+    'Destination': this.generateUrl_(goog.string.urlDecode(dstPath || '')),
+    'Overwrite': !!opt_request.headers['Overwrite'] ? 'T' : 'F'});
 
   this.request_(method, url, handler, opt_request, onXhrComplete);
 };
