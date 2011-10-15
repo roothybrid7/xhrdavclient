@@ -38,7 +38,6 @@ xhrdav.lib.VERSION = '0.0.22';
 /**
  * xhrdavclient Global config
  *
- * @private
  * @constructor
  */
 xhrdav.lib.Config = function() {

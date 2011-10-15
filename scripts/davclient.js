@@ -17,7 +17,8 @@ goog.require('goog.net.XhrIo');
  * WebDAV Client library by Google Closure library.
  *
  * @constructor
- * @param {Object=} opt_uri URI Parameters(opt_uri: scheme, domain, port)
+ * @param {{scheme:string=, domain:stirng=, port:nubmer=}=} opt_uri
+ *     URI Parameters(opt_uri: scheme, domain, port)
  * @see #initialize_
  */
 xhrdav.lib.Client = function(opt_uri) {
@@ -28,7 +29,8 @@ xhrdav.lib.Client = function(opt_uri) {
  * WebDAV Client initialize
  *
  * @private
- * @param {Object=} opt_uri URI Parameters(opt_uri: scheme, domain, port)
+ * @param {{scheme:string=, domain:stirng=, port:nubmer=}=} opt_uri
+ *     URI Parameters(opt_uri: scheme, domain, port)
  */
 xhrdav.lib.Client.prototype.initialize_ = function(opt_uri) {
   if (!goog.isDefAndNotNull(opt_uri)) {
@@ -100,7 +102,7 @@ xhrdav.lib.Client.prototype.processRequest_ = function(
   var xssGuard = 'while(1);';
   var headers = this.parseHeaders_(xhr.getAllResponseHeaders());
   var content = xhr.getResponse(xssGuard);
-//  if (xhr.getStatus() == 207) {
+
   if (goog.string.contains(headers['Content-Type'], 'xml')) {
     content = xhr.getResponseXml(xssGuard);
     if (this.canParseXml()) content = this.parseXml(content);

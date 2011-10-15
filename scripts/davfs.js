@@ -85,7 +85,8 @@ xhrdav.lib.DavFs.prototype.getXhrManager = function() {
  * Init with calling low-level client API.
  *
  * @private
- * @param {Object=} opt_uri davclient Parameters(options: scheme, domain, port)
+ * @param {{scheme:string=, domain:stirng=, port:nubmer=}=} opt_uri
+ *     davclient Parameters(opt_uri: scheme, domain, port)
  */
 xhrdav.lib.DavFs.prototype.initClient_ = function(opt_uri) {
   var config = xhrdav.lib.Config.getInstance();
@@ -98,10 +99,14 @@ xhrdav.lib.DavFs.prototype.initClient_ = function(opt_uri) {
  * Get and Create Connection xhrdav.lib.Client.
  *
  * @param {boolean=} refresh Refresh connection object.
- * @param {Object=} opt_uri URI Parameters(options: scheme, domain, port)
+ * @param {{scheme:string=, domain:stirng=, port:nubmer=}=} opt_uri
+ *     davclient Parameters(opt_uri: scheme, domain, port)
  * @return {xhrdav.lib.Client}
  * @see #initialize
  */
+// TODO: For multi davclient('default', 'main', 'share', 'tmp', etc.)
+// this#getConnection(false, null) #=> 'default' davclient
+// this#getConnection(false, 'share');
 xhrdav.lib.DavFs.prototype.getConnection = function(refresh, opt_uri) {
   if (!!refresh || goog.isNull(this.client_)) this.initClient_(opt_uri);
   return this.client_;
@@ -154,6 +159,35 @@ xhrdav.lib.DavFs.prototype.contentReadHandler_ = function(
 
   return args;
 };
+
+/**
+ * Exists Handler
+ *
+ * @private
+ * @param {string} path HTTP Requst path.
+ * @param {number} statusCode HTTP Status code.
+ * @param {Object} content Response body data.
+ * @param {Object} headers Response headers.
+ * @return {Array.<xhrdav.lib.Errors, string=>} Errors, new Location
+ * @see xhrdav.lib.Errors
+ */
+xhrdav.lib.DavFs.prototype.existsHandler_ = function(
+  path, statusCode, content, headers) {
+  var config = xhrdav.lib.Config.getInstance();
+  var httpStatus = xhrdav.lib.HttpStatus;
+  var errors = new xhrdav.lib.Errors();
+
+  var args = [];
+  if (!goog.array.contains(
+    [httpStatus.OK, httpStatus.CREATED, httpStatus.NO_CONTENT],
+    statusCode)) {
+    errors.setRequest({status: statusCode, message: httpStatus.text[statusCode], path: path});
+  }
+  args.push(errors);
+  args.push(errors.hasRequest() ? false : true);
+  return args;
+};
+
 
 /**
  * Error Handler
@@ -486,6 +520,26 @@ xhrdav.lib.DavFs.prototype.upload = function(
     opt_request, onXhrComplete);
 };
 
+/**
+ * Resource Exists to WebDAV server
+ *
+ * @param {string} path exists resource path.
+ * @param {Function} handler callback handler function.
+ * @param {Object=} opt_headers Request headers options.
+ * @param {Object=} opt_params  Request query paramters.
+ * @param {Object=} context Callback scope.
+ * @param {Function=} onXhrComplete onXhrComplete callback function
+ */
+xhrdav.lib.DavFs.prototype.exists = function(
+  path, handler, opt_headers, opt_params, context, onXhrComplete) {
+  var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
+
+  this.getConnection().head(path,
+    goog.bind(this.responseHandler_, this,
+      handler, this.existsHandler_, path, context),
+    opt_request, onXhrComplete);
+};
+
 
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs.getInstance);
@@ -511,4 +565,6 @@ goog.exportProperty(xhrdav.lib.DavFs.prototype, 'write',
   xhrdav.lib.DavFs.prototype.write);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'upload',
   xhrdav.lib.DavFs.prototype.upload);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'exists',
+  xhrdav.lib.DavFs.prototype.exists);
 
