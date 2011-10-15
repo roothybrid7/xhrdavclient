@@ -18,7 +18,7 @@
 <body>
   <script type="text/javascript">
     function testLogOutput() {
-      xhrdav.lib.Config.logging(xhrdav.lib.Config.LIBNAME);
+      xhrdav.lib.Config.logging(xhrdav.lib.LIBNAME);
       xhrdav.lib.Config.logging();
       xhrdav.lib.Config.logging(null);
       xhrdav.lib.Config.logging('');
@@ -28,6 +28,15 @@
       xhrdav.lib.Config.logging({});
       xhrdav.lib.Config.logging({key: '123a'});
       xhrdav.lib.Config.logging({flag: true});
+      assertTrue(true);
+    }
+
+    function testLogOutputWithMethod() {
+      var messages = {key: '123a', flag: true};
+      xhrdav.lib.Config.logging(messages, 'fine');
+      xhrdav.lib.Config.logging(messages, 'config');
+      xhrdav.lib.Config.logging(messages, 'info');
+      xhrdav.lib.Config.logging(messages, 'warning');
       assertTrue(true);
     }
 
