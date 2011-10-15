@@ -168,7 +168,7 @@ xhrdav.lib.DavFs.prototype.contentReadHandler_ = function(
  * @param {number} statusCode HTTP Status code.
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
- * @return {Array.<xhrdav.lib.Errors, string=>} Errors, new Location
+ * @return {Array.<xhrdav.lib.Errors, boolean>} Errors, new Location
  * @see xhrdav.lib.Errors
  */
 xhrdav.lib.DavFs.prototype.existsHandler_ = function(
