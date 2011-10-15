@@ -65,6 +65,15 @@
       var conn = fs.getConnection();
       assertTrue('Can ParseXml?', conn.canParseXml());
     }
+
+    function testReturningXhrMgr() {
+      var testId = 'testReturningXhrMgr';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      var fs = xhrdav.lib.DavFs.getInstance();
+      var mgr = fs.getXhrManager();
+      assertTrue('goog.net.XhrManager?', mgr instanceof goog.net.XhrManager);
+    }
   </script>
 </body>
 </html>

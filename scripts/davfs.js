@@ -52,6 +52,36 @@ xhrdav.lib.DavFs.prototype.initXhrMgr_ = function() {
 };
 
 /**
+ * Get XhrManager of davfs for monitoring, progress, abort, etc.
+ *
+ * Example:
+ *   var davFs = xhrdav.lib.DavFs.getInstance();
+ *   var xhrMgr = davFs.getXhrManager();
+ *
+ *   var onComplete = function(file, e) {
+ *     console.log('Uploaded ' + file.name); };
+ *
+ *   var delay = new goog.async.ConditionalDelay(function() {
+ *       var sendingCount = xhrMgr.getOutstandingCount();
+ *       console.log('Sending... ' + sendingCount);
+ *       return (sendingCount == 0); });
+ *   delay.onSuccess = function() { alert('Update files on completely!!'); };
+ *   delay.onFailure = function() {
+ *     alert('Failed to upload files by timeout'); };
+ *
+ *   delay.start(500, 5000);
+ *   goog.array.forEach(files, function(file, i) {
+ *     fs.upload(WEBDAV_ROOT + file.name, file,
+ *       goog.bind(onComplete, this, file), null, null, this);
+ *   }
+ *
+ * @return {goog.net.XhrManager}
+ */
+xhrdav.lib.DavFs.prototype.getXhrManager = function() {
+  return this.xhrMgr_;
+};
+
+/**
  * Init with calling low-level client API.
  *
  * @private
