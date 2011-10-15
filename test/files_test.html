@@ -37,6 +37,8 @@
       goog.string.path.join(parentDir, 'testwebdav.txt'));
     var dav = new xhrdav.lib.Client();
     var xmgr = new goog.net.XhrManager();
+    var httpStatus = xhrdav.lib.HttpStatus;
+    var httpStatusText = xhrdav.lib.HttpStatus.text;
 
     function setUp() {
       initData = 'This is a WebDAV Test.';
@@ -60,8 +62,6 @@
 
       var dummyFile = goog.string.path.normalizePath(
         goog.string.path.join(parentDir,'foo.txt'));
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
 
       var assertNotFound = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.NOT_FOUND, statusCode);
@@ -78,8 +78,6 @@
 
       asyncTestCase.waitForAsync(testId);
 
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertDeleteFile = function(statusCode, content, headers) {
@@ -103,8 +101,6 @@
 
       asyncTestCase.waitForAsync(testId);
 
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertDownloadFile = function(statusCode, content, headers) {
@@ -132,8 +128,6 @@
 
       asyncTestCase.waitForAsync(testId);
 
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertUploadFileOverWrite = function(statusCode, content, headers) {
@@ -162,8 +156,6 @@
 
       asyncTestCase.waitForAsync(testId);
 
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertUploadFile = function(statusCode, content, headers) {
@@ -188,8 +180,6 @@
 
       var newFile = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'rename.txt'));
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertRenameFile = function(statusCode, content, headers) {
@@ -217,8 +207,6 @@
 
       var newFile = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'copy.txt'));
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertCopyFileOverWriteFalse = function(statusCode, content, headers) {
@@ -262,8 +250,6 @@
 
       var newFile = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'move.txt'));
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertMoveFileOverWrite = function(statusCode, content, headers) {

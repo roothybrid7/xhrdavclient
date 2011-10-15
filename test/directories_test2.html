@@ -33,6 +33,8 @@
     var parentDir = '/mydav/DirClientTest2/';
     var dav = new xhrdav.lib.Client();
     var xmgr = goog.net.XhrManager();
+    var httpStatus = xhrdav.lib.HttpStatus;
+    var httpStatusText = xhrdav.lib.HttpStatus.text;
 
     function setUp() {
       asyncTestCase.waitForAsync('setUp');
@@ -54,8 +56,6 @@
         goog.string.path.join(parentDir, 'bar/')) + '/';
       var dstDir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'ほげ/')) + '/';
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertRename = function(statusCode, content, headers) {
@@ -85,8 +85,6 @@
       var dir2 = '/mydav/異動先/';
       var dstDir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'move/')) + '/';
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertMoveAnotherTreeOverWrite = function(statusCode, content, headers) {
@@ -125,8 +123,6 @@
         goog.string.path.join(parentDir, 'コピーもと/')) + '/';
       var dstDir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'コピー先/')) + '/';
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       asyncTestCase.waitForAsync(testId);
@@ -160,6 +156,34 @@
       };
       opt_request.xhrId = goog.string.createUniqueString();
       dav.mkcol(dir, callbackRequest1, opt_request);
+    }
+
+    function testOptions() {
+      var testId = 'testOptions';
+      var logger = new goog.debug.Logger.getLogger(testId);
+      var opt_request = {xhrMgr: xmgr, xhrId: goog.string.createUniqueString()};
+
+      var assertOptions = function(statusCode, content, headers) {
+        assertEquals('StatusCode 200?', httpStatus.OK, statusCode);
+        assertTrue('No content?', goog.string.isEmptySafe(content));
+        assertNotNullNorUndefined('Get allow methos?', headers['Allow']);
+        var allowMethods = headers['Allow'].split(',');
+        assertContains('GET?', 'GET', allowMethods);
+        assertContains('HEAD?', 'HEAD', allowMethods);
+        assertContains('POST?', 'POST', allowMethods);
+        assertContains('DELETE?', 'DELETE', allowMethods);
+        assertContains('PROPFIND?', 'PROPFIND', allowMethods);
+        assertContains('PROPPATCH?', 'PROPPATCH', allowMethods);
+        assertContains('COPY?', 'COPY', allowMethods);
+        assertContains('MOVE?', 'MOVE', allowMethods);
+        assertContains('LOCK?', 'LOCK', allowMethods);
+        assertContains('UNLOCK?', 'UNLOCK', allowMethods);
+        assertNotContains('PUT?', 'PUT', allowMethods);  // Not support for directory
+        asyncContinue();
+      };
+
+      asyncTestCase.waitForAsync(testId);
+      dav.options(parentDir, assertOptions, opt_request);
     }
   </script>
 </body>
