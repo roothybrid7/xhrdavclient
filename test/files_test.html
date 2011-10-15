@@ -246,8 +246,6 @@
       var testId = 'MoveFile';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      asyncTestCase.waitForAsync(testId);
-
       var newFile = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'move.txt'));
       var opt_request = {xhrMgr: xmgr};
@@ -285,6 +283,30 @@
         dav.move(file, newFile, assertMoveFile, opt_request);
       };
       opt_request.xhrId = goog.string.createUniqueString();
+
+      asyncTestCase.waitForAsync(testId);
+      dav.put(file, initData, callbackUploadFile, opt_request);
+    }
+
+    function testHead() {
+      var testId = 'testHead';
+      var logger = new goog.debug.Logger.getLogger(testId);
+      var opt_request = {xhrMgr: xmgr};
+
+      var assertHead = function(statusCode, content, headers) {
+        assertEquals('Status = 200', httpStatus.OK, statusCode);
+        assertTrue('Content empty?', goog.string.isEmptySafe(content));
+        assertEquals('text/plain?', 'text/plain', headers['Content-Type']);
+        asyncContinue();
+      };
+
+      var callbackUploadFile = function(statusCode, content, headers) {
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.head(file, assertHead, opt_request);
+      };
+      opt_request.xhrId = goog.string.createUniqueString();
+
+      asyncTestCase.waitForAsync(testId);
       dav.put(file, initData, callbackUploadFile, opt_request);
     }
   </script>

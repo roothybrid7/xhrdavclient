@@ -229,8 +229,8 @@ xhrdav.lib.Client.prototype.options = function(
  *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-// TODO: UNFIXED code
-xhrdav.lib.Client.prototype.head = function(path, handler, opt_request, onXhrComplete) {
+xhrdav.lib.Client.prototype.head = function(
+  path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));

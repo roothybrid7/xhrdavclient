@@ -31,7 +31,7 @@
 
     var parentDir = '/mydav/DirClientTest/';
     var dav = new xhrdav.lib.Client();
-    var xmgr = goog.net.XhrManager();
+    var xmgr = new goog.net.XhrManager();
 
     function setUp() {
       asyncTestCase.waitForAsync('setUp');

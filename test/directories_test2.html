@@ -13,6 +13,7 @@
     goog.require('goog.testing.jsunit');
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
+    goog.require('goog.async.ConditionalDelay');
 
     goog.require('goog.net.XhrManager');
     goog.require('xhrdav.lib.Client');
@@ -32,7 +33,7 @@
 
     var parentDir = '/mydav/DirClientTest2/';
     var dav = new xhrdav.lib.Client();
-    var xmgr = goog.net.XhrManager();
+    var xmgr = new goog.net.XhrManager();
     var httpStatus = xhrdav.lib.HttpStatus;
     var httpStatusText = xhrdav.lib.HttpStatus.text;
 
@@ -184,6 +185,47 @@
 
       asyncTestCase.waitForAsync(testId);
       dav.options(parentDir, assertOptions, opt_request);
+    }
+
+    function testHead() {
+      var testId = 'testHead';
+      var logger = new goog.debug.Logger.getLogger(testId);
+      var opt_request = {xhrMgr: xmgr, xhrId: goog.string.createUniqueString()};
+
+      var assertHead = function(statusCode, content, headers) {
+        assertEquals('Status = 200', httpStatus.OK, statusCode);
+        assertTrue('Content empty?', goog.string.isEmptySafe(content));
+        assertNotNullNorUndefined('Headers?', headers);
+        asyncContinue();
+      };
+      asyncTestCase.waitForAsync(testId);
+      dav.head(parentDir, assertHead, opt_request);
+    }
+
+    function testHeadFail() {
+      var testId = 'testHeadFail';
+      var logger = new goog.debug.Logger.getLogger(testId);
+      var opt_request = {xhrMgr: xmgr};
+
+      var delayListener = function() {
+        var count = xmgr.getOutstandingCount();
+        return (count == 0);
+      };
+      var delay = new goog.async.ConditionalDelay(delayListener);
+      delay.onSuccess = function() { asyncContinue(); };
+      delay.onFailure = function() { asyncContinue(); };
+
+      var assertHead = function(statusCode, content, headers) {
+        assertEquals('Status = 404', httpStatus.NOT_FOUND, statusCode);
+        assertTrue('Content empty?', goog.string.isEmptySafe(content));
+      };
+
+      delay.start(500, -1);
+      asyncTestCase.waitForAsync(testId);
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.head('/foo/bar/', assertHead, opt_request);
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.head('/foo/bar.txt', assertHead, opt_request);
     }
   </script>
 </body>
