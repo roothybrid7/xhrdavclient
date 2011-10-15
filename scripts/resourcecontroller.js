@@ -105,16 +105,8 @@ xhrdav.lib.ResourceController.prototype.getDestination = function() {
  * build destination path.
  */
 xhrdav.lib.ResourceController.prototype.buildNewDestination_ = function() {
-  // resource.hrefのパスとresourcetypeをチェックして、ファイルかディレクトリかを判別
-  // ディレクトリの場合:
-  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'を補完してcopy
-  //  違う場合は、destの末尾にresource.hrefの末尾を追加してcopy
-  // ファイルの場合:
-  //  destPathの末尾がresource.hrefの末尾なら、destの末尾に'/'があった場合削除してcopy
-  //  違う場合は、destをディレクトリと見なし、destの末尾に'/'を補完してから
-  //  resource.hrefの末尾を追加してcopy
   if (goog.isDefAndNotNull(this.destination_)) {
-    var dstlist = xhrdav.lib.functions.path.split(this.destination_);
+    var dstlist = xhrdav.lib.utils.path.split(this.destination_);
 
     if (dstlist[dstlist.length - 1] != this.pathlist[this.pathlist.length - 1]) {
       dstlist.push(this.pathlist[this.pathlist.length - 1]);
@@ -141,7 +133,7 @@ xhrdav.lib.ResourceController.prototype.remove = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
   // Directory
   if ('collection' == this.resourcetype) {
-    this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
+    this.destination_ = xhrdav.lib.utils.path.addLastSlash(this.destination_);
   }
   this.getConnection_().remove(this.href,
     handler, opt_headers, opt_params, context, onXhrComplete);
@@ -164,7 +156,7 @@ xhrdav.lib.ResourceController.prototype.mkDir = function(
     return goog.functions.error(
       'Not found Directory path: obj.href = directoryPath')();
   }
-  this.href = xhrdav.lib.functions.path.addLastSlash(this.href);
+  this.href = xhrdav.lib.utils.path.addLastSlash(this.href);
   this.getConnection_().mkDir(this.href,
     handler, opt_headers, opt_params, context, onXhrComplete);
 };
@@ -184,7 +176,7 @@ xhrdav.lib.ResourceController.prototype.copy = function(
 
   // Directory
   if ('collection' == this.resourcetype) {
-    this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
+    this.destination_ = xhrdav.lib.utils.path.addLastSlash(this.destination_);
   }
   this.getConnection_().copy(this.href, this.destination_,
     handler, opt_headers, opt_params, context, onXhrComplete);
@@ -227,7 +219,7 @@ xhrdav.lib.ResourceController.prototype.move = function(
 
   // Directory
   if ('collection' == this.resourcetype) {
-    this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
+    this.destination_ = xhrdav.lib.utils.path.addLastSlash(this.destination_);
   }
   this.getConnection_().move(this.href, this.destination_,
     handler, opt_headers, opt_params, context, onXhrComplete);
@@ -269,7 +261,7 @@ xhrdav.lib.ResourceController.prototype.rename = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
   // Directory
   if ('collection' == this.resourcetype) {
-    this.destination_ = xhrdav.lib.functions.path.addLastSlash(this.destination_);
+    this.destination_ = xhrdav.lib.utils.path.addLastSlash(this.destination_);
   }
   this.getConnection_().move(this.href, this.destination_,
     handler, opt_headers, opt_params, context, onXhrComplete);
@@ -294,7 +286,7 @@ xhrdav.lib.ResourceController.prototype.renameBeforeValidate = function(
     return goog.functions.error(
       'Not found destination: obj.setDestination = destPath')();
   } else {
-    var dstlist = xhrdav.lib.functions.path.split(this.destination_);
+    var dstlist = xhrdav.lib.utils.path.split(this.destination_);
 
     if (dstlist[dstlist.length - 1] == this.pathlist[this.pathlist.length - 1]) {
       return goog.functions.error(

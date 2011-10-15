@@ -17,7 +17,7 @@
     goog.require('goog.ds.JsDataSource');
     goog.require('xhrdav.lib.Client');
     goog.require('xhrdav.lib.DomParser');
-    goog.require('xhrdav.lib.functions.DomParse');
+    goog.require('xhrdav.lib.utils.DomParse');
 
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
@@ -27,7 +27,7 @@
   <script type="text/javascript">
     var dir = '/mydav/';
 
-    var func = xhrdav.lib.functions.DomParse;
+    var func = xhrdav.lib.utils.DomParse;
 
     var dav = new xhrdav.lib.Client();
     var httpStatus = xhrdav.lib.HttpStatus;

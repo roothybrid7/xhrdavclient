@@ -16,11 +16,10 @@ goog.require('goog.json');
 goog.require('goog.functions');
 goog.require('goog.string.path');
 goog.require('goog.net.XhrIo');
-goog.require('xhrdav.lib.functions');
+goog.require('xhrdav.lib.utils');
 goog.require('xhrdav.lib.Errors');
 goog.require('xhrdav.lib.string');
 goog.require('xhrdav.lib.HttpStatus');
-goog.require('xhrdav.lib.functions.path');
 goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');
 goog.require('goog.debug.ErrorHandler');
@@ -50,8 +49,8 @@ goog.addSingletonGetter(xhrdav.lib.Config);
  * Initiaze config
  */
 xhrdav.lib.Config.prototype.initialize_ = function() {
-  /** @type {Object} */
-  this.xmlParseFuncObj = 'xhrdav.lib.functions.domparse';
+  /** @type {string} */
+  this.xmlParseFuncObj = 'xhrdav.lib.utils.domparse';
 
   /**
    @ @private

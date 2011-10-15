@@ -59,7 +59,7 @@ xhrdav.lib.ResourceBuilder.prototype.convertRaw2Models = function() {
     var res = new xhrdav.lib.ResourceController();
 
     res.href = val.D$href.$t;
-    res.pathlist = xhrdav.lib.functions.path.split(res.href);
+    res.pathlist = xhrdav.lib.utils.path.split(res.href);
     if (goog.string.startsWith(
       res.pathlist[res.pathlist.length - 1], '.')) return;  // Skip dot file.
 

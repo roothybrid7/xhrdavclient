@@ -457,7 +457,7 @@ xhrdav.lib.DavFs.prototype.read = function(
   path, handler, opt_headers, opt_params, context, onXhrComplete) {
   var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
-  path = xhrdav.lib.functions.path.removeLastSlash(path);
+  path = xhrdav.lib.utils.path.removeLastSlash(path);
 
   this.getConnection().get(path,
     goog.bind(this.responseHandler_, this,
@@ -480,7 +480,7 @@ xhrdav.lib.DavFs.prototype.write = function(
   path, content, handler, opt_headers, opt_params, context, onXhrComplete) {
   var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
-  path = xhrdav.lib.functions.path.removeLastSlash(path);
+  path = xhrdav.lib.utils.path.removeLastSlash(path);
 
   this.getConnection().put(path, content,
     goog.bind(this.responseHandler_, this,
@@ -503,7 +503,7 @@ xhrdav.lib.DavFs.prototype.upload = function(
   path, file, handler, opt_headers, opt_params, context, onXhrComplete) {
   var opt_request = this.createRequestParameters_(true, opt_headers, opt_params);
 
-  path = xhrdav.lib.functions.path.removeLastSlash(path);
+  path = xhrdav.lib.utils.path.removeLastSlash(path);
   if (!(file instanceof File)) {
     xhrdav.lib.Config.getInstance().getLogger().warning(
       'DavFs#upload: Not a file object!![path: ' + path + ']');

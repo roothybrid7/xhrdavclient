@@ -4,7 +4,7 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.functions.path');
+goog.provide('xhrdav.lib.utils.path');
 goog.require('goog.string');
 goog.require('goog.string.path');
 goog.require('goog.array');
@@ -15,7 +15,7 @@ goog.require('goog.array');
  * @param {string} path
  * @return {string} converted new path.
  */
-xhrdav.lib.functions.path.removeLastSlash = function(path) {
+xhrdav.lib.utils.path.removeLastSlash = function(path) {
   var converted;
   if (path.match(/^(.+)\/$/)) {
     converted = RegExp.$1;
@@ -31,7 +31,7 @@ xhrdav.lib.functions.path.removeLastSlash = function(path) {
  * @param {string} path
  * @return {string} converted new path.
  */
-xhrdav.lib.functions.path.addLastSlash = function(path) {
+xhrdav.lib.utils.path.addLastSlash = function(path) {
   var converted = goog.string.endsWith(path, '/') ? path : path + '/';
   return converted;
 };
@@ -42,7 +42,7 @@ xhrdav.lib.functions.path.addLastSlash = function(path) {
  * @param {string} path
  * @return {Array.<string>} split path list.
  */
-xhrdav.lib.functions.path.split = function(path) {
+xhrdav.lib.utils.path.split = function(path) {
   var pathlist = goog.array.filter(path.split('/'), function(v, i) {
     return (!goog.string.isEmptySafe(v));
   });
@@ -51,11 +51,11 @@ xhrdav.lib.functions.path.split = function(path) {
 };
 
 /* Entry point for closure compiler */
-goog.exportSymbol('xhrdav.lib.functions.path', xhrdav.lib.functions.path);
-goog.exportSymbol('xhrdav.lib.functions.path.removeLastSlash',
-  xhrdav.lib.functions.path.removeLastSlash);
-goog.exportSymbol('xhrdav.lib.functions.path.addLastSlash',
-  xhrdav.lib.functions.path.addLastSlash);
-goog.exportSymbol('xhrdav.lib.functions.path.split',
-  xhrdav.lib.functions.path.split);
+goog.exportSymbol('xhrdav.lib.utils.path', xhrdav.lib.utils.path);
+goog.exportSymbol('xhrdav.lib.utils.path.removeLastSlash',
+  xhrdav.lib.utils.path.removeLastSlash);
+goog.exportSymbol('xhrdav.lib.utils.path.addLastSlash',
+  xhrdav.lib.utils.path.addLastSlash);
+goog.exportSymbol('xhrdav.lib.utils.path.split',
+  xhrdav.lib.utils.path.split);
 

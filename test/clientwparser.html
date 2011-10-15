@@ -21,7 +21,7 @@
     goog.require('goog.net.XhrIo');
     goog.require('xhrdav.lib.Client');
     goog.require('xhrdav.lib.HttpStatus');
-    goog.require('xhrdav.lib.functions.domparse');
+    goog.require('xhrdav.lib.utils.domparse');
   </script>
 </head>
 <body>
@@ -39,7 +39,7 @@
     var func;
 
     function setUp() {
-      func = xhrdav.lib.functions.domparse;
+      func = xhrdav.lib.utils.domparse;
     }
 
     function tearDown() {
@@ -55,7 +55,7 @@
       dav.setXmlParseFunction(String);
       assertFalse('Can parse Xml by String?', dav.canParseXml());
       dav.setXmlParseFunction(func);
-      assertTrue('Can parse Xml by xhrdav.lib.functions.DomParse?',
+      assertTrue('Can parse Xml by xhrdav.lib.utils.DomParse?',
         dav.canParseXml());
     }
 
