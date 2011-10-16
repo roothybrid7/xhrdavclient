@@ -53,21 +53,18 @@ ROOTS=(
 )
 NAMESPACES=(
   'xhrdav.lib'
-  'xhrdav.lib.Config'
-  'xhrdav.lib.XmlHttp'
-  'xhrdav.lib.string'
-  'xhrdav.lib.Client'
-  'xhrdav.lib.DavFs'
-  'xhrdav.lib.DomHandler'
-  'xhrdav.lib.DomParser'
-  'xhrdav.lib.Errors'
-  'xhrdav.lib.functions'
-  'xhrdav.lib.functions.domparse'
-  'xhrdav.lib.functions.path'
-  'xhrdav.lib.HttpStatus'
-  'xhrdav.lib.Resource'
-  'xhrdav.lib.ResourceBuilder'
-  'xhrdav.lib.ResourceController'
+  'xhrdav.Client'
+  'xhrdav.DavFs'
+  'xhrdav.Conf'
+  'xhrdav.ext'
+  'xhrdav.parser.DomHandler'
+  'xhrdav.parser.DomParser'
+  'xhrdav.Errors'
+  'xhrdav.utils'
+  'xhrdav.HttpStatus'
+  'xhrdav.Resource'
+  'xhrdav.ResourceBuilder'
+  'xhrdav.ResourceController'
 )
 
 rootdir=

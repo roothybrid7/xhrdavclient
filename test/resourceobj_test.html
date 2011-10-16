@@ -13,8 +13,8 @@
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
 
-    goog.require('xhrdav.lib.HttpStatus');
-    goog.require('xhrdav.lib.Resource');
+    goog.require('xhrdav.HttpStatus');
+    goog.require('xhrdav.Resource');
     goog.require('goog.json');
   </script>
   <script type="text/javascript">
@@ -40,7 +40,7 @@
       var testId = 'CreateResource';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var resource = new xhrdav.lib.Resource();
+      var resource = new xhrdav.Resource();
       assertNotNullNorUndefined('Create Resource?', resource);
 
       var hash = {href: null, pathlist: [],
@@ -66,7 +66,7 @@
       var testId = 'MixinRawObj';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var resource = new xhrdav.lib.Resource();
+      var resource = new xhrdav.Resource();
       var obj = {rawObj: initData};
 
       goog.mixin(resource, obj);

@@ -4,13 +4,13 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.HttpStatus');
+goog.provide('xhrdav.HttpStatus');
 
 /**
  * WebDAV HTTP Extentions Status Codes.
  * @enum {number}
  */
-xhrdav.lib.HttpStatus = {
+xhrdav.HttpStatus = {
   // Informational 1xx
   CONTINUE: 100,
   SWITCHING_PROTOCOLS: 101,
@@ -79,7 +79,7 @@ xhrdav.lib.HttpStatus = {
  * WebDAV HTTP Extensions Status Text.
  * @type {Array.<string>}
  */
-xhrdav.lib.HttpStatus.text = {
+xhrdav.HttpStatus.text = {
 // Informational 1xx
   100: 'Continue',
   101: 'Switching Protocols',
@@ -145,6 +145,6 @@ xhrdav.lib.HttpStatus.text = {
 }
 
 /* Entry Point for closure compiler */
-goog.exportSymbol('xhrdav.lib.HttpStatus', xhrdav.lib.HttpStatus);
-goog.exportSymbol('xhrdav.lib.HttpStatus.text', xhrdav.lib.HttpStatus.text);
+goog.exportSymbol('xhrdav.HttpStatus', xhrdav.HttpStatus);
+goog.exportSymbol('xhrdav.HttpStatus.text', xhrdav.HttpStatus.text);
 

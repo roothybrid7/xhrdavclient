@@ -16,7 +16,7 @@
     goog.require('goog.object');
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.DavFs');
+    goog.require('xhrdav.DavFs');
     goog.require('goog.array');
   </script>
 </head>
@@ -38,10 +38,10 @@
 
     var file = goog.string.path.normalizePath(
       goog.string.path.join(parentDir, 'testwebdav.txt'));
-    var dav = new xhrdav.lib.Client();
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var httpStatusText = xhrdav.lib.HttpStatus.text;
-    var fs = xhrdav.lib.DavFs.getInstance();
+    var dav = new xhrdav.Client();
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
+    var fs = xhrdav.DavFs.getInstance();
 
 
     function setUp() {
@@ -77,8 +77,8 @@
         asyncContinue();
       };
 
-      fs.write(file, initData, assertWriteFile, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(file, initData, assertWriteFile, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
 
     function testWriteMissingPath() {
@@ -89,7 +89,7 @@
       asyncTestCase.waitForAsync(testId);
 
       var assertWriteFail = function(errors, newLoc) {
-        assertTrue('xhrdav.lib.Errors?', errors instanceof xhrdav.lib.Errors);
+        assertTrue('xhrdav.Errors?', errors instanceof xhrdav.Errors);
         assertTrue('No request Error?', errors.hasRequest());
         logger.config(goog.debug.expose(errors.request));
         assertFalse('Occured request errors?',
@@ -102,9 +102,8 @@
         asyncContinue();
       };
 
-      fs.write(testPath, initData, assertWriteFail, {depth: 1}, {a: 'b'},
-        this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(testPath, initData, assertWriteFail, {depth: 1}, {a: 'b'},
+        this, {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
 
     function testWriteNullData() {
@@ -124,8 +123,8 @@
         asyncContinue();
       };
 
-      fs.write(file, null, assertWriteNull, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(file, null, assertWriteNull, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
 
     function testReadFile() {
@@ -143,17 +142,17 @@
       var assertRead = function(errors, content) {
         assertFalse('No errors?', errors.hasRequest());
         logger.config(content);
-        fs.read('/foo/bar.txt', assertFileNotFound, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().read('/foo/bar.txt', assertFileNotFound, null, null, this,
+          {xhrId: testId + '#read2'}, goog.partial(xhrLogging, logger));
       };
 
       var callbackWrite = function(errors, newLoc) {
-        fs.read(file, assertRead, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().read(file, assertRead, null, null, this,
+          {xhrId: testId + '#read1'}, goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackWrite, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(file, initData, callbackWrite, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
   </script>
 </body>

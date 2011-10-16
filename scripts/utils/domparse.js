@@ -4,9 +4,9 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.utils.domparse');
-goog.require('xhrdav.lib.DomParser');
-goog.require('xhrdav.lib.DomHandler');
+goog.provide('xhrdav.utils.domparse');
+goog.require('xhrdav.parser.DomParser');
+goog.require('xhrdav.parser.DomHandler');
 
 /**
  * Parse WebDAV Multi-Status to row structure by Dom parser
@@ -14,11 +14,11 @@ goog.require('xhrdav.lib.DomHandler');
  * @param {Object} xml WebDAV Multi-Status collections
  * @return {Object} converted multistatus object(Associate array)
  */
-xhrdav.lib.utils.domparse.parseXml = function(xml) {
-  var handler = new xhrdav.lib.DomHandler();
+xhrdav.utils.domparse.parseXml = function(xml) {
+  var handler = new xhrdav.parser.DomHandler();
   var parser, obj;
   try {
-    parser = new xhrdav.lib.DomParser().initialize(xml, handler).parse();
+    parser = new xhrdav.parser.DomParser().initialize(xml, handler).parse();
   } catch(e) {
     // TODO: [Replace goog.debug.Logger]
     console.log("Error: " + e.message);
@@ -31,7 +31,7 @@ xhrdav.lib.utils.domparse.parseXml = function(xml) {
 };
 
 /* Entry Point for closure compiler */
-goog.exportSymbol('xhrdav.lib.utils.domparse', xhrdav.lib.utils.domparse);
-goog.exportSymbol('xhrdav.lib.utils.domparse.parseXml',
-  xhrdav.lib.utils.domparse.parseXml);
+goog.exportSymbol('xhrdav.utils.domparse', xhrdav.utils.domparse);
+goog.exportSymbol('xhrdav.utils.domparse.parseXml',
+  xhrdav.utils.domparse.parseXml);
 

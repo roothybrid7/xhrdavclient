@@ -4,6 +4,6 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.utils');
-goog.require('xhrdav.lib.utils.domparse');
-goog.require('xhrdav.lib.utils.path');
+goog.provide('xhrdav.utils');
+goog.require('xhrdav.utils.domparse');
+goog.require('xhrdav.utils.path');

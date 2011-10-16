@@ -22,8 +22,8 @@
     goog.require('goog.net.XhrIo');
     goog.require('goog.dom.xml');
     goog.require('goog.ds.JsDataSource');
-    goog.require('xhrdav.lib.utils.domparse');
-    goog.require('xhrdav.lib.DomParser');
+    goog.require('xhrdav.utils.domparse');
+    goog.require('xhrdav.parser.DomParser');
   </script>
 </head>
 <body>
@@ -42,7 +42,7 @@
     loadJson('../fixtures/multistatus_currentdir.js');
 
     function setUp() {
-      func = xhrdav.lib.utils.domparse;
+      func = xhrdav.utils.domparse;
       initData = goog.dom.xml.loadXml(
         fixtureData['xml'].split('\n').join(''));
     }

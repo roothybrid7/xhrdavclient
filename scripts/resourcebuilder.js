@@ -4,24 +4,24 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.ResourceBuilder');
-goog.require('xhrdav.lib.Config');
-goog.require('xhrdav.lib.Resource');
-goog.require('xhrdav.lib.ResourceController');
+goog.provide('xhrdav.ResourceBuilder');
+goog.require('xhrdav.Conf');
+goog.require('xhrdav.ResourceController');
+
 
 /**
  * xhrdavclient resource object
  *
  * @constructor
  */
-xhrdav.lib.ResourceBuilder = function() {
+xhrdav.ResourceBuilder = function() {
   /** @type {Object} */
   this.rawData_ = null;
 
   /**
-   * @type {{root:xhrdav.lib.ResourceController,
-   *          childs:Array.<xhrdav.lib.ResourceController}}
-   * @see xhrdav.lib.ResourceController
+   * @type {{root:xhrdav.ResourceController,
+   *          childs:Array.<xhrdav.ResourceController}}
+   * @see xhrdav.ResourceController
    */
   this.resources_ = null;
 };
@@ -30,10 +30,10 @@ xhrdav.lib.ResourceBuilder = function() {
  * Create Resource and returning builder
  *
  * @param {Object} rawObj Converted WebDAV resoruce json/hash object.
- * @return {xhrdav.lib.ResourceBuilder}
+ * @return {xhrdav.ResourceBuilder}
  */
-xhrdav.lib.ResourceBuilder.createCollection = function(rawObj) {
-  var builder = new xhrdav.lib.ResourceBuilder();
+xhrdav.ResourceBuilder.createCollection = function(rawObj) {
+  var builder = new xhrdav.ResourceBuilder();
 
   builder.rawData_ = rawObj;
   builder.convertRaw2Models();
@@ -44,7 +44,7 @@ xhrdav.lib.ResourceBuilder.createCollection = function(rawObj) {
 /**
  * Convert raw data to model objects.
  */
-xhrdav.lib.ResourceBuilder.prototype.convertRaw2Models = function() {
+xhrdav.ResourceBuilder.prototype.convertRaw2Models = function() {
   if (!goog.isDefAndNotNull(this.rawData_.D$response)) return;
 
   var resp;
@@ -56,10 +56,10 @@ xhrdav.lib.ResourceBuilder.prototype.convertRaw2Models = function() {
   // get properties from respnse data
   var resList = [];
   goog.array.forEach(resp, function(val, key) {
-    var res = new xhrdav.lib.ResourceController();
+    var res = new xhrdav.ResourceController();
 
     res.href = val.D$href.$t;
-    res.pathlist = xhrdav.lib.utils.path.split(res.href);
+    res.pathlist = xhrdav.utils.path.split(res.href);
     if (goog.string.startsWith(
       res.pathlist[res.pathlist.length - 1], '.')) return;  // Skip dot file.
 
@@ -124,10 +124,10 @@ xhrdav.lib.ResourceBuilder.prototype.convertRaw2Models = function() {
  * Building tree from response data
  *
  * @private
- * @param {Array.<xhrdav.lib.ResourceController>} resList
- * @see xhrdav.lib.ResourceController
+ * @param {Array.<xhrdav.ResourceController>} resList
+ * @see xhrdav.ResourceController
  */
-xhrdav.lib.ResourceBuilder.prototype.buildTree_ = function(resList) {
+xhrdav.ResourceBuilder.prototype.buildTree_ = function(resList) {
   goog.array.stableSort(resList, function(obj1, obj2) {
     return (obj1.pathlist.length - obj2.pathlist.length);
   });
@@ -142,30 +142,30 @@ xhrdav.lib.ResourceBuilder.prototype.buildTree_ = function(resList) {
  *
  * @return {Object}
  */
-xhrdav.lib.ResourceBuilder.prototype.getRawData = function() {
+xhrdav.ResourceBuilder.prototype.getRawData = function() {
   return this.rawData_;
 };
 
 /**
  * Getter resources
  *
- * @return {{root:xhrdav.lib.ResourceController,
- *          childs:Array.<xhrdav.lib.ResourceController}}
- * @see xhrdav.lib.ResourceController
+ * @return {{root:xhrdav.ResourceController,
+ *          childs:Array.<xhrdav.ResourceController}}
+ * @see xhrdav.ResourceController
  */
-xhrdav.lib.ResourceBuilder.prototype.getResources = function() {
+xhrdav.ResourceBuilder.prototype.getResources = function() {
   return this.resources_;
 };
 
 /**
  * Serialize resources [Class method]
  *
- * @param {{root:xhrdav.lib.ResourceController,
- *          childs:Array.<xhrdav.lib.ResourceController}} resources
- * @param {boolean} asModel TRUE: xhrdav.lib.Resource FALSE: {}
- * @return {{root:xhrdav.lib.Resource, childs:Array.<xhrdav.lib.Resource}}
+ * @param {{root:xhrdav.ResourceController,
+ *          childs:Array.<xhrdav.ResourceController}} resources
+ * @param {boolean} asModel TRUE: xhrdav.Resource FALSE: {}
+ * @return {{root:xhrdav.Resource, childs:Array.<xhrdav.Resource}}
  */
-xhrdav.lib.ResourceBuilder.serialize = function(resources, asModel) {
+xhrdav.ResourceBuilder.serialize = function(resources, asModel) {
   var serializedResources = {};
 
   var root = resources.root;
@@ -182,28 +182,29 @@ xhrdav.lib.ResourceBuilder.serialize = function(resources, asModel) {
 /**
  * Serialize resources
  *
- * @param {boolean} asModel TRUE: xhrdav.lib.Resource FALSE: {}
- * @return {{root:xhrdav.lib.Resource, childs:Array.<xhrdav.lib.Resource}}
- * @see xhrdav.lib.ResourceBuilder.serialize
+ * @param {boolean} asModel TRUE: xhrdav.Resource FALSE: {}
+ * @return {{root:xhrdav.Resource, childs:Array.<xhrdav.Resource}}
+ * @see xhrdav.ResourceBuilder.serialize
  */
-xhrdav.lib.ResourceBuilder.prototype.serialize = function(asModel) {
-  return xhrdav.lib.ResourceBuilder.serialize(this.getResources(), asModel);
+xhrdav.ResourceBuilder.prototype.serialize = function(asModel) {
+  return xhrdav.ResourceBuilder.serialize(this.getResources(), asModel);
 };
 
+
 /* Entry point for closure compiler */
-goog.exportSymbol('xhrdav.lib.ResourceBuilder', xhrdav.lib.ResourceBuilder);
-goog.exportSymbol('xhrdav.lib.ResourceBuilder.createCollection',
-  xhrdav.lib.ResourceBuilder.createCollection);
-goog.exportProperty(xhrdav.lib.ResourceBuilder.prototype, 'convertRaw2Models',
-  xhrdav.lib.ResourceBuilder.prototype.convertRaw2Models);
-goog.exportProperty(xhrdav.lib.ResourceBuilder.prototype, 'getRawData',
-  xhrdav.lib.ResourceBuilder.prototype.getRawData);
-goog.exportProperty(xhrdav.lib.ResourceBuilder.prototype, 'getResources',
-  xhrdav.lib.ResourceBuilder.prototype.getResources);
-goog.exportSymbol('xhrdav.lib.ResourceBuilder.serialize',
-  xhrdav.lib.ResourceBuilder.serialize);
-goog.exportProperty(xhrdav.lib.ResourceBuilder.prototype, 'serialize',
-  xhrdav.lib.ResourceBuilder.prototype.serialize);
+goog.exportSymbol('xhrdav.ResourceBuilder', xhrdav.ResourceBuilder);
+goog.exportSymbol('xhrdav.ResourceBuilder.createCollection',
+  xhrdav.ResourceBuilder.createCollection);
+goog.exportProperty(xhrdav.ResourceBuilder.prototype, 'convertRaw2Models',
+  xhrdav.ResourceBuilder.prototype.convertRaw2Models);
+goog.exportProperty(xhrdav.ResourceBuilder.prototype, 'getRawData',
+  xhrdav.ResourceBuilder.prototype.getRawData);
+goog.exportProperty(xhrdav.ResourceBuilder.prototype, 'getResources',
+  xhrdav.ResourceBuilder.prototype.getResources);
+goog.exportSymbol('xhrdav.ResourceBuilder.serialize',
+  xhrdav.ResourceBuilder.serialize);
+goog.exportProperty(xhrdav.ResourceBuilder.prototype, 'serialize',
+  xhrdav.ResourceBuilder.prototype.serialize);
 
 /*
   Structure raw data:

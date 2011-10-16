@@ -6,7 +6,7 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.Errors');
+goog.provide('xhrdav.Errors');
 goog.require('goog.array');
 goog.require('goog.object');
 goog.require('goog.json');
@@ -23,7 +23,7 @@ goog.require('goog.json');
  *
  * @constructor
  */
-xhrdav.lib.Errors = function() {
+xhrdav.Errors = function() {
   /** @type {Object} */
   this.request = {};
   /** @type {Array.<Object>} */
@@ -35,7 +35,7 @@ xhrdav.lib.Errors = function() {
  *
  * @return {boolean} has request error.
  */
-xhrdav.lib.Errors.prototype.hasRequest = function() {
+xhrdav.Errors.prototype.hasRequest = function() {
   return !goog.object.isEmpty(this.request);
 };
 
@@ -44,17 +44,17 @@ xhrdav.lib.Errors.prototype.hasRequest = function() {
  *
  * @return {boolean} has request error.
  */
-xhrdav.lib.Errors.prototype.hasProps = function() {
+xhrdav.Errors.prototype.hasProps = function() {
   return !goog.array.isEmpty(this.props);
 };
 
 /**
  * Serialize errors object.
  *
- * @param {xhrdav.lib.Errors} errs Errors object.
+ * @param {xhrdav.Errors} errs Errors object.
  * @return {Object} serialized object(associated array).
  */
-xhrdav.lib.Errors.serialize = function(errs) {
+xhrdav.Errors.serialize = function(errs) {
 //  return {request: errs.request(), props: errs.props()};
   return goog.json.parse(goog.json.serialize(errs));
 };
@@ -64,15 +64,15 @@ xhrdav.lib.Errors.serialize = function(errs) {
  *
  * @return {Object} serialized object(associated array).
  */
-xhrdav.lib.Errors.prototype.serialize = function() {
-//  return xhrdav.lib.Errors.serialize(this);
+xhrdav.Errors.prototype.serialize = function() {
+//  return xhrdav.Errors.serialize(this);
   return goog.json.parse(goog.json.serialize(this));
 };
 
 /**
  * Clear all errors.
  */
-xhrdav.lib.Errors.prototype.clear = function() {
+xhrdav.Errors.prototype.clear = function() {
   goog.object.clear(this.request);
   goog.array.clear(this.props);
 };
@@ -86,7 +86,7 @@ xhrdav.lib.Errors.prototype.clear = function() {
  *
  * @param {Object=} requestErr Request error object(associate array).
  */
-xhrdav.lib.Errors.prototype.setRequest = function(requestErr) {
+xhrdav.Errors.prototype.setRequest = function(requestErr) {
   if (goog.object.getCount(requestErr) > 0) this.request = requestErr;
 };
 
@@ -99,25 +99,25 @@ xhrdav.lib.Errors.prototype.setRequest = function(requestErr) {
  *
  * @param {Object} propsErr property error.
  */
-xhrdav.lib.Errors.prototype.addProps = function(propsErr) {
+xhrdav.Errors.prototype.addProps = function(propsErr) {
   if (goog.object.getCount(propsErr) > 0) {
     goog.array.extend(this.props, propsErr);
   }
 };
 
 /* Entry point for closure compiler */
-goog.exportSymbol('xhrdav.lib.Errors', xhrdav.lib.Errors);
-goog.exportProperty(xhrdav.lib.Errors.prototype, 'hasRequest',
-  xhrdav.lib.Errors.prototype.hasRequest);
-goog.exportProperty(xhrdav.lib.Errors.prototype, 'hasProps',
-  xhrdav.lib.Errors.prototype.hasProps);
-goog.exportSymbol('xhrdav.lib.Errors.serialize', xhrdav.lib.Errors.serialize);
-goog.exportProperty(xhrdav.lib.Errors.prototype, 'serialize',
-  xhrdav.lib.Errors.prototype.serialize);
-goog.exportProperty(xhrdav.lib.Errors.prototype, 'clear',
-  xhrdav.lib.Errors.prototype.clear);
-goog.exportProperty(xhrdav.lib.Errors.prototype, 'setRequest',
-  xhrdav.lib.Errors.prototype.setRequest);
-goog.exportProperty(xhrdav.lib.Errors.prototype, 'addProps',
-  xhrdav.lib.Errors.prototype.addProps);
+goog.exportSymbol('xhrdav.Errors', xhrdav.Errors);
+goog.exportProperty(xhrdav.Errors.prototype, 'hasRequest',
+  xhrdav.Errors.prototype.hasRequest);
+goog.exportProperty(xhrdav.Errors.prototype, 'hasProps',
+  xhrdav.Errors.prototype.hasProps);
+goog.exportSymbol('xhrdav.Errors.serialize', xhrdav.Errors.serialize);
+goog.exportProperty(xhrdav.Errors.prototype, 'serialize',
+  xhrdav.Errors.prototype.serialize);
+goog.exportProperty(xhrdav.Errors.prototype, 'clear',
+  xhrdav.Errors.prototype.clear);
+goog.exportProperty(xhrdav.Errors.prototype, 'setRequest',
+  xhrdav.Errors.prototype.setRequest);
+goog.exportProperty(xhrdav.Errors.prototype, 'addProps',
+  xhrdav.Errors.prototype.addProps);
 

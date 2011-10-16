@@ -14,8 +14,8 @@
     goog.require('goog.net.XhrManager');
     goog.require('goog.net.XhrIo');
     goog.require('goog.dom.xml');
-    goog.require('xhrdav.lib.DavFs');
-    goog.require('xhrdav.lib.ResourceBuilder');
+    goog.require('xhrdav.DavFs');
+    goog.require('xhrdav.ResourceBuilder');
 
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
@@ -25,10 +25,10 @@
   <script type="text/javascript">
     var davDir = '/mydav/';
 
-    var davFs = xhrdav.lib.DavFs.getInstance().initialize();
-    var dav = new xhrdav.lib.Client();
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var bldKls = xhrdav.lib.ResourceBuilder;
+    var davFs = xhrdav.DavFs.getInstance().initialize();
+    var dav = new xhrdav.Client();
+    var httpStatus = xhrdav.HttpStatus;
+    var bldKls = xhrdav.ResourceBuilder;
 
     var multiCurrJs = '../fixtures/multistatusCurrentDirParseRaw.js';
     var multiOnlyJs = '../fixtures/multistatusDironlyParseRaw.js';

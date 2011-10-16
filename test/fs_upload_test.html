@@ -16,7 +16,7 @@
     goog.require('goog.object');
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.DavFs');
+    goog.require('xhrdav.DavFs');
     goog.require('goog.array');
   </script>
 </head>
@@ -33,10 +33,10 @@
     var parentDir = '/mydav/uploadTestDir/';
     var file = goog.string.path.normalizePath(
       goog.string.path.join(parentDir, 'testwebdav.txt'));
-    var dav = new xhrdav.lib.Client();
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var httpStatusText = xhrdav.lib.HttpStatus.text;
-    var fs = xhrdav.lib.DavFs.getInstance();
+    var dav = new xhrdav.Client();
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
+    var fs = xhrdav.DavFs.getInstance();
 
     function setUp() {
       initData = 'This is a WebDAV Test.';
@@ -65,8 +65,8 @@
       };
 
       asyncTestCase.waitForAsync(testId);
-      fs.upload(file, initData, assertUploadFile, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().upload(file, initData, assertUploadFile, null, null, this,
+        {xhrId: testId + '#upload'}, goog.partial(xhrLogging, logger));
     }
 
     function testUploadMissingPath() {
@@ -87,8 +87,8 @@
       };
 
       asyncTestCase.waitForAsync(testId);
-      fs.upload(dummyPath, initData, assertUploadFileFail, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().upload(dummyPath, initData, assertUploadFileFail, null, null, this,
+        {xhrId: testId + '#upload'}, goog.partial(xhrLogging, logger));
     }
 
     function testUploadUndefinedData() {
@@ -105,8 +105,8 @@
       };
 
       asyncTestCase.waitForAsync(testId);
-      fs.upload(file, undefined, assertUploadFileUndefined, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().upload(file, undefined, assertUploadFileUndefined, null, null, this,
+        {xhrId: testId + '#upload'}, goog.partial(xhrLogging, logger));
     }
   </script>
 </body>
