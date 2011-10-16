@@ -14,7 +14,7 @@
     goog.require('goog.debug.Logger');
     goog.require('goog.json');
 
-    goog.require('xhrdav.lib.Client');
+    goog.require('xhrdav.Client');
   </script>
   <script type="text/javascript">
     goog.debug.Console.autoInstall();
@@ -24,10 +24,10 @@
       var testId = 'CreateInstance';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var dav = new xhrdav.lib.Client();
+      var dav = new xhrdav.Client();
       assertNotNullNorUndefined('Create instance?', dav);
       var opt_uri = {scheme: 'https', domain: 'example.com', port:443};
-      var davWithOpt = new xhrdav.lib.Client(opt_uri);
+      var davWithOpt = new xhrdav.Client(opt_uri);
       assertNotNullNorUndefined('Create instance with options?', davWithOpt);
       logger.config(goog.json.serialize(davWithOpt));
     }

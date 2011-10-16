@@ -17,8 +17,8 @@
     goog.require('goog.object');
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.Client');
-    goog.require('xhrdav.lib.HttpStatus');
+    goog.require('xhrdav.Client');
+    goog.require('xhrdav.HttpStatus');
   </script>
   <script type="text/javascript">
     goog.debug.Console.autoInstall();
@@ -35,10 +35,10 @@
     var parentDir = '/mydav/parentforfile/';
     var file = goog.string.path.normalizePath(
       goog.string.path.join(parentDir, 'testwebdav.txt'));
-    var dav = new xhrdav.lib.Client();
+    var dav = new xhrdav.Client();
     var xmgr = new goog.net.XhrManager();
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var httpStatusText = xhrdav.lib.HttpStatus.text;
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
 
     function setUp() {
       initData = 'This is a WebDAV Test.';

@@ -16,7 +16,7 @@
     goog.require('goog.object');
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.DavFs');
+    goog.require('xhrdav.DavFs');
     goog.require('goog.array');
   </script>
 </head>
@@ -38,10 +38,10 @@
 
     var file = goog.string.path.normalizePath(
       goog.string.path.join(parentDir, 'testwebdav.txt'));
-    var dav = new xhrdav.lib.Client();
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var httpStatusText = xhrdav.lib.HttpStatus.text;
-    var fs = xhrdav.lib.DavFs.getInstance();
+    var dav = new xhrdav.Client();
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
+    var fs = xhrdav.DavFs.getInstance();
 
 
     function setUp() {
@@ -89,7 +89,7 @@
       asyncTestCase.waitForAsync(testId);
 
       var assertWriteFail = function(errors, newLoc) {
-        assertTrue('xhrdav.lib.Errors?', errors instanceof xhrdav.lib.Errors);
+        assertTrue('xhrdav.Errors?', errors instanceof xhrdav.Errors);
         assertTrue('No request Error?', errors.hasRequest());
         logger.config(goog.debug.expose(errors.request));
         assertFalse('Occured request errors?',

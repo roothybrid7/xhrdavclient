@@ -16,8 +16,8 @@
     goog.require('goog.async.ConditionalDelay');
 
     goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.Client');
-    goog.require('xhrdav.lib.HttpStatus');
+    goog.require('xhrdav.Client');
+    goog.require('xhrdav.HttpStatus');
     goog.require('goog.crypt.base64');
   </script>
   <script type="text/javascript">
@@ -32,10 +32,10 @@
     };
 
     var parentDir = '/mydav/DirClientTest2/';
-    var dav = new xhrdav.lib.Client();
+    var dav = new xhrdav.Client();
     var xmgr = new goog.net.XhrManager();
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var httpStatusText = xhrdav.lib.HttpStatus.text;
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
 
     function setUp() {
       asyncTestCase.waitForAsync('setUp');

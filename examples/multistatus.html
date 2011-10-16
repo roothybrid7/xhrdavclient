@@ -15,8 +15,8 @@
 -->
   <script type="text/javascript">
     goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.Client');
-    goog.require('xhrdav.lib.HttpStatus');
+    goog.require('xhrdav.Client');
+    goog.require('xhrdav.HttpStatus');
     goog.require('goog.dom.xml');
 
     goog.require('goog.debug.Console');
@@ -24,9 +24,9 @@
   </script>
   <script type="text/javascript">
     var dir = '/mydav/'
-    var dav = new xhrdav.lib.Client();
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var httpStatusText = xhrdav.lib.HttpStatus.text;
+    var dav = new xhrdav.Client();
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
 
     var uploadHandler = function(filename, statusCode, content, headers) {
 //      console.log(content instanceof Document);

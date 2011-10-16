@@ -15,10 +15,10 @@
     goog.require('goog.debug.Logger');
 
     goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.Client');
-    goog.require('xhrdav.lib.HttpStatus');
-    goog.require('xhrdav.lib.ResourceController');
-    goog.require('xhrdav.lib.DavFs');
+    goog.require('xhrdav.Client');
+    goog.require('xhrdav.HttpStatus');
+    goog.require('xhrdav.ResourceController');
+    goog.require('xhrdav.DavFs');
   </script>
   <script type="text/javascript">
     goog.debug.Console.autoInstall();
@@ -31,7 +31,7 @@
       asyncTestCase.continueTesting();
     };
 
-    var davFs = xhrdav.lib.DavFs.getInstance();
+    var davFs = xhrdav.DavFs.getInstance();
 
     var initDirOnlyData, initCurrDirData;
     // Load fixture by jsonp
@@ -60,7 +60,7 @@
       var testId = 'CreateController';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var controller = new xhrdav.lib.ResourceController();
+      var controller = new xhrdav.ResourceController();
       assertNotNullNorUndefined('Create Instance?', controller);
     }
 
@@ -68,8 +68,8 @@
       var testId = 'CreateWithMixinResource';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var controller = new xhrdav.lib.ResourceController(
-        new xhrdav.lib.Resource());
+      var controller = new xhrdav.ResourceController(
+        new xhrdav.Resource());
       assertNotUndefined('Define resource property: href?', controller.href);
     }
 
@@ -77,8 +77,8 @@
       var testId = 'DestinationDir';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var controller = new xhrdav.lib.ResourceController(
-        new xhrdav.lib.Resource());
+      var controller = new xhrdav.ResourceController(
+        new xhrdav.Resource());
       assertTrue('Destination is empty?',
         goog.string.isEmptySafe(controller.getDestination()));
       var destPath ='/mydav/parentGen/bar';
@@ -91,7 +91,7 @@
       var testId = 'SupportMethod';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var genKlass = xhrdav.lib.ResourceController;
+      var genKlass = xhrdav.ResourceController;
       var controller = new genKlass();
       assertNotUndefined('Define method remove?', controller.remove);
       assertNotUndefined('Define method copy?', controller.copy);
@@ -103,13 +103,13 @@
       var testId = 'Serialize';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var genKlass = xhrdav.lib.ResourceController;
+      var genKlass = xhrdav.ResourceController;
       var controller = new genKlass();
       controller.href = '/foo/bar/';
       controller.status = 'HTTP/1.1 200 OK';
       var resSerialize = controller.serialize();
-      assertFalse('same xhrdav.lib.Resource?',
-        resSerialize instanceof xhrdav.lib.Resource);
+      assertFalse('same xhrdav.Resource?',
+        resSerialize instanceof xhrdav.Resource);
       logger.config(goog.json.serialize(resSerialize));
       assertEquals('href is same?', controller.href, resSerialize.href);
       assertEquals('status is same?', controller.status, resSerialize.status);
@@ -119,13 +119,13 @@
       var testId = 'SerializeWithClassbase';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var genKlass = xhrdav.lib.ResourceController;
+      var genKlass = xhrdav.ResourceController;
       var controller = new genKlass();
       controller.href = '/foo/bar/';
       controller.status = 'HTTP/1.1 200 OK';
       var resSerializeKls = controller.serialize(true);
-      assertTrue('same xhrdav.lib.Resource?',
-        resSerializeKls instanceof xhrdav.lib.Resource);
+      assertTrue('same xhrdav.Resource?',
+        resSerializeKls instanceof xhrdav.Resource);
       logger.config(goog.json.serialize(resSerializeKls));
       assertEquals('href is same?', controller.href, resSerializeKls.href);
       assertEquals('status is same?', controller.status, resSerializeKls.status);
@@ -135,13 +135,13 @@
       var testId = 'SerializeResource2Object';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var genKlass = xhrdav.lib.ResourceController;
-      var resource = new xhrdav.lib.Resource();
+      var genKlass = xhrdav.ResourceController;
+      var resource = new xhrdav.Resource();
       resource.href = '/foo/bar/';
       resource.status = 'HTTP/1.1 200 OK';
       var resSerialize = genKlass.serialize(resource);
-      assertFalse('same xhrdav.lib.Resource?',
-        resSerialize instanceof xhrdav.lib.Resource);
+      assertFalse('same xhrdav.Resource?',
+        resSerialize instanceof xhrdav.Resource);
       logger.config(goog.json.serialize(resSerialize));
       assertEquals('href is same?', resource.href, resSerialize.href);
       assertEquals('status is same?', resource.status, resSerialize.status);
@@ -151,8 +151,8 @@
       var testId = 'Load';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var genKlass = xhrdav.lib.ResourceController;
-      var resource = new xhrdav.lib.Resource();
+      var genKlass = xhrdav.ResourceController;
+      var resource = new xhrdav.Resource();
       resource.href = '/foo/bar/';
       resource.status = 'HTTP/1.1 200 OK';
       var controller = new genKlass(resource);
@@ -163,7 +163,7 @@
     function testSetRequest() {
       var testId = 'testSetRequest';
 
-      var ctrl = new xhrdav.lib.ResourceController();
+      var ctrl = new xhrdav.ResourceController();
       var req = davFs.getRequest();
       ctrl.setRequest(req);
       assertEquals('Same Request object?', req, ctrl.request_);

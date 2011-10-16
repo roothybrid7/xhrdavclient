@@ -15,10 +15,10 @@
     goog.require('goog.debug.Logger');
 
 //    goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.Client');
-    goog.require('xhrdav.lib.DavFs');
-    goog.require('xhrdav.lib.HttpStatus');
-    goog.require('xhrdav.lib.ResourceController');
+    goog.require('xhrdav.Client');
+    goog.require('xhrdav.DavFs');
+    goog.require('xhrdav.HttpStatus');
+    goog.require('xhrdav.ResourceController');
   </script>
   <script type="text/javascript">
     goog.debug.Console.autoInstall();
@@ -31,8 +31,8 @@
       asyncTestCase.continueTesting();
     };
 
-    var dav = new xhrdav.lib.Client();
-    var davFs = xhrdav.lib.DavFs.getInstance();
+    var dav = new xhrdav.Client();
+    var davFs = xhrdav.DavFs.getInstance();
     var parentDir = '/mydav/parentCtrl/';
     var childDir = '/mydav/parentCtrl/child/';
 

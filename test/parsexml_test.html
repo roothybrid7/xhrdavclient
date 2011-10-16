@@ -20,8 +20,8 @@
     goog.require('goog.net.XhrIo');
     goog.require('goog.dom.xml');
     goog.require('goog.ds.JsDataSource');
-    goog.require('xhrdav.lib.DomParser');
-    goog.require('xhrdav.lib.DomHandler');
+    goog.require('xhrdav.parser.DomParser');
+    goog.require('xhrdav.parser.DomHandler');
   </script>
 </head>
 <body>
@@ -50,16 +50,16 @@
     function testParseNullOrEmpty() {
       var testId = 'ParseNullOrEmpty';
       var logger = goog.debug.Logger.getLogger(testId);
-      var handler = new xhrdav.lib.DomHandler();
+      var handler = new xhrdav.parser.DomHandler();
       var parser;
       try {
-        parser = new xhrdav.lib.DomParser().initialize(null, handler).parse();
+        parser = new xhrdav.parser.DomParser().initialize(null, handler).parse();
       } catch(e) {
         assertNotNullNorUndefined('Error object?', e);
         assertEquals('Error message?', 'Xml document is NOT GIVEN!!', e.message);
       }
       try {
-        parser = new xhrdav.lib.DomParser().initialize('', handler).parse();
+        parser = new xhrdav.parser.DomParser().initialize('', handler).parse();
       } catch(e) {
         assertNotNullNorUndefined('Error object?', e);
         assertEquals('Error message?', 'Xml document is NOT GIVEN!!', e.message);
@@ -70,7 +70,7 @@
       var logger = goog.debug.Logger.getLogger('HandlerNull()');
       var handler = null;
       try {
-      var parser = new xhrdav.lib.DomParser().initialize(initData, handler).parse();
+      var parser = new xhrdav.parser.DomParser().initialize(initData, handler).parse();
       } catch(e) {
         assertNotNullNorUndefined('Error object?', e);
         assertEquals('Error message?', 'Parse handler is NOT GIVEN!!', e.message);
@@ -80,10 +80,10 @@
 
     function testParseXmlForMultiStatus() {
       var logger = goog.debug.Logger.getLogger('ParseXmlForMultiStatus()');
-      var handler = new xhrdav.lib.DomHandler();
+      var handler = new xhrdav.parser.DomHandler();
       var parser, obj;
       try {
-        parser = new xhrdav.lib.DomParser().initialize(initData, handler).parse();
+        parser = new xhrdav.parser.DomParser().initialize(initData, handler).parse();
       } catch(e) {
       } finally {
         obj = handler.getObject();
@@ -97,7 +97,7 @@
 //     logger.config(goog.typeOf(nodeList));
 //     logger.config(nodeList[0].nodeType);
 //      logger.config(goog.debug.deepExpose(obj));
-//      var myObj = xhrdav.lib.DomParser.xml2Obj(doc);
+//      var myObj = xhrdav.parser.DomParser.xml2Obj(doc);
 //      logger.config(goog.debug.deepExpose(myObj));
 //      var ds = new goog.ds.JsDataSource(myObj);
 //      logger.config(ds.getChildNodes().getCount());

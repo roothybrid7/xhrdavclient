@@ -16,7 +16,7 @@
     goog.require('goog.object');
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.DavFs');
+    goog.require('xhrdav.DavFs');
     goog.require('goog.ds.JsDataSource');
     goog.require('goog.array');
   </script>
@@ -39,10 +39,10 @@
 
     var file = goog.string.path.normalizePath(
       goog.string.path.join(parentDir, 'testwebdav.txt'));
-    var dav = new xhrdav.lib.Client();
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var httpStatusText = xhrdav.lib.HttpStatus.text;
-    var fs = xhrdav.lib.DavFs.getInstance();
+    var dav = new xhrdav.Client();
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
+    var fs = xhrdav.DavFs.getInstance();
 
 
     function setUp() {

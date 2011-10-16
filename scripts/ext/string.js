@@ -4,7 +4,7 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.string');
+goog.provide('xhrdav.ext.string');
 goog.require('goog.array');
 goog.require('goog.functions');
 
@@ -13,7 +13,7 @@ goog.require('goog.functions');
  *
  * @enum {number}
  */
-xhrdav.lib.string.LetterType = {
+xhrdav.ext.string.LetterType = {
   LOWER: 0,
   UPPER: 1
 };
@@ -47,7 +47,7 @@ String.prototype.dasherize = function() {
  * Example:
  *   "foo_bar" #=> "FooBar"
  *   "foo" #=> "Foo"
- * options firstLetter: xhrdav.lib.string.LetterType.LOWER
+ * options firstLetter: xhrdav.ext.string.LetterType.LOWER
  *   "foo_bar" #=> "fooBar"
  *   "Foo" #=> "foo"
  * options with_dasherize: true
@@ -55,14 +55,14 @@ String.prototype.dasherize = function() {
  *   "location" #=> "Location"
  *   "Content-Type" #=> "Content-Type"
  *
- * @param {{firstLetter: xhrdav.lib.string.LetterType, with_dasherize: boolean}} options
+ * @param {{firstLetter: xhrdav.ext.string.LetterType, with_dasherize: boolean}} options
  *          ext options
  * @return {string} Camelized string.
- * @see xhrdav.lib.string.LetterType
+ * @see xhrdav.ext.string.LetterType
  */
 String.prototype.camelize = function(options) {
   var self = this;
-  var lType = xhrdav.lib.string.LetterType;
+  var lType = xhrdav.ext.string.LetterType;
   if (!goog.isDef(options)) options = {};
   if (!goog.isDefAndNotNull(options.firstLetter) || options.firstLetter > lType.UPPER) {
     options.firstLetter = lType.UPPER;
@@ -89,7 +89,7 @@ String.prototype.camelize = function(options) {
 };
 
 /* Entry point for closure compiler */
-goog.exportSymbol('xhrdav.lib.string.LetterType', xhrdav.lib.string.LetterType);
+goog.exportSymbol('xhrdav.ext.string.LetterType', xhrdav.ext.string.LetterType);
 goog.exportProperty(String.prototype, 'capitalize',
   String.prototype.capitalize);
 goog.exportProperty(String.prototype, 'dasherize',

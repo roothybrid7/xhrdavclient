@@ -14,7 +14,7 @@
     goog.require('goog.json');
     goog.require('goog.async.ConditionalDelay');
 
-    goog.require('xhrdav.lib.DavFs');
+    goog.require('xhrdav.DavFs');
   </script>
 </head>
 <body>
@@ -38,7 +38,7 @@
       var testId = 'CreateXhrManager';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var fs = xhrdav.lib.DavFs.getInstance();
+      var fs = xhrdav.DavFs.getInstance();
       assertNotNullNorUndefined('Get XhrManager Instance?', fs.xhrMgr_);
       assertTrue('Is a goog.net.XhrManger?', fs.xhrMgr_ instanceof goog.net.XhrManager);
     }
@@ -46,11 +46,11 @@
     function testAddConnection() {
       var testId = 'testAddConnection';
 
-      var fs = xhrdav.lib.DavFs.getInstance();
+      var fs = xhrdav.DavFs.getInstance();
       var davOpts = {scheme: 'https', domain: 'foo.com', port: 443};
       var conn = fs.getConnection();
-      assertTrue('Create xhrdav.lib.Client?',
-        conn instanceof xhrdav.lib.Client);
+      assertTrue('Create xhrdav.Client?',
+        conn instanceof xhrdav.Client);
 
       fs.addConnection(davOpts);
       var conn2 = fs.getConnection();
@@ -73,7 +73,7 @@
       var testId = 'testConnectionEmpty';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var fs = xhrdav.lib.DavFs.getInstance();
+      var fs = xhrdav.DavFs.getInstance();
       var conn = fs.getConnection(true);
       assertTrue('Invalid Connection by true?',
         goog.object.isEmpty(conn));
@@ -86,7 +86,7 @@
       var testId = 'ParseXmlSet';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var fs = xhrdav.lib.DavFs.getInstance();
+      var fs = xhrdav.DavFs.getInstance();
       var conn = fs.getConnection();
       assertTrue('Can ParseXml?', conn.canParseXml());
     }
@@ -95,7 +95,7 @@
       var testId = 'testReturningXhrMgr';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var fs = xhrdav.lib.DavFs.getInstance();
+      var fs = xhrdav.DavFs.getInstance();
       var mgr = fs.getXhrManager();
       assertTrue('goog.net.XhrManager?', mgr instanceof goog.net.XhrManager);
     }
@@ -104,7 +104,7 @@
       var testId = 'testSetXhrMgr';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var fs = xhrdav.lib.DavFs.getInstance();
+      var fs = xhrdav.DavFs.getInstance();
       var mgr = fs.getXhrManager();
       var newMgr = new goog.net.XhrManager();
       fs.setXhrManager(newMgr);
@@ -116,11 +116,11 @@
     function testCreateRequest() {
       var testId = 'testCreateRequest';
 
-      var fs = xhrdav.lib.DavFs.getInstance();
+      var fs = xhrdav.DavFs.getInstance();
       var req = fs.getRequest();
       assertNotNullNorUndefined('Create Request object?', req);
       assertTrue('instanceof Request?',
-        req instanceof xhrdav.lib.DavFs.Request);
+        req instanceof xhrdav.DavFs.Request);
       assertNotUndefined('listDir', req.listDir);
       assertNotUndefined('getProps', req.getProps);
       assertNotUndefined('mkDir', req.mkDir);
@@ -132,13 +132,13 @@
       assertNotUndefined('upload', req.upload);
       assertNotUndefined('exists', req.exists);
       assertNotUndefined('getListDirFromMultistatus',
-        xhrdav.lib.DavFs.Request.getListDirFromMultistatus);
+        xhrdav.DavFs.Request.getListDirFromMultistatus);
     }
 
     function testCreateRequestByXhrIo() {
       var testId = 'testCreateRequestByXhrIo';
 
-      var fs = xhrdav.lib.DavFs.getInstance();
+      var fs = xhrdav.DavFs.getInstance();
       var xhrIo = new goog.net.XhrIo();
       var req = fs.getRequest('default', xhrIo);
       assertEquals('Same xhrIo', xhrIo, req.xhrIo_);

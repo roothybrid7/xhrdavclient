@@ -5,19 +5,19 @@
  * This is a Manager of WebDAV and XHTTPRequest for File system.
  * and a High-level WebDAV client API for File system.
  * Path base request.
- * Resource base request: @see xhrdav.lib.ResourceController
+ * Resource base request: @see xhrdav.ResourceController
  *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.DavFs');
-goog.provide('xhrdav.lib.DavFs.Request');
+goog.provide('xhrdav.DavFs');
+goog.provide('xhrdav.DavFs.Request');
 goog.require('goog.net.XhrManager');
-goog.require('goog.Disposable');
-goog.require('xhrdav.lib.Config');
-goog.require('xhrdav.lib.Client');
-goog.require('xhrdav.lib.ResourceBuilder');
-goog.require('xhrdav.lib.ResourceController');
+goog.require('xhrdav.Conf');
+goog.require('xhrdav.Client');
+goog.require('xhrdav.Errors');
+goog.require('xhrdav.ResourceBuilder');
+goog.require('xhrdav.ResourceController');
 
 
 /**
@@ -25,27 +25,27 @@ goog.require('xhrdav.lib.ResourceController');
  *
  * @constructor
  */
-xhrdav.lib.DavFs = function() {
+xhrdav.DavFs = function() {
   /** @type {goog.net.XhrManager} */
   this.xhrMgr_ = null;
-  /** @type {Object.<string,xhrdav.lib.Client>} */
+  /** @type {Object.<string,xhrdav.Client>} */
   this.clients_ = {};
 
   this.initXhrMgr_();
   this.addConnection();
 };
-goog.addSingletonGetter(xhrdav.lib.DavFs);
+goog.addSingletonGetter(xhrdav.DavFs);
 
 /** @type {string} */
-xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME = 'default';
+xhrdav.DavFs.DEFAULT_DAV_SITE_NAME = 'default';
 
 /**
  *  Init XhrManager with config.
  *
  * @private
  */
-xhrdav.lib.DavFs.prototype.initXhrMgr_ = function() {
-  var config = xhrdav.lib.Config.getInstance();
+xhrdav.DavFs.prototype.initXhrMgr_ = function() {
+  var config = xhrdav.Conf.getInstance();
   var configXhrMgr = config.getXhrMgrConfig();
 
   if (goog.isDefAndNotNull(configXhrMgr) && !goog.object.isEmpty(configXhrMgr)) {
@@ -64,7 +64,7 @@ xhrdav.lib.DavFs.prototype.initXhrMgr_ = function() {
  * Get XhrManager of davfs for monitoring, progress, abort, etc.
  *
  * Example:
- *   var davFs = xhrdav.lib.DavFs.getInstance();
+ *   var davFs = xhrdav.DavFs.getInstance();
  *   var xhrMgr = davFs.getXhrManager();
  *
  *   var onComplete = function(file, e) {
@@ -86,7 +86,7 @@ xhrdav.lib.DavFs.prototype.initXhrMgr_ = function() {
  *
  * @return {goog.net.XhrManager}
  */
-xhrdav.lib.DavFs.prototype.getXhrManager = function() {
+xhrdav.DavFs.prototype.getXhrManager = function() {
   return this.xhrMgr_;
 };
 
@@ -96,7 +96,7 @@ xhrdav.lib.DavFs.prototype.getXhrManager = function() {
  * @param {goog.net.XhrManager} xhrMgr
  * @see goog.net.XhrManager
  */
-xhrdav.lib.DavFs.prototype.setXhrManager = function(xhrMgr) {
+xhrdav.DavFs.prototype.setXhrManager = function(xhrMgr) {
   if (xhrMgr && xhrMgr instanceof goog.net.XhrManager) {
     this.xhrMgr_ = xhrMgr;
   }
@@ -110,22 +110,22 @@ xhrdav.lib.DavFs.prototype.setXhrManager = function(xhrMgr) {
  *     davclient Parameters(opt_uri: scheme, domain, port)
  * @param {string} site Settings name of WebDAV site.
  */
-xhrdav.lib.DavFs.prototype.createClient_ = function(opt_uri, site) {
-  var config = xhrdav.lib.Config.getInstance();
-  var client = new xhrdav.lib.Client(opt_uri);
+xhrdav.DavFs.prototype.createClient_ = function(opt_uri, site) {
+  var config = xhrdav.Conf.getInstance();
+  var client = new xhrdav.Client(opt_uri);
   client.setXmlParseFunction(goog.getObjectByName(config.xmlParseFuncObj));
   goog.object.set(this.clients_, site, client);
 };
 
 /**
- * Get and Create Connection xhrdav.lib.Client.
+ * Get and Create Connection xhrdav.Client.
  *
  * @param {string=} opt_davSiteName  Any settings name of WebDAV site.
- * @return {xhrdav.lib.Client}
+ * @return {xhrdav.Client}
  */
-xhrdav.lib.DavFs.prototype.getConnection = function(opt_davSiteName) {
+xhrdav.DavFs.prototype.getConnection = function(opt_davSiteName) {
   if (goog.string.isEmptySafe(opt_davSiteName)) {
-    opt_davSiteName = xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME;
+    opt_davSiteName = xhrdav.DavFs.DEFAULT_DAV_SITE_NAME;
   }
   return this.clients_[opt_davSiteName];
 };
@@ -139,9 +139,9 @@ xhrdav.lib.DavFs.prototype.getConnection = function(opt_davSiteName) {
  *     davclient Parameters(opt_uri: scheme, domain, port)
  * @param {string=} opt_davSiteName  Any settings name of WebDAV site.
  */
-xhrdav.lib.DavFs.prototype.addConnection = function(opt_uri, opt_davSiteName) {
+xhrdav.DavFs.prototype.addConnection = function(opt_uri, opt_davSiteName) {
   if (goog.string.isEmptySafe(opt_davSiteName)) {
-    opt_davSiteName = xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME;
+    opt_davSiteName = xhrdav.DavFs.DEFAULT_DAV_SITE_NAME;
   }
   this.createClient_(opt_uri, opt_davSiteName);
 };
@@ -152,12 +152,12 @@ xhrdav.lib.DavFs.prototype.addConnection = function(opt_uri, opt_davSiteName) {
  * @param {string=} opt_davSiteName Any settings name of WebDAV site.
  * @param {(goog.net.XhrIo|goog.net.XhrManager)=} opt_xhrIo request object
  *     of closure library (For Cross-site resource sharing[CORS]).
- * @see xhrdav.lib.DavFs.Request
+ * @see xhrdav.DavFs.Request
  */
-xhrdav.lib.DavFs.prototype.getRequest = function(
+xhrdav.DavFs.prototype.getRequest = function(
   opt_davSiteName, opt_xhrIo) {
   if (goog.string.isEmptySafe(opt_davSiteName)) {
-    opt_davSiteName = xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME;
+    opt_davSiteName = xhrdav.DavFs.DEFAULT_DAV_SITE_NAME;
   }
   var davSite = this.getConnection(opt_davSiteName);
 
@@ -167,7 +167,7 @@ xhrdav.lib.DavFs.prototype.getRequest = function(
     opt_xhrIo = this.xhrMgr_;
   }
 
-  return new xhrdav.lib.DavFs.Request(davSite, opt_xhrIo);
+  return new xhrdav.DavFs.Request(davSite, opt_xhrIo);
 };
 
 
@@ -176,24 +176,15 @@ xhrdav.lib.DavFs.prototype.getRequest = function(
  *
  *
  * @constructor
- * @param {xhrdav.lib.Client} davSite WebDAV site.
+ * @param {xhrdav.Client} davSite WebDAV site.
  * @param {(goog.net.XhrIo|goog.net.XhrManager)} xhrIo request object
  *     of closure library (For Cross-site resource sharing[CORS]).
- * @extends {goog.Disposable}
  */
-xhrdav.lib.DavFs.Request = function(davSite, xhrIo) {
-  goog.Disposable.call(this);
-
-  /** @type {xhrdav.lib.Client} */
+xhrdav.DavFs.Request = function(davSite, xhrIo) {
+  /** @type {xhrdav.Client} */
   this.davSite_ = davSite;
   /** @type {(goog.net.XhrIo|goog.net.XhrManager)} */
   this.xhrIo_ = xhrIo;
-};
-goog.inherits(xhrdav.lib.DavFs.Request, goog.Disposable);
-
-/** @inheritDoc */
-xhrdav.lib.DavFs.Request.prototype.disposeInternal = function() {
-  xhrdav.lib.DavFs.Request.superClass_.disposeInternal.call(this);
 };
 
 /**
@@ -206,9 +197,9 @@ xhrdav.lib.DavFs.Request.prototype.disposeInternal = function() {
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
  */
-xhrdav.lib.DavFs.Request.prototype.responseHandler_ = function(
+xhrdav.DavFs.Request.prototype.responseHandler_ = function(
   handler, processHandler, path, context, statusCode, content, headers) {
-  var httpStatus = xhrdav.lib.HttpStatus;
+  var httpStatus = xhrdav.HttpStatus;
   var args = processHandler(path, statusCode, content, headers);
   if (goog.isDefAndNotNull(context) && goog.isObject(context)) {
     handler.apply(context, args);
@@ -225,14 +216,14 @@ xhrdav.lib.DavFs.Request.prototype.responseHandler_ = function(
  * @param {number} statusCode HTTP Status code.
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
- * @return {Array.<xhrdav.lib.Errors, string=>} Errors, new Location
- * @see xhrdav.lib.Errors
+ * @return {Array.<xhrdav.Errors, string=>} Errors, new Location
+ * @see xhrdav.Errors
  */
-xhrdav.lib.DavFs.Request.prototype.contentReadHandler_ = function(
+xhrdav.DavFs.Request.prototype.contentReadHandler_ = function(
   path, statusCode, content, headers) {
-  var config = xhrdav.lib.Config.getInstance();
-  var httpStatus = xhrdav.lib.HttpStatus;
-  var errors = new xhrdav.lib.Errors();
+  var config = xhrdav.Conf.getInstance();
+  var httpStatus = xhrdav.HttpStatus;
+  var errors = new xhrdav.Errors();
 
   var args = [];
   if (statusCode != httpStatus.OK) {
@@ -252,14 +243,14 @@ xhrdav.lib.DavFs.Request.prototype.contentReadHandler_ = function(
  * @param {number} statusCode HTTP Status code.
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
- * @return {Array.<xhrdav.lib.Errors, boolean>} Errors, new Location
- * @see xhrdav.lib.Errors
+ * @return {Array.<xhrdav.Errors, boolean>} Errors, new Location
+ * @see xhrdav.Errors
  */
-xhrdav.lib.DavFs.Request.prototype.existsHandler_ = function(
+xhrdav.DavFs.Request.prototype.existsHandler_ = function(
   path, statusCode, content, headers) {
-  var config = xhrdav.lib.Config.getInstance();
-  var httpStatus = xhrdav.lib.HttpStatus;
-  var errors = new xhrdav.lib.Errors();
+  var config = xhrdav.Conf.getInstance();
+  var httpStatus = xhrdav.HttpStatus;
+  var errors = new xhrdav.Errors();
 
   var args = [];
   if (!goog.array.contains(
@@ -281,14 +272,14 @@ xhrdav.lib.DavFs.Request.prototype.existsHandler_ = function(
  * @param {number} statusCode HTTP Status code.
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
- * @return {Array.<xhrdav.lib.Errors, string=>} Errors, new Location
- * @see xhrdav.lib.Errors
+ * @return {Array.<xhrdav.Errors, string=>} Errors, new Location
+ * @see xhrdav.Errors
  */
-xhrdav.lib.DavFs.Request.prototype.simpleErrorHandler_ = function(
+xhrdav.DavFs.Request.prototype.simpleErrorHandler_ = function(
   path, statusCode, content, headers) {
-  var config = xhrdav.lib.Config.getInstance();
-  var httpStatus = xhrdav.lib.HttpStatus;
-  var errors = new xhrdav.lib.Errors();
+  var config = xhrdav.Conf.getInstance();
+  var httpStatus = xhrdav.HttpStatus;
+  var errors = new xhrdav.Errors();
 
   var args = [];
   if (!goog.array.contains(
@@ -309,13 +300,13 @@ xhrdav.lib.DavFs.Request.prototype.simpleErrorHandler_ = function(
  *
  * @param {Object} content  multistatus response data.
  * @param {Object=} opt_helper Returning resource controller.
- * @return {(xhrdav.lib.Resource|xhrdav.lib.ResourceController|Object)}
+ * @return {(xhrdav.Resource|xhrdav.ResourceController|Object)}
  *         converted object for WebDAV resources.
- * @see xhrdav.lib.ResourceBuilder.createCollection
+ * @see xhrdav.ResourceBuilder.createCollection
  */
-xhrdav.lib.DavFs.Request.getListDirFromMultistatus = function(content, opt_helper) {
+xhrdav.DavFs.Request.getListDirFromMultistatus = function(content, opt_helper) {
   if (!goog.isDefAndNotNull(opt_helper)) opt_helper = {};
-  var builder = xhrdav.lib.ResourceBuilder.createCollection(content);
+  var builder = xhrdav.ResourceBuilder.createCollection(content);
   var resources;
   if (!!opt_helper.hasCtrl) {
     resources = builder.getResources();
@@ -334,7 +325,7 @@ xhrdav.lib.DavFs.Request.getListDirFromMultistatus = function(content, opt_helpe
 /**
  * Update(move, copy) request handler.
  *
- * @param {string} method Method name of xhrdav.lib.Client instance.
+ * @param {string} method Method name of xhrdav.Client instance.
  * @param {string} path Update src file path.
  * @param {string} dstPath Update destination path.
  * @param {Function} handler  callback handler function.
@@ -343,7 +334,7 @@ xhrdav.lib.DavFs.Request.getListDirFromMultistatus = function(content, opt_helpe
  * @param {Object=} context Callback scope.
  * @param {Function=} onXhrComplete onXhrComplete callback function
  */
-xhrdav.lib.DavFs.Request.prototype.updateRequestHandler_ = function(
+xhrdav.DavFs.Request.prototype.updateRequestHandler_ = function(
   method, path, dstPath, handler, opt_request, context, onXhrComplete) {
   var api = goog.getObjectByName(method, this.davSite_);
 
@@ -356,7 +347,7 @@ xhrdav.lib.DavFs.Request.prototype.updateRequestHandler_ = function(
 /**
  * Propfind request(listDir, getProps) handler.
  *
- * @param {string} method Method name of xhrdav.lib.Client instance.
+ * @param {string} method Method name of xhrdav.Client instance.
  * @param {string} path propfind request path.
  * @param {Function} handler  callback handler function.
  * @param {Object=} opt_headers Request headers options.
@@ -365,7 +356,7 @@ xhrdav.lib.DavFs.Request.prototype.updateRequestHandler_ = function(
  * @param {{hasCtrl:boolean, asModel:boolean}=} opt_helper  response options.
  * @param {Function=} onXhrComplete onXhrComplete callback function
  */
-xhrdav.lib.DavFs.Request.prototype.propfindRequestHandler_ = function(
+xhrdav.DavFs.Request.prototype.propfindRequestHandler_ = function(
   path, handler, opt_request, context, opt_helper, onXhrComplete) {
   var dataHandler = goog.bind(this.processMultistatus_, this, opt_helper);
   this.davSite_.propfind(path,
@@ -380,19 +371,19 @@ xhrdav.lib.DavFs.Request.prototype.propfindRequestHandler_ = function(
  * @param {number} statusCode HTTP Status code.
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
- * @return {Array.<xhrdav.lib.Errors, xhrdav.lib.Response>}
- * @see xhrdav.lib.Errors
+ * @return {Array.<xhrdav.Errors, xhrdav.Response>}
+ * @see xhrdav.Errors
  */
-xhrdav.lib.DavFs.Request.prototype.processMultistatus_ = function(
+xhrdav.DavFs.Request.prototype.processMultistatus_ = function(
   opt_helper, path, statusCode, content, headers) {
-  var config = xhrdav.lib.Config.getInstance();
-  var httpStatus = xhrdav.lib.HttpStatus;
-  var errors = new xhrdav.lib.Errors();
+  var config = xhrdav.Conf.getInstance();
+  var httpStatus = xhrdav.HttpStatus;
+  var errors = new xhrdav.Errors();
 
   var args = [];
   if (statusCode == httpStatus.MULTI_STATUS) {
     content =
-      xhrdav.lib.DavFs.Request.getListDirFromMultistatus(content, opt_helper);
+      xhrdav.DavFs.Request.getListDirFromMultistatus(content, opt_helper);
   } else {
     errors.setRequest({status: statusCode, message: httpStatus.text[statusCode], path: path});
   }
@@ -411,7 +402,7 @@ xhrdav.lib.DavFs.Request.prototype.processMultistatus_ = function(
  * @return {Object}
  * @throws {Error} Not found of xhrIo object.
  */
-xhrdav.lib.DavFs.Request.prototype.createRequestParameters_ = function(
+xhrdav.DavFs.Request.prototype.createRequestParameters_ = function(
   opt_headers, opt_params, opt_xhrId) {
   var opt_request = {headers: opt_headers || {}, query: opt_params || {}};
 
@@ -445,7 +436,7 @@ xhrdav.lib.DavFs.Request.prototype.createRequestParameters_ = function(
  * @param {Function=} onXhrComplete onXhrComplete callback function
  * @see #propfindRequestHandler_
  */
-xhrdav.lib.DavFs.Request.prototype.listDir = function(
+xhrdav.DavFs.Request.prototype.listDir = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
   var opt_request = this.createRequestParameters_(
     opt_headers, opt_params, opt_helper && opt_helper.xhrId);
@@ -468,7 +459,7 @@ xhrdav.lib.DavFs.Request.prototype.listDir = function(
  * @param {Function=} onXhrComplete onXhrComplete callback function
  * @see #propfindRequestHandler_
  */
-xhrdav.lib.DavFs.Request.prototype.getProps = function(
+xhrdav.DavFs.Request.prototype.getProps = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
   var opt_request = this.createRequestParameters_(
     opt_headers, opt_params, opt_helper && opt_helper.xhrId);
@@ -487,7 +478,7 @@ xhrdav.lib.DavFs.Request.prototype.getProps = function(
  * @param {{xhrId:string=}=} opt_helper xhr options.
  * @param {Function=} onXhrComplete onXhrComplete callback function
  */
-xhrdav.lib.DavFs.Request.prototype.mkDir = function(
+xhrdav.DavFs.Request.prototype.mkDir = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
   var opt_request = this.createRequestParameters_(
     opt_headers, opt_params, opt_helper && opt_helper.xhrId);
@@ -509,7 +500,7 @@ xhrdav.lib.DavFs.Request.prototype.mkDir = function(
  * @param {{xhrId:string=}=} opt_helper xhr options.
  * @param {Function=} onXhrComplete onXhrComplete callback function
  */
-xhrdav.lib.DavFs.Request.prototype.remove = function(
+xhrdav.DavFs.Request.prototype.remove = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
   var opt_request = this.createRequestParameters_(
     opt_headers, opt_params, opt_helper && opt_helper.xhrId);
@@ -532,7 +523,7 @@ xhrdav.lib.DavFs.Request.prototype.remove = function(
  * @param {{xhrId:string=}=} opt_helper xhr options.
  * @param {Function=} onXhrComplete onXhrComplete callback function
  */
-xhrdav.lib.DavFs.Request.prototype.move = function(
+xhrdav.DavFs.Request.prototype.move = function(
   path, dstPath, handler, opt_headers, opt_params, context,
   opt_helper, onXhrComplete) {
   var opt_request = this.createRequestParameters_(
@@ -555,7 +546,7 @@ xhrdav.lib.DavFs.Request.prototype.move = function(
  * @param {Function=} onXhrComplete onXhrComplete callback function
  * @see #updateRequestHandler_
  */
-xhrdav.lib.DavFs.Request.prototype.copy = function(
+xhrdav.DavFs.Request.prototype.copy = function(
   path, dstPath, handler, opt_headers, opt_params, context,
   opt_helper, onXhrComplete) {
   var opt_request = this.createRequestParameters_(
@@ -574,12 +565,12 @@ xhrdav.lib.DavFs.Request.prototype.copy = function(
  * @param {{xhrId:string=}=} opt_helper xhr options.
  * @param {Function=} onXhrComplete onXhrComplete callback function
  */
-xhrdav.lib.DavFs.Request.prototype.read = function(
+xhrdav.DavFs.Request.prototype.read = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
   var opt_request = this.createRequestParameters_(
     opt_headers, opt_params, opt_helper && opt_helper.xhrId);
 
-  path = xhrdav.lib.utils.path.removeLastSlash(path);
+  path = xhrdav.utils.path.removeLastSlash(path);
 
   this.davSite_.get(path,
     goog.bind(this.responseHandler_, this,
@@ -599,13 +590,13 @@ xhrdav.lib.DavFs.Request.prototype.read = function(
  * @param {{xhrId:string=}=} opt_helper xhr options.
  * @param {Function=} onXhrComplete onXhrComplete callback function
  */
-xhrdav.lib.DavFs.Request.prototype.write = function(
+xhrdav.DavFs.Request.prototype.write = function(
   path, content, handler, opt_headers, opt_params, context,
   opt_helper, onXhrComplete) {
   var opt_request = this.createRequestParameters_(
     opt_headers, opt_params, opt_helper && opt_helper.xhrId);
 
-  path = xhrdav.lib.utils.path.removeLastSlash(path);
+  path = xhrdav.utils.path.removeLastSlash(path);
 
   this.davSite_.put(path, content,
     goog.bind(this.responseHandler_, this,
@@ -626,18 +617,18 @@ xhrdav.lib.DavFs.Request.prototype.write = function(
  * @param {Function=} onXhrComplete onXhrComplete callback function
  * @throws {Error} Not a file object.
  */
-xhrdav.lib.DavFs.Request.prototype.upload = function(
+xhrdav.DavFs.Request.prototype.upload = function(
   path, file, handler, opt_headers, opt_params, context,
   opt_helper, onXhrComplete) {
   var opt_request = this.createRequestParameters_(
     opt_headers, opt_params, opt_helper && opt_helper.xhrId);
 
-  path = xhrdav.lib.utils.path.removeLastSlash(path);
+  path = xhrdav.utils.path.removeLastSlash(path);
   if (!(file instanceof File)) {
-    xhrdav.lib.Config.logging(
+    xhrdav.Conf.logging(
       {'DavFs.Request#upload': 'Argument "file" is not a file object!![path: ' + path + ']'},
       'warning');
-    xhrdav.lib.Config.logging(file, 'warning');
+    xhrdav.Conf.logging(file, 'warning');
   }
   if (goog.isDefAndNotNull(file)) {
     goog.object.extend(opt_request.headers,
@@ -661,7 +652,7 @@ xhrdav.lib.DavFs.Request.prototype.upload = function(
  * @param {{xhrId:string=}=} opt_helper xhr options.
  * @param {Function=} onXhrComplete onXhrComplete callback function
  */
-xhrdav.lib.DavFs.Request.prototype.exists = function(
+xhrdav.DavFs.Request.prototype.exists = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
   var opt_request = this.createRequestParameters_(
     opt_headers, opt_params, opt_helper && opt_helper.xhrId);
@@ -675,55 +666,55 @@ xhrdav.lib.DavFs.Request.prototype.exists = function(
 /**
  * Create ResourceController.
  *
- * @param {(xhrdav.lib.Resource|Object)=} resource  Json/Hash object for WebDAV resource.
- * @return {xhrdav.lib.ResourceController}
- * @see xhrdav.lib.ResourceController
+ * @param {(xhrdav.Resource|Object)=} resource  Json/Hash object for WebDAV resource.
+ * @return {xhrdav.ResourceController}
+ * @see xhrdav.ResourceController
  */
-xhrdav.lib.DavFs.Request.prototype.createResourceController = function(resource) {
-  var controller = new xhrdav.lib.ResourceController(resource);
+xhrdav.DavFs.Request.prototype.createResourceController = function(resource) {
+  var controller = new xhrdav.ResourceController(resource);
   controller.setRequest(this);
   return controller;
 };
 
 
 /* Entry Point for closure compiler */
-goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs.getInstance);
-goog.exportSymbol('xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME',
-  xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME);
-goog.exportProperty(xhrdav.lib.DavFs.prototype, 'getXhrManager',
-  xhrdav.lib.DavFs.prototype.getXhrManager);
-goog.exportProperty(xhrdav.lib.DavFs.prototype, 'setXhrManager',
-  xhrdav.lib.DavFs.prototype.setXhrManager);
-goog.exportProperty(xhrdav.lib.DavFs.prototype, 'getConnection',
-  xhrdav.lib.DavFs.prototype.getConnection);
-goog.exportProperty(xhrdav.lib.DavFs.prototype, 'addConnection',
-  xhrdav.lib.DavFs.prototype.addConnection);
-goog.exportProperty(xhrdav.lib.DavFs.prototype, 'getRequest',
-  xhrdav.lib.DavFs.prototype.getRequest);
+goog.exportSymbol('xhrdav.DavFs.getInstance', xhrdav.DavFs.getInstance);
+goog.exportSymbol('xhrdav.DavFs.DEFAULT_DAV_SITE_NAME',
+  xhrdav.DavFs.DEFAULT_DAV_SITE_NAME);
+goog.exportProperty(xhrdav.DavFs.prototype, 'getXhrManager',
+  xhrdav.DavFs.prototype.getXhrManager);
+goog.exportProperty(xhrdav.DavFs.prototype, 'setXhrManager',
+  xhrdav.DavFs.prototype.setXhrManager);
+goog.exportProperty(xhrdav.DavFs.prototype, 'getConnection',
+  xhrdav.DavFs.prototype.getConnection);
+goog.exportProperty(xhrdav.DavFs.prototype, 'addConnection',
+  xhrdav.DavFs.prototype.addConnection);
+goog.exportProperty(xhrdav.DavFs.prototype, 'getRequest',
+  xhrdav.DavFs.prototype.getRequest);
 
-goog.exportSymbol('xhrdav.lib.DavFs.Request', xhrdav.lib.DavFs.Request);
-goog.exportSymbol('xhrdav.lib.DavFs.Request.getListDirFromMultistatus',
-  xhrdav.lib.DavFs.Request.getListDirFromMultistatus);
-goog.exportProperty(xhrdav.lib.DavFs.Request.prototype, 'listDir',
-  xhrdav.lib.DavFs.Request.prototype.listDir);
-goog.exportProperty(xhrdav.lib.DavFs.Request.prototype, 'getProps',
-  xhrdav.lib.DavFs.Request.prototype.getProps);
-goog.exportProperty(xhrdav.lib.DavFs.Request.prototype, 'mkDir',
-  xhrdav.lib.DavFs.Request.prototype.mkDir);
-goog.exportProperty(xhrdav.lib.DavFs.Request.prototype, 'remove',
-  xhrdav.lib.DavFs.Request.prototype.remove);
-goog.exportProperty(xhrdav.lib.DavFs.Request.prototype, 'move',
-  xhrdav.lib.DavFs.Request.prototype.move);
-goog.exportProperty(xhrdav.lib.DavFs.Request.prototype, 'copy',
-  xhrdav.lib.DavFs.Request.prototype.copy);
-goog.exportProperty(xhrdav.lib.DavFs.Request.prototype, 'read',
-  xhrdav.lib.DavFs.Request.prototype.read);
-goog.exportProperty(xhrdav.lib.DavFs.Request.prototype, 'write',
-  xhrdav.lib.DavFs.Request.prototype.write);
-goog.exportProperty(xhrdav.lib.DavFs.Request.prototype, 'upload',
-  xhrdav.lib.DavFs.Request.prototype.upload);
-goog.exportProperty(xhrdav.lib.DavFs.Request.prototype, 'exists',
-  xhrdav.lib.DavFs.Request.prototype.exists);
-goog.exportProperty(xhrdav.lib.DavFs.Request.prototype, 'createResourceController',
-  xhrdav.lib.DavFs.Request.prototype.createResourceController);
+goog.exportSymbol('xhrdav.DavFs.Request', xhrdav.DavFs.Request);
+goog.exportSymbol('xhrdav.DavFs.Request.getListDirFromMultistatus',
+  xhrdav.DavFs.Request.getListDirFromMultistatus);
+goog.exportProperty(xhrdav.DavFs.Request.prototype, 'listDir',
+  xhrdav.DavFs.Request.prototype.listDir);
+goog.exportProperty(xhrdav.DavFs.Request.prototype, 'getProps',
+  xhrdav.DavFs.Request.prototype.getProps);
+goog.exportProperty(xhrdav.DavFs.Request.prototype, 'mkDir',
+  xhrdav.DavFs.Request.prototype.mkDir);
+goog.exportProperty(xhrdav.DavFs.Request.prototype, 'remove',
+  xhrdav.DavFs.Request.prototype.remove);
+goog.exportProperty(xhrdav.DavFs.Request.prototype, 'move',
+  xhrdav.DavFs.Request.prototype.move);
+goog.exportProperty(xhrdav.DavFs.Request.prototype, 'copy',
+  xhrdav.DavFs.Request.prototype.copy);
+goog.exportProperty(xhrdav.DavFs.Request.prototype, 'read',
+  xhrdav.DavFs.Request.prototype.read);
+goog.exportProperty(xhrdav.DavFs.Request.prototype, 'write',
+  xhrdav.DavFs.Request.prototype.write);
+goog.exportProperty(xhrdav.DavFs.Request.prototype, 'upload',
+  xhrdav.DavFs.Request.prototype.upload);
+goog.exportProperty(xhrdav.DavFs.Request.prototype, 'exists',
+  xhrdav.DavFs.Request.prototype.exists);
+goog.exportProperty(xhrdav.DavFs.Request.prototype, 'createResourceController',
+  xhrdav.DavFs.Request.prototype.createResourceController);
 
