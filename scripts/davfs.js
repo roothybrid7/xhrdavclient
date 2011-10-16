@@ -9,6 +9,7 @@
  */
 
 goog.provide('xhrdav.lib.DavFs');
+goog.provide('xhrdav.lib.DavFs.Request');
 goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.Client');
 goog.require('goog.net.XhrManager');
@@ -115,9 +116,7 @@ xhrdav.lib.DavFs.prototype.createClient_ = function(opt_uri, site) {
 /**
  * Get and Create Connection xhrdav.lib.Client.
  *
- * @param {boolean=} refresh Refresh connection object.
- * @param {{scheme:string=, domain:stirng=, port:nubmer=}=} opt_uri
- *     davclient Parameters(opt_uri: scheme, domain, port)
+ * @param {string=} opt_davSiteName  Any settings name of WebDAV site.
  * @return {xhrdav.lib.Client}
  */
 xhrdav.lib.DavFs.prototype.getConnection = function(opt_davSiteName) {
@@ -134,7 +133,7 @@ xhrdav.lib.DavFs.prototype.getConnection = function(opt_davSiteName) {
  *
  * @param {{scheme:string=, domain:string=, port:number=}=} opt_uri
  *     davclient Parameters(opt_uri: scheme, domain, port)
- * @param {string} opt_davSiteName  Any settings name of WebDAV site.
+ * @param {string=} opt_davSiteName  Any settings name of WebDAV site.
  */
 xhrdav.lib.DavFs.prototype.addConnection = function(opt_uri, opt_davSiteName) {
   if (goog.string.isEmptySafe(opt_davSiteName)) {
@@ -168,7 +167,7 @@ xhrdav.lib.DavFs.prototype.responseHandler_ = function(
  * Content read Handler
  *
  * @private
- * @param {string} path HTTP Requst path.
+ * @param {string} path HTTP Request path.
  * @param {number} statusCode HTTP Status code.
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
@@ -195,7 +194,7 @@ xhrdav.lib.DavFs.prototype.contentReadHandler_ = function(
  * Exists Handler
  *
  * @private
- * @param {string} path HTTP Requst path.
+ * @param {string} path HTTP Request path.
  * @param {number} statusCode HTTP Status code.
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
@@ -224,7 +223,7 @@ xhrdav.lib.DavFs.prototype.existsHandler_ = function(
  * Error Handler
  *
  * @private
- * @param {string} path HTTP Requst path.
+ * @param {string} path HTTP Request path.
  * @param {number} statusCode HTTP Status code.
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
@@ -569,6 +568,56 @@ xhrdav.lib.DavFs.prototype.exists = function(
     goog.bind(this.responseHandler_, this,
       handler, this.existsHandler_, path, context),
     opt_request, onXhrComplete);
+};
+
+/**
+ * Get Request object for WebDAV request.
+ *
+ * @param {string=} opt_davSiteName Any settings name of WebDAV site.
+ * @param {(goog.net.XhrIo|goog.net.XhrManager)=} opt_xhrIo request object
+ *     of closure library (For Cross-site resource sharing[CORS]).
+ * @see xhrdav.lib.DavFs.Request
+ */
+xhrdav.lib.DavFs.prototype.getRequest = function(
+  opt_davSiteName, opt_xhrIo) {
+  if (goog.string.isEmptySafe(opt_davSiteName)) {
+    opt_davSiteName = xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME;
+  }
+  var davSite = this.getConnection(opt_davSiteName);
+
+  if (!goog.isDefAndNotNull(opt_xhrIo) ||
+    !(opt_xhrIo instanceof goog.net.XhrIo) ||
+    !(opt_xhrIo instanceof goog.net.XhrManager)) {
+    opt_xhrIo = this.xhrMgr_;
+  }
+
+  return new xhrdav.lib.DavFs.Request(davSite, opt_xhrIo);
+};
+
+
+/**
+ * An encapsulation of everything needed to make a DavFs request.
+ *
+ *
+ * @param {xhrdav.lib.Client} davSite WebDAV site.
+ * @param {(goog.net.XhrIo|goog.net.XhrManager)} xhrIo request object
+ *     of closure library (For Cross-site resource sharing[CORS]).
+ * @constructor
+ * @extends {goog.Disposable}
+ */
+xhrdav.lib.DavFs.Request = function(davSite, xhrIo) {
+  goog.Disposable.call(this);
+
+  /** @type {xhrdav.lib.Client} */
+  this.davSite_ = davSite;
+  /** @type {(goog.net.XhrIo|goog.net.XhrManager)} */
+  this.xhrIo = xhrIo;
+};
+goog.inherits(xhrdav.lib.DavFs.Request, goog.Disposable);
+
+/** @inheritDoc */
+xhrdav.lib.DavFs.Request.prototype.disposeInternal = function() {
+  xhrdav.lib.DavFs.Request.superClass_.disposeInternal.call(this);
 };
 
 

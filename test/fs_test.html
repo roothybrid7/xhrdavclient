@@ -113,6 +113,16 @@
       assertEquals('New XhrManager?', newMgr, fs.getXhrManager());
       assertNotEquals('Old XhrManager is not same?', mgr, fs.getXhrManager());
     }
+
+    function testCreateRequest() {
+      var testId = 'testCreateRequest';
+
+      var fs = xhrdav.lib.DavFs.getInstance();
+      var req = fs.getRequest();
+      assertNotNullNorUndefined('Create Request object?', req);
+      assertTrue('instanceof Request?',
+        req instanceof xhrdav.lib.DavFs.Request);
+    }
   </script>
 </body>
 </html>
