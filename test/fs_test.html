@@ -44,17 +44,43 @@
       assertTrue('Is a goog.net.XhrManger?', fs.xhrMgr_ instanceof goog.net.XhrManager);
     }
 
-    function testConnection() {
-      var testId = 'Connection';
+    function testAddConnection() {
+      var testId = 'testAddConnection';
+
+      var fs = xhrdav.lib.DavFs.getInstance();
+      var davOpts = {scheme: 'https', domain: 'foo.com', port: 443};
+      var conn = fs.getConnection();
+      assertTrue('Create xhrdav.lib.Client?',
+        conn instanceof xhrdav.lib.Client);
+
+      fs.addConnection(davOpts);
+      var conn2 = fs.getConnection();
+      assertNotEquals('Call addConnection for default site.',
+        conn, conn2);
+
+      var dav3Opts = {scheme: 'http', domain: 'bar.com'};
+      fs.addConnection(dav3Opts, 'dav3');
+      var reGetconn2 = fs.getConnection();
+      var conn3 = fs.getConnection('dav3');
+      assertNotEquals('Add another site.',
+        conn2, conn3);
+      assertNotEquals('Add another site and reget default site.',
+        reGetconn2, conn3);
+      assertTrue('davclient count = 2?',
+        goog.object.getCount(fs.clients_) == 2);
+    }
+
+    function testConnectionInvalid() {
+      var testId = 'testConnectionEmpty';
       var logger = goog.debug.Logger.getLogger(testId);
 
       var fs = xhrdav.lib.DavFs.getInstance();
-      var conn = fs.getConnection();
-      assertNotNullNorUndefined('Create Connection?', conn);
-      var conn2 = fs.getConnection();
-      assertEquals('Same Connection?', conn, conn2);
-      var conn3 = fs.getConnection(true);
-      assertNotEquals('Same Connection?', conn, conn3);
+      var conn = fs.getConnection(true);
+      assertTrue('Invalid Connection by true?',
+        goog.object.isEmpty(conn));
+      var conn2 = fs.getConnection(false);
+      assertTrue('Invalid Connection by false?',
+        goog.object.isEmpty(conn2));
     };
 
     function testParseXmlSet() {
@@ -73,6 +99,19 @@
       var fs = xhrdav.lib.DavFs.getInstance();
       var mgr = fs.getXhrManager();
       assertTrue('goog.net.XhrManager?', mgr instanceof goog.net.XhrManager);
+    }
+
+    function testSetXhrMgr() {
+      var testId = 'testSetXhrMgr';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      var fs = xhrdav.lib.DavFs.getInstance();
+      var mgr = fs.getXhrManager();
+      var newMgr = new goog.net.XhrManager();
+      fs.setXhrManager(newMgr);
+
+      assertEquals('New XhrManager?', newMgr, fs.getXhrManager());
+      assertNotEquals('Old XhrManager is not same?', mgr, fs.getXhrManager());
     }
   </script>
 </body>

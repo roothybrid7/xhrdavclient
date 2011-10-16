@@ -14,21 +14,25 @@ goog.require('xhrdav.lib.Client');
 goog.require('goog.net.XhrManager');
 goog.require('xhrdav.lib.ResourceBuilder');
 
+
 /**
  * high-level WebDAV client API Singleton
  *
- * @private
  * @constructor
  */
 xhrdav.lib.DavFs = function() {
   /** @type {goog.net.XhrManager} */
   this.xhrMgr_ = null;
-  /** @type {xhrdav.lib.Client} */
-  this.client_ = null;
+  /** @type {Object.<string,xhrdav.lib.Client>} */
+  this.clients_ = {};
 
   this.initXhrMgr_();
+  this.addConnection();
 };
 goog.addSingletonGetter(xhrdav.lib.DavFs);
+
+/** @type {string} */
+xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME = 'default';
 
 /**
  *  Init XhrManager with config.
@@ -82,17 +86,30 @@ xhrdav.lib.DavFs.prototype.getXhrManager = function() {
 };
 
 /**
- * Init with calling low-level client API.
+ * Setter XhrManager
+ *
+ * @param {goog.net.XhrManager} xhrMgr
+ * @see goog.net.XhrManager
+ */
+xhrdav.lib.DavFs.prototype.setXhrManager = function(xhrMgr) {
+  if (xhrMgr && xhrMgr instanceof goog.net.XhrManager) {
+    this.xhrMgr_ = xhrMgr;
+  }
+};
+
+/**
+ * Create WebDAV client object.
  *
  * @private
  * @param {{scheme:string=, domain:stirng=, port:nubmer=}=} opt_uri
  *     davclient Parameters(opt_uri: scheme, domain, port)
+ * @param {string} site Settings name of WebDAV site.
  */
-xhrdav.lib.DavFs.prototype.initClient_ = function(opt_uri) {
+xhrdav.lib.DavFs.prototype.createClient_ = function(opt_uri, site) {
   var config = xhrdav.lib.Config.getInstance();
-  this.client_ = new xhrdav.lib.Client(opt_uri);
-  this.client_.setXmlParseFunction(
-    goog.getObjectByName(config.xmlParseFuncObj));
+  var client = new xhrdav.lib.Client(opt_uri);
+  client.setXmlParseFunction(goog.getObjectByName(config.xmlParseFuncObj));
+  goog.object.set(this.clients_, site, client);
 };
 
 /**
@@ -102,14 +119,28 @@ xhrdav.lib.DavFs.prototype.initClient_ = function(opt_uri) {
  * @param {{scheme:string=, domain:stirng=, port:nubmer=}=} opt_uri
  *     davclient Parameters(opt_uri: scheme, domain, port)
  * @return {xhrdav.lib.Client}
- * @see #initialize
  */
-// TODO: For multi davclient('default', 'main', 'share', 'tmp', etc.)
-// this#getConnection(false, null) #=> 'default' davclient
-// this#getConnection(false, 'share');
-xhrdav.lib.DavFs.prototype.getConnection = function(refresh, opt_uri) {
-  if (!!refresh || goog.isNull(this.client_)) this.initClient_(opt_uri);
-  return this.client_;
+xhrdav.lib.DavFs.prototype.getConnection = function(opt_davSiteName) {
+  if (goog.string.isEmptySafe(opt_davSiteName)) {
+    opt_davSiteName = xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME;
+  }
+  return this.clients_[opt_davSiteName];
+};
+
+/**
+ * Add WebDAV connection setting(For multiple WebDAV root)
+ *
+ * If connection exists, overwrite WebDAV site settings.
+ *
+ * @param {{scheme:string=, domain:string=, port:number=}=} opt_uri
+ *     davclient Parameters(opt_uri: scheme, domain, port)
+ * @param {string} opt_davSiteName  Any settings name of WebDAV site.
+ */
+xhrdav.lib.DavFs.prototype.addConnection = function(opt_uri, opt_davSiteName) {
+  if (goog.string.isEmptySafe(opt_davSiteName)) {
+    opt_davSiteName = xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME;
+  }
+  this.createClient_(opt_uri, opt_davSiteName);
 };
 
 /**
@@ -543,8 +574,16 @@ xhrdav.lib.DavFs.prototype.exists = function(
 
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.DavFs.getInstance', xhrdav.lib.DavFs.getInstance);
+goog.exportSymbol('xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME',
+  xhrdav.lib.DavFs.DEFAULT_DAV_SITE_NAME);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'getXhrManager',
+  xhrdav.lib.DavFs.prototype.getXhrManager);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'setXhrManager',
+  xhrdav.lib.DavFs.prototype.setXhrManager);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'getConnection',
   xhrdav.lib.DavFs.prototype.getConnection);
+goog.exportProperty(xhrdav.lib.DavFs.prototype, 'addConnection',
+  xhrdav.lib.DavFs.prototype.addConnection);
 goog.exportSymbol('xhrdav.lib.DavFs.getListDirFromMultistatus',
   xhrdav.lib.DavFs.getListDirFromMultistatus);
 goog.exportProperty(xhrdav.lib.DavFs.prototype, 'listDir',
