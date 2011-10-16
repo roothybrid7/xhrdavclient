@@ -18,7 +18,7 @@ goog.require('goog.net.XhrIo');
  * WebDAV Client library by Google Closure library.
  *
  * @constructor
- * @param {{scheme:string=, domain:stirng=, port:nubmer=}=} opt_uri
+ * @param {{scheme:string=, domain:stirng=, port:nubmer=, auth:string=}=} opt_uri
  *     URI Parameters(opt_uri: scheme, domain, port)
  * @see #initialize_
  */
@@ -30,7 +30,7 @@ xhrdav.Client = function(opt_uri) {
  * WebDAV Client initialize
  *
  * @private
- * @param {{scheme:string=, domain:stirng=, port:nubmer=}=} opt_uri
+ * @param {{scheme:string=, domain:stirng=, port:nubmer=, auth:string=}=} opt_uri
  *     URI Parameters(opt_uri: scheme, domain, port)
  */
 xhrdav.Client.prototype.initialize_ = function(opt_uri) {
@@ -44,6 +44,42 @@ xhrdav.Client.prototype.initialize_ = function(opt_uri) {
   this.domain_ = opt_uri.domain || locationUrl.getDomain();
   /** @type {number} */
   this.port_ = opt_uri.port || locationUrl.getPort() || 80;
+  /** @type {?string} */
+  this.auth_ = opt_uri.auth;
+};
+
+/**
+ * Has Authorization credentials
+ *
+ * @return {boolean}
+ */
+xhrdav.Client.prototype.hasAuthCredentials = function() {
+  return !!this.auth_;
+};
+
+/**
+ * Get Authorization credentials
+ *
+ * @return {string}
+ */
+xhrdav.Client.prototype.getAuthCredentials = function() {
+  return this.auth_;
+};
+
+/**
+ * Set Authorization credentials
+ *
+ * @param {string} auth
+ */
+xhrdav.Client.prototype.setAuthCredentials = function(auth) {
+  this.auth_ = auth;
+};
+
+/**
+ * Clear Authorization credentials
+ */
+xhrdav.Client.prototype.clearAuthCredentials = function() {
+  this.auth_ = null;
 };
 
 /**
@@ -184,6 +220,11 @@ xhrdav.Client.prototype.convertHeadersKeys_ = function(headers) {
 xhrdav.Client.prototype.request_ = function(
   method, url, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
+  if (!goog.isDefAndNotNull(opt_request.headers)) opt_request.headers = {};
+  var auth = goog.object.get(opt_request.headers, 'Authorization');
+  if (!goog.isDefAndNotNull(auth)) {
+    goog.object.set(opt_request.headers, 'Authorization', this.auth_);
+  }
   if (goog.isDefAndNotNull(opt_request.xhrMgr)) {
     opt_request.xhrMgr.send(
       opt_request.xhrId || goog.string.createUniqueString(),
@@ -480,6 +521,14 @@ xhrdav.Client.prototype.copy = function(
 
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.Client', xhrdav.Client);
+goog.exportProperty(xhrdav.Client.prototype, 'hasAuthCredentials',
+  xhrdav.Client.prototype.hasAuthCredentials);
+goog.exportProperty(xhrdav.Client.prototype, 'getAuthCredentials',
+  xhrdav.Client.prototype.getAuthCredentials);
+goog.exportProperty(xhrdav.Client.prototype, 'setAuthCredentials',
+  xhrdav.Client.prototype.setAuthCredentials);
+goog.exportProperty(xhrdav.Client.prototype, 'clearAuthCredentials',
+  xhrdav.Client.prototype.clearAuthCredentials);
 goog.exportProperty(xhrdav.Client.prototype, 'canParseXml',
   xhrdav.Client.prototype.canParseXml);
 goog.exportProperty(xhrdav.Client.prototype, 'setXmlParseFunction',
