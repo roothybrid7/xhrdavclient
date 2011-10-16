@@ -140,16 +140,16 @@
 
       var fs = xhrdav.DavFs.getInstance();
       var xhrIo = new goog.net.XhrIo();
-      var req = fs.getRequest('default', xhrIo);
+      var req = fs.getRequest({davSiteName: 'default', xhrIo: xhrIo});
       assertEquals('Same xhrIo', xhrIo, req.xhrIo_);
       var req2 = fs.getRequest();
       assertTrue('XhrManager?', req2.xhrIo_ instanceof goog.net.XhrManager);
       var xhrMgrOrg = req2.xhrIo_;
       var xhrMgr = new goog.net.XhrManager();
-      var req3 = fs.getRequest(null, xhrMgr);
+      var req3 = fs.getRequest({xhrIo: xhrMgr});
       assertNotEquals('Argument xhrManager', xhrMgrOrg, req3.xhrIo_);
       xhrIo.setWithCredentials(true);
-      var req4 = fs.getRequest('default', xhrIo);
+      var req4 = fs.getRequest({davSiteName: 'default', xhrIo: xhrIo});
       assertTrue('With Credentials?', req4.xhrIo_.getWithCredentials());
     }
   </script>

@@ -149,25 +149,33 @@ xhrdav.DavFs.prototype.addConnection = function(opt_uri, opt_davSiteName) {
 /**
  * Get Request object for WebDAV request.
  *
- * @param {string=} opt_davSiteName Any settings name of WebDAV site.
- * @param {(goog.net.XhrIo|goog.net.XhrManager)=} opt_xhrIo request object
- *     of closure library (For Cross-site resource sharing[CORS]).
+ * @param {{davSiteName:string=, xhrIo:(goog.net.XhrIo|goog.net.XhrManager)=,
+ *     auth:string=, authOverwrite:boolean=}} options
+ *     davSiteName Any settings name of WebDAV site.
+ *     xhrIo request object of closure library (For Cross-site resource sharing[CORS]).
+ *     auth: authorization credentials.
+ *     authOverwrite: overwrite flag for auth credentials.
  * @see xhrdav.DavFs.Request
  */
-xhrdav.DavFs.prototype.getRequest = function(
-  opt_davSiteName, opt_xhrIo) {
-  if (goog.string.isEmptySafe(opt_davSiteName)) {
-    opt_davSiteName = xhrdav.DavFs.DEFAULT_DAV_SITE_NAME;
+xhrdav.DavFs.prototype.getRequest = function(options) {
+  if (!goog.isDefAndNotNull(options)) options = {};
+  if (goog.string.isEmptySafe(options.davSiteName)) {
+    options.davSiteName = xhrdav.DavFs.DEFAULT_DAV_SITE_NAME;
   }
-  var davSite = this.getConnection(opt_davSiteName);
-
-  if (!goog.isDefAndNotNull(opt_xhrIo) ||
-    !(opt_xhrIo instanceof goog.net.XhrIo ||
-    opt_xhrIo instanceof goog.net.XhrManager)) {
-    opt_xhrIo = this.xhrMgr_;
+  var davSite = this.getConnection(options.davSiteName);
+  if (!goog.string.isEmptySafe(options.auth)) {
+    if (!!options.authOverwrite || !davSite.hasAuthCredentials()) {
+      davSite.setAuthCredentials(options.auth);
+    }
   }
 
-  return new xhrdav.DavFs.Request(davSite, opt_xhrIo);
+  if (!goog.isDefAndNotNull(options.xhrIo) ||
+    !(options.xhrIo instanceof goog.net.XhrIo ||
+    options.xhrIo instanceof goog.net.XhrManager)) {
+    options.xhrIo = this.xhrMgr_;
+  }
+
+  return new xhrdav.DavFs.Request(davSite, options.xhrIo);
 };
 
 

@@ -36,11 +36,20 @@
     var xmgr = new goog.net.XhrManager();
 
     var authRootDir = '/davauth/';
+    var validBasicAuth;
 
     function setUp() {
+      var username = 'rh7';
+      var password = '1qaz2wsx';
+      var seed = username + ':' + password;
+      var hash = goog.crypt.base64.encodeString(seed, true);
+      console.log(hash);
+      validBasicAuth = 'Basic ' + hash;
+      davFs.addConnection();
     }
 
     function tearDown() {
+      validBasicAuth = null;
     }
 
     function testAddAuthentication() {
@@ -79,14 +88,7 @@
       var testId = 'testBasicAuthRequest';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var username = 'rh7';
-      var password = '1qaz2wsx';
-      var seed = username + ':' + password;
-      var hash = goog.crypt.base64.encodeString(seed, true);
-      console.log(hash);
-      var basicAuth = 'Basic ' + hash;
-
-      var opts = {auth: basicAuth};
+      var opts = {auth: validBasicAuth};
       var dav = new xhrdav.Client(opts);
 
       var opt_request = {xhrId: goog.string.createUniqueString(), xhrMgr: xmgr};
@@ -109,17 +111,10 @@
       var testId = 'testBasicAuthRequestFail';
       var logger = goog.debug.Logger.getLogger(testId);
 
-      var username = 'rh7';
-      var password = '1qaz2wsx';
-      var seed = username + ':' + password;
-      var hash = goog.crypt.base64.encodeString(seed, true);
-      console.log(hash);
-      var basicAuth = 'Basic ' + hash;
-
       var dav = new xhrdav.Client();
 
       var opt_request = {xhrId: goog.string.createUniqueString(), xhrMgr: xmgr};
-      opt_request.headers = {'Authorization': basicAuth};
+      opt_request.headers = {'Authorization': validBasicAuth};
 
       var assertPropsWAuth = function(statusCode, content, headers) {
         assertEquals('Multistatus?', httpStatus.MULTI_STATUS, statusCode);
@@ -133,6 +128,89 @@
       asyncTestCase.waitForAsync(testId);
       dav.propfind(authRootDir, assertPropsWAuth, opt_request,
         goog.partial(xhrLogging, logger));
+    }
+
+    function testDavFsAddConnectionWAuth() {
+      var testId = 'testDavFsAddConnectionWAuth';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      davFs.addConnection({auth: validBasicAuth});
+
+      var assertListWAuth = function(errors, content) {
+        assertFalse('No errors', errors.hasRequest());
+        assertNotNullNorUndefined('Content', content);
+        console.log(content.root);
+        assertNotNullNorUndefined('root', content.root);
+        assertEquals('/davauth/', authRootDir, content.root.href);
+        asyncContinue();
+      };
+
+      asyncTestCase.waitForAsync(testId);
+      davFs.getRequest().listDir(authRootDir, assertListWAuth, null, null, this,
+        null, goog.partial(xhrLogging, logger));
+    }
+
+    function testDavFsPerRequstWAuth() {
+      var testId = 'testDavFsPerRequstWAuth';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      var assertListWAuth = function(errors, content) {
+        assertFalse('No errors', errors.hasRequest());
+        assertNotNullNorUndefined('Content', content);
+        console.log(content.root);
+        assertNotNullNorUndefined('root', content.root);
+        assertEquals('/davauth/', authRootDir, content.root.href);
+        asyncContinue();
+      };
+
+      asyncTestCase.waitForAsync(testId);
+      davFs.getRequest({auth: validBasicAuth}).listDir(
+        authRootDir, assertListWAuth, null, null, this,
+        null, goog.partial(xhrLogging, logger));
+    }
+
+    function testDavFsPerRequstWAuthOverWrite() {
+      var testId = 'testDavFsPerRequstWAuthOverWrite';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      davFs.addConnection({auth: 'foo'});
+      assertEquals('foo', davFs.getConnection().getAuthCredentials());
+
+      var assertListWAuth = function(errors, content) {
+        assertFalse('No errors', errors.hasRequest());
+        assertNotNullNorUndefined('Content', content);
+        console.log(content.root);
+        assertNotNullNorUndefined('root', content.root);
+        assertEquals('/davauth/', authRootDir, content.root.href);
+        assertEquals(validBasicAuth, davFs.getConnection().getAuthCredentials());
+        asyncContinue();
+      };
+
+      asyncTestCase.waitForAsync(testId);
+      davFs.getRequest({auth: validBasicAuth, authOverwrite: true}).listDir(
+        authRootDir, assertListWAuth, null, null, this,
+        null, goog.partial(xhrLogging, logger));
+    }
+
+    function testDavFsPerMethodWAuth() {
+      var testId = 'testDavFsPerMethodWAuth';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      var assertListWAuth = function(errors, content) {
+        assertFalse('No errors', errors.hasRequest());
+        assertNotNullNorUndefined('Content', content);
+        console.log(content.root);
+        assertNotNullNorUndefined('root', content.root);
+        assertEquals('/davauth/', authRootDir, content.root.href);
+        assertFalse('No set Auth credentials',
+          davFs.getConnection().hasAuthCredentials());
+        asyncContinue();
+      };
+
+      asyncTestCase.waitForAsync(testId);
+      davFs.getRequest().listDir(authRootDir, assertListWAuth,
+        {authorization: validBasicAuth}, null, this,
+        null, goog.partial(xhrLogging, logger));
     }
   </script>
 </body>
