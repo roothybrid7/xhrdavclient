@@ -1,4 +1,26 @@
 
+0.1.0 / 2011-10-17 
+==================
+
+  *  Add basic auth in davfs.js
+  * Add basic auth in client.js
+  * Remove new break line at EOF
+  * Merge branch 'feature/DavFsSplitForRequest' into develop
+  * Refactor namespace and require scripts
+  * refactor
+  * Add DavFs.Request method
+  * Add WebDAV Request object for high-level api
+  * Add method of Adding multiple WebDAV site
+  * Rename namespace from xhrdav.lib.functions to xhrdav.lib.utils
+  * fixed jsdoc
+  * Add resource exists method in DavFs
+  * Add testcase of head HTTP method
+  * Add testcase of OPTIONS HTTP Method
+  * Modified logging of output method
+  * Add getXhrManager
+  * Merge branch 'release/v0.0.22' into develop
+  * update changelog and version string
+
 0.0.22 / 2011-10-14 
 ==================
 
