@@ -69,4 +69,3 @@ goog.exportProperty(xhrdav.parser.DomHandler.prototype, 'execute',
   xhrdav.parser.DomHandler.prototype.execute);
 goog.exportProperty(xhrdav.parser.DomHandler.prototype, 'getObject',
   xhrdav.parser.DomHandler.prototype.getObject);
-

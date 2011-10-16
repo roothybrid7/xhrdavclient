@@ -246,4 +246,3 @@ goog.exportProperty(xhrdav.ResourceBuilder.prototype, 'serialize',
      locktype: 'write', lockscope: 'exclusive', locktoken: opaquelocktoken:....,
      lockdepth: 0, lockowner: '', timeout: ('Infinite' | #)}
  */
-

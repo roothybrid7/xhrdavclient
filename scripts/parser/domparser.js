@@ -130,4 +130,3 @@ goog.exportProperty(xhrdav.parser.DomParser.prototype, 'parse',
   xhrdav.parser.DomParser.prototype.parse);
 goog.exportProperty(xhrdav.parser.DomParser.prototype, 'parseDocument',
   xhrdav.parser.DomParser.prototype.parseDocument);
-

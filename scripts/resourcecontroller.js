@@ -329,4 +329,3 @@ goog.exportProperty(xhrdav.ResourceController.prototype, 'rename',
   xhrdav.ResourceController.prototype.rename);
 goog.exportProperty(xhrdav.ResourceController.prototype, 'renameBeforeValidate',
   xhrdav.ResourceController.prototype.renameBeforeValidate);
-

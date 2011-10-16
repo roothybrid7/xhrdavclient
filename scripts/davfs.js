@@ -717,4 +717,3 @@ goog.exportProperty(xhrdav.DavFs.Request.prototype, 'exists',
   xhrdav.DavFs.Request.prototype.exists);
 goog.exportProperty(xhrdav.DavFs.Request.prototype, 'createResourceController',
   xhrdav.DavFs.Request.prototype.createResourceController);
-

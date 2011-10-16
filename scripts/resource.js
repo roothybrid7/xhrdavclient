@@ -60,4 +60,3 @@ xhrdav.Resource = function() {
 
 /* Entry point for closure compiler */
 goog.exportSymbol('xhrdav.Resource', xhrdav.Resource);
-

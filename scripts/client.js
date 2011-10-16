@@ -502,4 +502,3 @@ goog.exportProperty(xhrdav.Client.prototype, 'move',
   xhrdav.Client.prototype.move);
 goog.exportProperty(xhrdav.Client.prototype, 'copy',
   xhrdav.Client.prototype.copy);
-

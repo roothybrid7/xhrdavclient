@@ -120,4 +120,3 @@ goog.exportProperty(xhrdav.Errors.prototype, 'setRequest',
   xhrdav.Errors.prototype.setRequest);
 goog.exportProperty(xhrdav.Errors.prototype, 'addProps',
   xhrdav.Errors.prototype.addProps);
-

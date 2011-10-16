@@ -34,4 +34,3 @@ xhrdav.utils.domparse.parseXml = function(xml) {
 goog.exportSymbol('xhrdav.utils.domparse', xhrdav.utils.domparse);
 goog.exportSymbol('xhrdav.utils.domparse.parseXml',
   xhrdav.utils.domparse.parseXml);
-

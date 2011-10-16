@@ -165,4 +165,3 @@ goog.exportProperty(xhrdav.Conf.prototype, 'getXhrMgrConfig',
 goog.exportProperty(xhrdav.Conf.prototype, 'getLogger',
   xhrdav.Conf.prototype.getLogger);
 goog.exportSymbol('xhrdav.Conf.logging', xhrdav.Conf.logging);
-

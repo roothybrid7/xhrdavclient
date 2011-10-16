@@ -147,4 +147,3 @@ xhrdav.HttpStatus.text = {
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.HttpStatus', xhrdav.HttpStatus);
 goog.exportSymbol('xhrdav.HttpStatus.text', xhrdav.HttpStatus.text);
-

@@ -96,4 +96,3 @@ goog.exportProperty(String.prototype, 'dasherize',
   String.prototype.dasherize);
 goog.exportProperty(String.prototype, 'camelize',
   String.prototype.camelize);
-

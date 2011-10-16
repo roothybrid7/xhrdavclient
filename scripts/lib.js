@@ -26,4 +26,3 @@ xhrdav.lib.LIBNAME = 'xhrdavclient';
 
 /** @type {string} */
 xhrdav.lib.VERSION = '0.0.22';
-

@@ -58,4 +58,3 @@ goog.exportSymbol('xhrdav.utils.path.addLastSlash',
   xhrdav.utils.path.addLastSlash);
 goog.exportSymbol('xhrdav.utils.path.split',
   xhrdav.utils.path.split);
-

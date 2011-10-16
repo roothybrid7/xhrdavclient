@@ -6,4 +6,3 @@
 
 goog.provide('xhrdav.ext');
 goog.require('xhrdav.ext.string');
-
