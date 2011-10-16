@@ -13,7 +13,7 @@
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
 
-    goog.require('xhrdav.lib.functions.path');
+    goog.require('xhrdav.utils.path');
   </script>
 
   <script type="text/javascript">
@@ -26,9 +26,9 @@
       var path2 = '/foo/bar';
 
       assertEquals(path1,
-        '/foo/bar', xhrdav.lib.functions.path.removeLastSlash(path1));
+        '/foo/bar', xhrdav.utils.path.removeLastSlash(path1));
       assertEquals(path2,
-        '/foo/bar', xhrdav.lib.functions.path.removeLastSlash(path2));
+        '/foo/bar', xhrdav.utils.path.removeLastSlash(path2));
     }
 
     function testAddLastSlash() {
@@ -36,9 +36,9 @@
       var path2 = '/foo/bar/';
 
       assertEquals(path1,
-        '/foo/bar/', xhrdav.lib.functions.path.addLastSlash(path1));
+        '/foo/bar/', xhrdav.utils.path.addLastSlash(path1));
       assertEquals(path2,
-        '/foo/bar/', xhrdav.lib.functions.path.addLastSlash(path2));
+        '/foo/bar/', xhrdav.utils.path.addLastSlash(path2));
     }
 
     function testSplit() {
@@ -46,12 +46,12 @@
       var path2 = '/foo/bar/';
       var path3 = '/foo/bar';
 
-      assertArrayEquals('path: ' + path1, ['/'], xhrdav.lib.functions.path.split(path1));
-      console.log(xhrdav.lib.functions.path.split(path1));
+      assertArrayEquals('path: ' + path1, ['/'], xhrdav.utils.path.split(path1));
+      console.log(xhrdav.utils.path.split(path1));
       assertArrayEquals('path: ' + path2,
-        ['foo', 'bar'], xhrdav.lib.functions.path.split(path2));
+        ['foo', 'bar'], xhrdav.utils.path.split(path2));
       assertArrayEquals('path: ' + path3,
-        ['foo', 'bar'], xhrdav.lib.functions.path.split(path3));
+        ['foo', 'bar'], xhrdav.utils.path.split(path3));
     }
   </script>
 </body>

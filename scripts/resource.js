@@ -7,7 +7,7 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.Resource');
+goog.provide('xhrdav.Resource');
 goog.require('goog.array');
 goog.require('goog.object');
 
@@ -16,7 +16,7 @@ goog.require('goog.object');
  *
  * @constructor
  */
-xhrdav.lib.Resource = function() {
+xhrdav.Resource = function() {
   /** @type {string} */
   this.href = null;
   /** @type {Array.<string>} */
@@ -59,5 +59,4 @@ xhrdav.lib.Resource = function() {
 };
 
 /* Entry point for closure compiler */
-goog.exportSymbol('xhrdav.lib.Resource', xhrdav.lib.Resource);
-
+goog.exportSymbol('xhrdav.Resource', xhrdav.Resource);

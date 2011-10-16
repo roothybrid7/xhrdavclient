@@ -19,9 +19,9 @@
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
     goog.require('goog.net.XhrIo');
-    goog.require('xhrdav.lib.Client');
-    goog.require('xhrdav.lib.HttpStatus');
-    goog.require('xhrdav.lib.functions.domparse');
+    goog.require('xhrdav.Client');
+    goog.require('xhrdav.HttpStatus');
+    goog.require('xhrdav.utils.domparse');
   </script>
 </head>
 <body>
@@ -39,7 +39,7 @@
     var func;
 
     function setUp() {
-      func = xhrdav.lib.functions.domparse;
+      func = xhrdav.utils.domparse;
     }
 
     function tearDown() {
@@ -49,24 +49,24 @@
     function testClientMixinParseFuncObj() {
       var testId = 'ClientMixinParseFuncObj';
       var logger = new goog.debug.Logger.getLogger(testId);
-      var dav = new xhrdav.lib.Client();
+      var dav = new xhrdav.Client();
       dav.setXmlParseFunction();
       assertFalse('Can parse Xml by null?', dav.canParseXml());
       dav.setXmlParseFunction(String);
       assertFalse('Can parse Xml by String?', dav.canParseXml());
       dav.setXmlParseFunction(func);
-      assertTrue('Can parse Xml by xhrdav.lib.functions.DomParse?',
+      assertTrue('Can parse Xml by xhrdav.utils.DomParse?',
         dav.canParseXml());
     }
 
     function testPropfindWithParse() {
       var testId = 'PropfindWithParse';
       var logger = new goog.debug.Logger.getLogger(testId);
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
+      var httpStatus = xhrdav.HttpStatus;
+      var httpStatusText = xhrdav.HttpStatus.text;
 
 
-      var dav = new xhrdav.lib.Client();
+      var dav = new xhrdav.Client();
       //goog.mixin(dav, func);
       dav.setXmlParseFunction(func);
       //assertNotUndefined('Mixin: parseXml?', dav.parseXml);

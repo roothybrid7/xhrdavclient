@@ -14,7 +14,7 @@
     goog.require('goog.json');
 
     goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.DavFs');
+    goog.require('xhrdav.DavFs');
     goog.require('goog.async.ConditionalDelay');
     goog.require('goog.dom');
     goog.require('goog.string.StringBuffer');
@@ -32,7 +32,7 @@
       console.innerHTML += msg + '<br />';
     }
 
-    var fs = xhrdav.lib.DavFs.getInstance();
+    var fs = xhrdav.DavFs.getInstance();
 //    var xmgr = fs.getXhrManager();
     var xmgr = new goog.net.XhrManager();
 

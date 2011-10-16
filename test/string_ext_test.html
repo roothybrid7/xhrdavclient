@@ -12,7 +12,7 @@
     goog.require('goog.debug.Logger');
     goog.require('goog.json');
 
-    goog.require('xhrdav.lib.string');
+    goog.require('xhrdav.ext.string');
   </script>
 </head>
 <body>
@@ -47,7 +47,7 @@
 
     function testCamelize() {
       var testId = 'testCamelize';
-      var letterType = xhrdav.lib.string.LetterType;
+      var letterType = xhrdav.ext.string.LetterType;
 
       assertEquals('FooBar', 'foo_bar'.camelize());
       assertEquals('Foo', 'foo'.camelize());

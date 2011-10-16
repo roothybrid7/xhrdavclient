@@ -7,18 +7,18 @@
 <!--
   <script src="xhrdavclient.js" type="text/javascript"></script>
 -->
+  <script type="text/javascript">
+    goog.require('xhrdav.Client');
+    goog.require('xhrdav.HttpStatus');
+  </script>
 </head>
 <body>
   <div id="sample"></div>
   <script type="text/javascript">
-    goog.require('xhrdav.lib.Client');
-    goog.require('xhrdav.lib.HttpStatus');
-  </script>
-  <script type="text/javascript">
     var dir = '/mydav/'
-    var dav = new xhrdav.lib.Client();
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var httpStatusText = xhrdav.lib.HttpStatus.text;
+    var dav = new xhrdav.Client();
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
 
     dav.propfind(dir, function(statusCode, content, headers) {
       document.getElementById('sample').innerHTML = 'Sample File ' + "Status: " + httpStatusText[statusCode];

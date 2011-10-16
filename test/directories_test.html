@@ -15,8 +15,8 @@
     goog.require('goog.debug.Logger');
 
     goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.Client');
-    goog.require('xhrdav.lib.HttpStatus');
+    goog.require('xhrdav.Client');
+    goog.require('xhrdav.HttpStatus');
   </script>
   <script type="text/javascript">
     goog.debug.Console.autoInstall();
@@ -30,8 +30,10 @@
     };
 
     var parentDir = '/mydav/DirClientTest/';
-    var dav = new xhrdav.lib.Client();
-    var xmgr = goog.net.XhrManager();
+    var dav = new xhrdav.Client();
+    var xmgr = new goog.net.XhrManager();
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
 
     function setUp() {
       asyncTestCase.waitForAsync('setUp');
@@ -45,13 +47,11 @@
 
     function testPropfind() {
       var testId = 'Propfind';
-      var logger = new goog.debug.Logger.getLogger(testId);
+      var logger = goog.debug.Logger.getLogger(testId);
 
       asyncTestCase.waitForAsync();
 
       var dir = '/mydav/';
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
 
       var assertList = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.MULTI_STATUS, statusCode);
@@ -73,8 +73,6 @@
       asyncTestCase.waitForAsync(testId);
 
       var dir = '/mydav/';
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
 
       var assertList = function(statusCode, content, headers) {
         assertEquals('StatusCode?', httpStatus.MULTI_STATUS, statusCode);
@@ -98,8 +96,6 @@
 
       var dir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'foo/')) + '/';
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertDelete = function(statusCode, content, headers) {
@@ -129,8 +125,6 @@
 
       var dir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'foo'));
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
       logger.config(dir);
 
@@ -153,8 +147,6 @@
         goog.string.path.join(parentDir, 'bar/')) + '/';
       var dstDir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'buz/')) + '/';
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertRename = function(statusCode, content, headers) {
@@ -184,8 +176,6 @@
       var dir2 = '/mydav/move2/';
       var dstDir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'move/')) + '/';
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       var assertMoveAnotherTreeOverWrite = function(statusCode, content, headers) {
@@ -225,8 +215,6 @@
         goog.string.path.join(parentDir, 'moveFail/')) + '/';
       var dstDir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, '/foo/moveFail/')) + '/';
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       asyncTestCase.waitForAsync(testId);
@@ -253,8 +241,6 @@
         goog.string.path.join(parentDir, 'copySrc/')) + '/';
       var dstDir = goog.string.path.normalizePath(
         goog.string.path.join(parentDir, 'copyDst/')) + '/';
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var opt_request = {xhrMgr: xmgr};
 
       asyncTestCase.waitForAsync(testId);

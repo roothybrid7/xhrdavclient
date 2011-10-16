@@ -14,8 +14,8 @@
     goog.require('goog.object');
     goog.require('goog.string.path');
     goog.require('goog.net.XhrManager');
-    goog.require('xhrdav.lib.Client');
-    goog.require('xhrdav.lib.HttpStatus');
+    goog.require('xhrdav.Client');
+    goog.require('xhrdav.HttpStatus');
   </script>
 </head>
 <body>
@@ -23,6 +23,8 @@
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
 
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
     /**
      * Logging for XHR
      *
@@ -64,7 +66,7 @@
 
     function setUp() {
       asyncTestCase.waitForAsync('setUp');
-      var dav = new xhrdav.lib.Client();
+      var dav = new xhrdav.Client();
       var processRequest = function(e) {
         var xhr = e.target;
         initData = xhr.getResponse('while(1);');
@@ -75,7 +77,7 @@
 
     function tearDown() {
       asyncTestCase.waitForAsync('tearDown');
-      var dav = new xhrdav.lib.Client();
+      var dav = new xhrdav.Client();
       dav.delete(parentDir, asyncContinue);
     }
 
@@ -84,9 +86,7 @@
 
       asyncTestCase.waitForAsync(testId);
 
-      var dav = new xhrdav.lib.Client();
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
+      var dav = new xhrdav.Client();
 
       var assertOptions = function(req) {
         assertEquals('StatusCode?', httpStatus.OK, req.getStatus());
@@ -104,9 +104,7 @@
 
       asyncTestCase.waitForAsync(testId);
 
-      var dav = new xhrdav.lib.Client();
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
+      var dav = new xhrdav.Client();
 
       var assertLock = function(req) {
         assertEquals('StatusCode?', httpStatus.OK, req.getStatus());
@@ -126,10 +124,8 @@
 
       asyncTestCase.waitForAsync(testId);
 
-      var dav = new xhrdav.lib.Client();
+      var dav = new xhrdav.Client();
       var mgr = new goog.net.XhrManager();
-      var httpStatus = xhrdav.lib.HttpStatus;
-      var httpStatusText = xhrdav.lib.HttpStatus.text;
       var lockToken;
 
       var callbackPropfind = function(req) {

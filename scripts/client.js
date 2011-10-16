@@ -7,20 +7,22 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-goog.provide('xhrdav.lib.Client');
-goog.require('xhrdav.lib.Config');
+goog.provide('xhrdav.Client');
+goog.require('xhrdav.Conf');
 goog.require('goog.dom');
 goog.require('goog.Uri');
 goog.require('goog.net.XhrIo');
+
 
 /**
  * WebDAV Client library by Google Closure library.
  *
  * @constructor
- * @param {Object=} opt_uri URI Parameters(opt_uri: scheme, domain, port)
+ * @param {{scheme:string=, domain:stirng=, port:nubmer=, auth:string=}=} opt_uri
+ *     URI Parameters(opt_uri: scheme, domain, port)
  * @see #initialize_
  */
-xhrdav.lib.Client = function(opt_uri) {
+xhrdav.Client = function(opt_uri) {
   this.initialize_(opt_uri);
 };
 
@@ -28,9 +30,10 @@ xhrdav.lib.Client = function(opt_uri) {
  * WebDAV Client initialize
  *
  * @private
- * @param {Object=} opt_uri URI Parameters(opt_uri: scheme, domain, port)
+ * @param {{scheme:string=, domain:stirng=, port:nubmer=, auth:string=}=} opt_uri
+ *     URI Parameters(opt_uri: scheme, domain, port)
  */
-xhrdav.lib.Client.prototype.initialize_ = function(opt_uri) {
+xhrdav.Client.prototype.initialize_ = function(opt_uri) {
   if (!goog.isDefAndNotNull(opt_uri)) {
     opt_uri = {};
   }
@@ -41,6 +44,42 @@ xhrdav.lib.Client.prototype.initialize_ = function(opt_uri) {
   this.domain_ = opt_uri.domain || locationUrl.getDomain();
   /** @type {number} */
   this.port_ = opt_uri.port || locationUrl.getPort() || 80;
+  /** @type {?string} */
+  this.auth_ = opt_uri.auth;
+};
+
+/**
+ * Has Authorization credentials
+ *
+ * @return {boolean}
+ */
+xhrdav.Client.prototype.hasAuthCredentials = function() {
+  return !!this.auth_;
+};
+
+/**
+ * Get Authorization credentials
+ *
+ * @return {string}
+ */
+xhrdav.Client.prototype.getAuthCredentials = function() {
+  return this.auth_;
+};
+
+/**
+ * Set Authorization credentials
+ *
+ * @param {string} auth
+ */
+xhrdav.Client.prototype.setAuthCredentials = function(auth) {
+  this.auth_ = auth;
+};
+
+/**
+ * Clear Authorization credentials
+ */
+xhrdav.Client.prototype.clearAuthCredentials = function() {
+  this.auth_ = null;
 };
 
 /**
@@ -50,7 +89,7 @@ xhrdav.lib.Client.prototype.initialize_ = function(opt_uri) {
  * @param {string} headerStrings Response all header strings.
  * @return {Object} converted header object(associated array).
  */
-xhrdav.lib.Client.prototype.parseHeaders_ = function(headerStrings) {
+xhrdav.Client.prototype.parseHeaders_ = function(headerStrings) {
   var headers = {};
   var headerListWithoutEmpty = goog.array.filter(
     headerStrings.split(/\n/), function(v, i) {
@@ -70,7 +109,7 @@ xhrdav.lib.Client.prototype.parseHeaders_ = function(headerStrings) {
  *
  * @return {boolean} true: can parse xml, false: can't parse xml.
  */
-xhrdav.lib.Client.prototype.canParseXml = function() {
+xhrdav.Client.prototype.canParseXml = function() {
   return (goog.isDef(this.parseXml)) ? true : false;
 };
 
@@ -79,7 +118,7 @@ xhrdav.lib.Client.prototype.canParseXml = function() {
  *
  * @param {Object} funcObj Xml Parse function Object(defined function: parseXml).
  */
-xhrdav.lib.Client.prototype.setXmlParseFunction = function(funcObj) {
+xhrdav.Client.prototype.setXmlParseFunction = function(funcObj) {
   goog.mixin(this, funcObj);
 };
 
@@ -92,7 +131,7 @@ xhrdav.lib.Client.prototype.setXmlParseFunction = function(funcObj) {
  * @param {Object} event XHR Event Object.
  */
 // TODO: UNFIXED Logic
-xhrdav.lib.Client.prototype.processRequest_ = function(
+xhrdav.Client.prototype.processRequest_ = function(
   handler, onXhrComplete, event) {
   if (onXhrComplete && onXhrComplete instanceof Function) onXhrComplete(event);
 
@@ -100,7 +139,7 @@ xhrdav.lib.Client.prototype.processRequest_ = function(
   var xssGuard = 'while(1);';
   var headers = this.parseHeaders_(xhr.getAllResponseHeaders());
   var content = xhr.getResponse(xssGuard);
-//  if (xhr.getStatus() == 207) {
+
   if (goog.string.contains(headers['Content-Type'], 'xml')) {
     content = xhr.getResponseXml(xssGuard);
     if (this.canParseXml()) content = this.parseXml(content);
@@ -114,8 +153,8 @@ xhrdav.lib.Client.prototype.processRequest_ = function(
  * @private
  * @param {string} path Path(<code>/foo</code>, <code>/foo/bar.txt</code>).
  */
-xhrdav.lib.Client.prototype.generateUrl_ = function(path) {
-  xhrdav.lib.Config.logging({'Client#generateUrl_': path});
+xhrdav.Client.prototype.generateUrl_ = function(path) {
+  xhrdav.Conf.logging({'Client#generateUrl_': path});
   // scheme, userinfo, domain, port, path, query, fragment
   return goog.Uri.create(
     this.scheme_,
@@ -130,11 +169,12 @@ xhrdav.lib.Client.prototype.generateUrl_ = function(path) {
 /**
  * Set Query parameters for url.
  *
+ * @private
  * @param {goog.net.Uri} url  Uri object.
  * @param {Object=} query Json/Hash object for query.
  * @return {goog.net.Uri}
  */
-xhrdav.lib.Client.prototype.setParameters_ = function(url, query) {
+xhrdav.Client.prototype.setParameters_ = function(url, query) {
   if (goog.isDefAndNotNull(query) && !goog.object.isEmpty(query)) {
     goog.object.forEach(query, function(val, key) {
       if (val instanceof Array && !goog.array.isEmpty(val)) {
@@ -150,10 +190,11 @@ xhrdav.lib.Client.prototype.setParameters_ = function(url, query) {
 /**
  * convert headers keys.
  *
+ * @private
  * @param {Object=} headers HTTP headers object.
  * @return {Object} converted HTTP headers object.
  */
-xhrdav.lib.Client.prototype.convertHeadersKeys = function(headers) {
+xhrdav.Client.prototype.convertHeadersKeys_ = function(headers) {
   var converted = {};
   if (goog.isDefAndNotNull(headers) && !goog.object.isEmpty(headers)) {
     goog.object.forEach(headers, function(val, key) {
@@ -176,9 +217,14 @@ xhrdav.lib.Client.prototype.convertHeadersKeys = function(headers) {
  *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-xhrdav.lib.Client.prototype.request_ = function(
+xhrdav.Client.prototype.request_ = function(
   method, url, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
+  if (!goog.isDefAndNotNull(opt_request.headers)) opt_request.headers = {};
+  var auth = goog.object.get(opt_request.headers, 'Authorization');
+  if (!goog.isDefAndNotNull(auth)) {
+    goog.object.set(opt_request.headers, 'Authorization', this.auth_);
+  }
   if (goog.isDefAndNotNull(opt_request.xhrMgr)) {
     opt_request.xhrMgr.send(
       opt_request.xhrId || goog.string.createUniqueString(),
@@ -189,13 +235,6 @@ xhrdav.lib.Client.prototype.request_ = function(
       opt_request.priority || 0,
       goog.bind(this.processRequest_, this, handler, onXhrComplete),
       opt_request.maxRetries || 1);
-  } else if (goog.isDefAndNotNull(opt_request.xhrIoKls)) {
-    opt_request.xhrIoKls.send(
-      url,
-      goog.bind(this.processRequest_, this, handler, onXhrComplete),
-      method,
-      opt_request.body,
-      opt_request.headers);
   } else {
     goog.net.XhrIo.send(
       url,
@@ -216,12 +255,12 @@ xhrdav.lib.Client.prototype.request_ = function(
  *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-xhrdav.lib.Client.prototype.options = function(
+xhrdav.Client.prototype.options = function(
   path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
   goog.object.extend(opt_request.headers, {'Cache-Control': 'no-cache'});
   this.request_('OPTIONS', url, handler, opt_request, onXhrComplete);
 };
@@ -236,14 +275,14 @@ xhrdav.lib.Client.prototype.options = function(
  *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-// TODO: UNFIXED code
-xhrdav.lib.Client.prototype.head = function(path, handler, opt_request, onXhrComplete) {
+xhrdav.Client.prototype.head = function(
+  path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
   goog.object.extend(opt_request.headers, {'Cache-Control': 'no-cache'});
 
   this.request_('HEAD', url, handler, opt_request, onXhrComplete);
@@ -259,12 +298,12 @@ xhrdav.lib.Client.prototype.head = function(path, handler, opt_request, onXhrCom
  *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-xhrdav.lib.Client.prototype.get = function(path, handler, opt_request, onXhrComplete) {
+xhrdav.Client.prototype.get = function(path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
 
   this.request_('GET', url, handler, opt_request, onXhrComplete);
 };
@@ -280,7 +319,7 @@ xhrdav.lib.Client.prototype.get = function(path, handler, opt_request, onXhrComp
  *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-xhrdav.lib.Client.prototype.put = function(
+xhrdav.Client.prototype.put = function(
   path, data, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
@@ -292,7 +331,7 @@ xhrdav.lib.Client.prototype.put = function(
   } // Preserve GET
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
   goog.object.extend(opt_request.headers, {'Cache-Control': 'no-cache'});
 
   opt_request.body = data;
@@ -310,14 +349,14 @@ xhrdav.lib.Client.prototype.put = function(
  *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-xhrdav.lib.Client.prototype.propfind = function(
+xhrdav.Client.prototype.propfind = function(
   path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
   // 0(path only) or 1(current directory)
   goog.object.extend(opt_request.headers, {
     'Content-Type': 'text/xml',
@@ -342,13 +381,13 @@ xhrdav.lib.Client.prototype.propfind = function(
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 // TODO: UNFIXED
-xhrdav.lib.Client.prototype.proppatch = function(path, handler, opt_request, onXhrComplete) {
+xhrdav.Client.prototype.proppatch = function(path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
 };
 
 /**
@@ -362,13 +401,13 @@ xhrdav.lib.Client.prototype.proppatch = function(path, handler, opt_request, onX
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 // TODO: UNFIXED
-xhrdav.lib.Client.prototype.lock = function(path, handler, opt_request, onXhrComplete) {
+xhrdav.Client.prototype.lock = function(path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
   goog.object.extend(opt_request.headers, {
     'Content-Type': 'text/xml',
     'Depth': goog.isDefAndNotNull(opt_request.headers['Depth']) ?
@@ -394,14 +433,14 @@ xhrdav.lib.Client.prototype.lock = function(path, handler, opt_request, onXhrCom
  *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-xhrdav.lib.Client.prototype.mkcol = function(path, handler, opt_request, onXhrComplete) {
+xhrdav.Client.prototype.mkcol = function(path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   path = goog.string.endsWith(path, '/') ? path : path + '/'; // Preserve GET
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
 
   this.request_('MKCOL', url, handler, opt_request, onXhrComplete);
 };
@@ -416,14 +455,14 @@ xhrdav.lib.Client.prototype.mkcol = function(path, handler, opt_request, onXhrCo
  *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-xhrdav.lib.Client.prototype._delete = function(
+xhrdav.Client.prototype._delete = function(
   path, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
 
   this.request_('DELETE', url, handler, opt_request, onXhrComplete);
 };
@@ -441,7 +480,7 @@ xhrdav.lib.Client.prototype._delete = function(
  *                                          Option params(xhrId, xhrManager, etc);
  * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
-xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
+xhrdav.Client.prototype.copyOrMovePath_ = function(
   method, path, dstPath, handler, opt_request, onXhrComplete) {
 
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
@@ -449,7 +488,7 @@ xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
 
   goog.object.extend(opt_request.headers, {
     'Cache-Control': 'no-cache',
@@ -464,7 +503,7 @@ xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
  *
  * @see #copyOrMovePath_
  */
-xhrdav.lib.Client.prototype.move = function(
+xhrdav.Client.prototype.move = function(
   path, dstPath, handler, opt_request, onXhrComplete) {
   this.copyOrMovePath_('MOVE', path, dstPath, handler, opt_request, onXhrComplete);
 };
@@ -474,33 +513,41 @@ xhrdav.lib.Client.prototype.move = function(
  *
  * @see #copyOrMovePath_
  */
-xhrdav.lib.Client.prototype.copy = function(
+xhrdav.Client.prototype.copy = function(
   path, dstPath, handler, opt_request, onXhrComplete) {
   this.copyOrMovePath_('COPY', path, dstPath, handler, opt_request, onXhrComplete);
 };
 
-/* Entry Point for closure compiler */
-goog.exportSymbol('xhrdav.lib.Client', xhrdav.lib.Client);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'canParseXml',
-  xhrdav.lib.Client.prototype.canParseXml);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'setXmlParseFunction',
-  xhrdav.lib.Client.prototype.setXmlParseFunction);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'options',
-  xhrdav.lib.Client.prototype.options);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'head',
-  xhrdav.lib.Client.prototype.head);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'get',
-  xhrdav.lib.Client.prototype.get);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'put',
-  xhrdav.lib.Client.prototype.put);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'propfind',
-  xhrdav.lib.Client.prototype.propfind);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'mkcol',
-  xhrdav.lib.Client.prototype.mkcol);
-goog.exportProperty(xhrdav.lib.Client.prototype, '_delete',
-  xhrdav.lib.Client.prototype._delete);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'move',
-  xhrdav.lib.Client.prototype.move);
-goog.exportProperty(xhrdav.lib.Client.prototype, 'copy',
-  xhrdav.lib.Client.prototype.copy);
 
+/* Entry Point for closure compiler */
+goog.exportSymbol('xhrdav.Client', xhrdav.Client);
+goog.exportProperty(xhrdav.Client.prototype, 'hasAuthCredentials',
+  xhrdav.Client.prototype.hasAuthCredentials);
+goog.exportProperty(xhrdav.Client.prototype, 'getAuthCredentials',
+  xhrdav.Client.prototype.getAuthCredentials);
+goog.exportProperty(xhrdav.Client.prototype, 'setAuthCredentials',
+  xhrdav.Client.prototype.setAuthCredentials);
+goog.exportProperty(xhrdav.Client.prototype, 'clearAuthCredentials',
+  xhrdav.Client.prototype.clearAuthCredentials);
+goog.exportProperty(xhrdav.Client.prototype, 'canParseXml',
+  xhrdav.Client.prototype.canParseXml);
+goog.exportProperty(xhrdav.Client.prototype, 'setXmlParseFunction',
+  xhrdav.Client.prototype.setXmlParseFunction);
+goog.exportProperty(xhrdav.Client.prototype, 'options',
+  xhrdav.Client.prototype.options);
+goog.exportProperty(xhrdav.Client.prototype, 'head',
+  xhrdav.Client.prototype.head);
+goog.exportProperty(xhrdav.Client.prototype, 'get',
+  xhrdav.Client.prototype.get);
+goog.exportProperty(xhrdav.Client.prototype, 'put',
+  xhrdav.Client.prototype.put);
+goog.exportProperty(xhrdav.Client.prototype, 'propfind',
+  xhrdav.Client.prototype.propfind);
+goog.exportProperty(xhrdav.Client.prototype, 'mkcol',
+  xhrdav.Client.prototype.mkcol);
+goog.exportProperty(xhrdav.Client.prototype, '_delete',
+  xhrdav.Client.prototype._delete);
+goog.exportProperty(xhrdav.Client.prototype, 'move',
+  xhrdav.Client.prototype.move);
+goog.exportProperty(xhrdav.Client.prototype, 'copy',
+  xhrdav.Client.prototype.copy);

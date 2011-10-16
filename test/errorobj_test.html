@@ -14,15 +14,16 @@
     goog.require('goog.debug.Logger');
 
     goog.require('goog.object');
-    goog.require('xhrdav.lib.Config');
-    goog.require('xhrdav.lib.HttpStatus');
+    goog.require('xhrdav.Conf');
+    goog.require('xhrdav.Errors');
+    goog.require('xhrdav.HttpStatus');
   </script>
   <script type="text/javascript">
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
 
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var httpStatusText = xhrdav.lib.HttpStatus.text;
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
     /*
       Json/Hash repr
       {request: {},
@@ -32,9 +33,9 @@
       var testId = 'CreateErrorsObject';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var errors = new xhrdav.lib.Errors();
+      var errors = new xhrdav.Errors();
       assertNotNullNorUndefined('Get Error Object?', errors);
-      assertTrue('xhrdav.lib.Errors?', errors instanceof xhrdav.lib.Errors);
+      assertTrue('xhrdav.Errors?', errors instanceof xhrdav.Errors);
 
       assertFalse('No request error?', errors.hasRequest());
       assertFalse('No request error?', errors.hasProps());
@@ -46,7 +47,7 @@
         assertEquals('request empty?', 0, goog.object.getCount(s_errs.request));
         assertTrue('props empty?', goog.array.isEmpty(s_errs.props));
       };
-      var err_hash = xhrdav.lib.Errors.serialize(errors);
+      var err_hash = xhrdav.Errors.serialize(errors);
       assert_serialize(err_hash);
 
       // instance serialize
@@ -62,7 +63,7 @@
       var testId = 'RequestErrors';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var errors = new xhrdav.lib.Errors();
+      var errors = new xhrdav.Errors();
 
       var assertReqErrsNull = function(errs) {
         errors.setRequest(errs);
@@ -97,7 +98,7 @@
       var testId = 'PropsErrors';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      var errors = new xhrdav.lib.Errors();
+      var errors = new xhrdav.Errors();
 
       var assertPropsNull = function(errs) {
         errors.addProps(errs);
