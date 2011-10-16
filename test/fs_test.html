@@ -14,7 +14,6 @@
     goog.require('goog.json');
     goog.require('goog.async.ConditionalDelay');
 
-    goog.require('goog.net.XhrManager');
     goog.require('xhrdav.lib.DavFs');
   </script>
 </head>
@@ -122,6 +121,18 @@
       assertNotNullNorUndefined('Create Request object?', req);
       assertTrue('instanceof Request?',
         req instanceof xhrdav.lib.DavFs.Request);
+      assertNotUndefined('listDir', req.listDir);
+      assertNotUndefined('getProps', req.getProps);
+      assertNotUndefined('mkDir', req.mkDir);
+      assertNotUndefined('remove', req.remove);
+      assertNotUndefined('move', req.move);
+      assertNotUndefined('copy', req.copy);
+      assertNotUndefined('read', req.read);
+      assertNotUndefined('write', req.write);
+      assertNotUndefined('upload', req.upload);
+      assertNotUndefined('exists', req.exists);
+      assertNotUndefined('getListDirFromMultistatus',
+        xhrdav.lib.DavFs.Request.getListDirFromMultistatus);
     }
   </script>
 </body>
