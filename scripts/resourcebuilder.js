@@ -6,8 +6,8 @@
 
 goog.provide('xhrdav.lib.ResourceBuilder');
 goog.require('xhrdav.lib.Config');
-goog.require('xhrdav.lib.Resource');
 goog.require('xhrdav.lib.ResourceController');
+
 
 /**
  * xhrdavclient resource object
@@ -189,6 +189,7 @@ xhrdav.lib.ResourceBuilder.serialize = function(resources, asModel) {
 xhrdav.lib.ResourceBuilder.prototype.serialize = function(asModel) {
   return xhrdav.lib.ResourceBuilder.serialize(this.getResources(), asModel);
 };
+
 
 /* Entry point for closure compiler */
 goog.exportSymbol('xhrdav.lib.ResourceBuilder', xhrdav.lib.ResourceBuilder);

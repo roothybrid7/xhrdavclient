@@ -8,7 +8,6 @@
 
 goog.provide('xhrdav.lib');
 goog.provide('xhrdav.lib.Config');
-goog.require('goog.Disposable');
 goog.require('goog.dom');
 goog.require('goog.array');
 goog.require('goog.object');

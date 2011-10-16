@@ -76,17 +76,17 @@
       var assertRemoveFile = function(errors) {
         assertFalse('No errors', errors.hasRequest());
 
-        fs.remove(file, assertRetryRemove, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().remove(file, assertRetryRemove, null, null, this,
+          {xhrId: testId + '#remove2'}, goog.partial(xhrLogging, logger));
       };
 
       var callbackWrite = function(errors, newLoc) {
-        fs.remove(file, assertRemoveFile, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().remove(file, assertRemoveFile, null, null, this,
+          {xhrId: testId + '#remove1'}, goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackWrite, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(file, initData, callbackWrite, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
 
     function testRename() {
@@ -105,12 +105,12 @@
       };
 
       var callbackWrite = function(errors, newLoc) {
-        fs.move(file, dstPath, assertRename, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().move(file, dstPath, assertRename, null, null, this,
+          {xhrId: testId + '#move'}, goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackWrite, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(file, initData, callbackWrite, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
 
     function testCopy() {
@@ -129,33 +129,33 @@
 
       var assertOverwrite = function(errors, newLoc) {
         assertFalse('No errors?', errors.hasRequest());
-        fs.copy(file, dstPath, assertFailOverwrite, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().copy(file, dstPath, assertFailOverwrite, null, null, this,
+          {xhrId: testId + '#copy4'}, goog.partial(xhrLogging, logger));
       };
 
       var assertRetryCopyErr = function(errors, newLoc) {
         assertTrue('Errors?', errors.hasRequest());
         assertTrue('No create?', goog.string.isEmptySafe(newLoc));
 
-        fs.copy(file, dstPath, assertOverwrite, {overwrite: true}, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().copy(file, dstPath, assertOverwrite, {overwrite: true}, null, this,
+          {xhrId: testId + '#copy3'}, goog.partial(xhrLogging, logger));
       };
 
       var assertCopy = function(errors, newLoc) {
         assertFalse('No errors', errors.hasRequest());
         assertNotNullNorUndefined('Create location?', newLoc);
 
-        fs.copy(file, '/foo/bar/', assertRetryCopyErr, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().copy(file, '/foo/bar/', assertRetryCopyErr, null, null, this,
+          {xhrId: testId + '#copy2'}, goog.partial(xhrLogging, logger));
       };
 
       var callbackWrite = function(errors, newLoc) {
-        fs.copy(file, dstPath, assertCopy, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().copy(file, dstPath, assertCopy, null, null, this,
+          {xhrId: testId + '#copy1'}, goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackWrite, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(file, initData, callbackWrite, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
 
     function testReadFile() {
@@ -173,17 +173,17 @@
       var assertRead = function(errors, content) {
         assertFalse('No errors?', errors.hasRequest());
         logger.config(content);
-        fs.read('/foo/bar.txt', assertFileNotFound, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().read('/foo/bar.txt', assertFileNotFound, null, null, this,
+         {xhrId: testId + '#read2'},  goog.partial(xhrLogging, logger));
       };
 
       var callbackWrite = function(errors, newLoc) {
-        fs.read(file, assertRead, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().read(file, assertRead, null, null, this,
+          {xhrId: testId + '#read1'}, goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackWrite, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(file, initData, callbackWrite, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
   </script>
 </body>

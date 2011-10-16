@@ -77,8 +77,8 @@
         asyncContinue();
       };
 
-      fs.write(file, initData, assertWriteFile, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(file, initData, assertWriteFile, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
 
     function testWriteMissingPath() {
@@ -102,9 +102,8 @@
         asyncContinue();
       };
 
-      fs.write(testPath, initData, assertWriteFail, {depth: 1}, {a: 'b'},
-        this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(testPath, initData, assertWriteFail, {depth: 1}, {a: 'b'},
+        this, {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
 
     function testWriteNullData() {
@@ -124,8 +123,8 @@
         asyncContinue();
       };
 
-      fs.write(file, null, assertWriteNull, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(file, null, assertWriteNull, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
 
     function testReadFile() {
@@ -143,17 +142,17 @@
       var assertRead = function(errors, content) {
         assertFalse('No errors?', errors.hasRequest());
         logger.config(content);
-        fs.read('/foo/bar.txt', assertFileNotFound, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().read('/foo/bar.txt', assertFileNotFound, null, null, this,
+          {xhrId: testId + '#read2'}, goog.partial(xhrLogging, logger));
       };
 
       var callbackWrite = function(errors, newLoc) {
-        fs.read(file, assertRead, null, null, this,
-          goog.partial(xhrLogging, logger));
+        fs.getRequest().read(file, assertRead, null, null, this,
+          {xhrId: testId + '#read1'}, goog.partial(xhrLogging, logger));
       };
 
-      fs.write(file, initData, callbackWrite, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().write(file, initData, callbackWrite, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
     }
   </script>
 </body>

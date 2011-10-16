@@ -66,17 +66,17 @@
 
       var assertRmDir = function(errors) {
         assertFalse('No Error', errors.hasRequest());
-        davFs.remove(dir, assertRetryRmDir, null, null, this,
-          goog.partial(xhrLogging, logger));
+        davFs.getRequest().remove(dir, assertRetryRmDir, null, null, this,
+          {xhrId: testId + '#remove2'}, goog.partial(xhrLogging, logger));
       };
 
       var assertMkDir = function(errors, newLoc) {
-        davFs.remove(dir, assertRmDir, null, null, this,
-          goog.partial(xhrLogging, logger));
+        davFs.getRequest().remove(dir, assertRmDir, null, null, this,
+          {xhrId: testId + '#remove1'}, goog.partial(xhrLogging, logger));
       };
 
-      davFs.mkDir(dir, assertMkDir, null, null, this,
-        goog.partial(xhrLogging, logger));
+      davFs.getRequest().mkDir(dir, assertMkDir, null, null, this,
+        {xhrId: testId + '#mkdir'}, goog.partial(xhrLogging, logger));
     }
 
     function testMove() {
@@ -104,18 +104,17 @@
         assertNotNullNorUndefined('Create Location?', newLoc);
         logger.config('New location: ' + newLoc);
 
-        davFs.move(dir, dstDir, assertRetryMoveDir, null, null, this,
-          goog.partial(xhrLogging, logger));
+        davFs.getRequest().move(dir, dstDir, assertRetryMoveDir, null, null, this,
+          {xhrId: testId + '#move2'}, goog.partial(xhrLogging, logger));
       };
 
       var callbackMkDir = function() {
-        davFs.move(dir, dstDir, assertMoveDir, null, null, this,
-          goog.partial(xhrLogging, logger));
+        davFs.getRequest().move(dir, dstDir, assertMoveDir, null, null, this,
+          {xhrId: testId + '#move1'}, goog.partial(xhrLogging, logger));
       };
 
-      davFs.mkDir(dir, callbackMkDir, null, null, this,
-        goog.partial(xhrLogging, logger));
-
+      davFs.getRequest().mkDir(dir, callbackMkDir, null, null, this,
+        {xhrId: testId + '#mkDir'}, goog.partial(xhrLogging, logger));
     }
 
     function testCopy() {
@@ -140,12 +139,12 @@
       };
 
       var callbackCpDir = function() {
-        davFs.copy(dir, dstDir, assertCopyDir, null, null, this,
-          goog.partial(xhrLogging, logger));
+        davFs.getRequest().copy(dir, dstDir, assertCopyDir, null, null, this,
+          {xhrId: testId + '#copy'}, goog.partial(xhrLogging, logger));
       };
 
-      davFs.mkDir(dir, callbackCpDir, null, null, this,
-        goog.partial(xhrLogging, logger));
+      davFs.getRequest().mkDir(dir, callbackCpDir, null, null, this,
+        {xhrId: testId + '#mkDir'}, goog.partial(xhrLogging, logger));
     }
 
     function testExists() {
@@ -159,8 +158,8 @@
       }
 
       asyncTestCase.waitForAsync(testId);
-      davFs.exists(parentDir, assertExists, null, null, this,
-        goog.partial(xhrLogging, logger));
+      davFs.getRequest().exists(parentDir, assertExists, null, null, this,
+        {xhrId: testId + '#exists'}, goog.partial(xhrLogging, logger));
     }
 
     function testExistsFail() {
@@ -183,10 +182,10 @@
 
       delay.start(500, -1);
       asyncTestCase.waitForAsync(testId);
-      davFs.exists('/foo/bar/', assertExists, null, null, this,
-        goog.partial(xhrLogging, logger));
-      davFs.exists('/foo/bar.txt', assertExists, null, null, this,
-        goog.partial(xhrLogging, logger));
+      davFs.getRequest().exists('/foo/bar/', assertExists, null, null, this,
+        {xhrId: testId + '#exists2'}, goog.partial(xhrLogging, logger));
+      davFs.getRequest().exists('/foo/bar.txt', assertExists, null, null, this,
+        {xhrId: testId + '#exists1'}, goog.partial(xhrLogging, logger));
     }
   </script>
 </body>

@@ -18,6 +18,7 @@
     goog.require('xhrdav.lib.Client');
     goog.require('xhrdav.lib.HttpStatus');
     goog.require('xhrdav.lib.ResourceController');
+    goog.require('xhrdav.lib.DavFs');
   </script>
   <script type="text/javascript">
     goog.debug.Console.autoInstall();
@@ -29,6 +30,8 @@
     var asyncContinue = function() {
       asyncTestCase.continueTesting();
     };
+
+    var davFs = xhrdav.lib.DavFs.getInstance();
 
     var initDirOnlyData, initCurrDirData;
     // Load fixture by jsonp
@@ -155,6 +158,18 @@
       var controller = new genKlass(resource);
       assertEquals('href is same?', resource.href, controller.href);
       assertEquals('status is same?', resource.status, resource.status);
+    }
+
+    function testSetRequest() {
+      var testId = 'testSetRequest';
+
+      var ctrl = new xhrdav.lib.ResourceController();
+      var req = davFs.getRequest();
+      ctrl.setRequest(req);
+      assertEquals('Same Request object?', req, ctrl.request_);
+      var ctrl2 = req.createResourceController();
+      assertNotEquals('Create new resource ctrl?', ctrl, ctrl2);
+      assertEquals('Same Request object?', req, ctrl2.request_);
     }
   </script>
 </body>

@@ -13,6 +13,7 @@ goog.require('goog.dom');
 goog.require('goog.Uri');
 goog.require('goog.net.XhrIo');
 
+
 /**
  * WebDAV Client library by Google Closure library.
  *
@@ -132,6 +133,7 @@ xhrdav.lib.Client.prototype.generateUrl_ = function(path) {
 /**
  * Set Query parameters for url.
  *
+ * @private
  * @param {goog.net.Uri} url  Uri object.
  * @param {Object=} query Json/Hash object for query.
  * @return {goog.net.Uri}
@@ -152,10 +154,11 @@ xhrdav.lib.Client.prototype.setParameters_ = function(url, query) {
 /**
  * convert headers keys.
  *
+ * @private
  * @param {Object=} headers HTTP headers object.
  * @return {Object} converted HTTP headers object.
  */
-xhrdav.lib.Client.prototype.convertHeadersKeys = function(headers) {
+xhrdav.lib.Client.prototype.convertHeadersKeys_ = function(headers) {
   var converted = {};
   if (goog.isDefAndNotNull(headers) && !goog.object.isEmpty(headers)) {
     goog.object.forEach(headers, function(val, key) {
@@ -216,7 +219,7 @@ xhrdav.lib.Client.prototype.options = function(
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
   goog.object.extend(opt_request.headers, {'Cache-Control': 'no-cache'});
   this.request_('OPTIONS', url, handler, opt_request, onXhrComplete);
 };
@@ -238,7 +241,7 @@ xhrdav.lib.Client.prototype.head = function(
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
   goog.object.extend(opt_request.headers, {'Cache-Control': 'no-cache'});
 
   this.request_('HEAD', url, handler, opt_request, onXhrComplete);
@@ -259,7 +262,7 @@ xhrdav.lib.Client.prototype.get = function(path, handler, opt_request, onXhrComp
 
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
 
   this.request_('GET', url, handler, opt_request, onXhrComplete);
 };
@@ -287,7 +290,7 @@ xhrdav.lib.Client.prototype.put = function(
   } // Preserve GET
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
   goog.object.extend(opt_request.headers, {'Cache-Control': 'no-cache'});
 
   opt_request.body = data;
@@ -312,7 +315,7 @@ xhrdav.lib.Client.prototype.propfind = function(
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
   // 0(path only) or 1(current directory)
   goog.object.extend(opt_request.headers, {
     'Content-Type': 'text/xml',
@@ -343,7 +346,7 @@ xhrdav.lib.Client.prototype.proppatch = function(path, handler, opt_request, onX
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
 };
 
 /**
@@ -363,7 +366,7 @@ xhrdav.lib.Client.prototype.lock = function(path, handler, opt_request, onXhrCom
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
   goog.object.extend(opt_request.headers, {
     'Content-Type': 'text/xml',
     'Depth': goog.isDefAndNotNull(opt_request.headers['Depth']) ?
@@ -396,7 +399,7 @@ xhrdav.lib.Client.prototype.mkcol = function(path, handler, opt_request, onXhrCo
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
 
   this.request_('MKCOL', url, handler, opt_request, onXhrComplete);
 };
@@ -418,7 +421,7 @@ xhrdav.lib.Client.prototype._delete = function(
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
 
   this.request_('DELETE', url, handler, opt_request, onXhrComplete);
 };
@@ -444,7 +447,7 @@ xhrdav.lib.Client.prototype.copyOrMovePath_ = function(
   var url = this.generateUrl_(goog.string.urlDecode(path || ''));
   this.setParameters_(url, opt_request.query);
 
-  opt_request.headers = this.convertHeadersKeys(opt_request.headers || {});
+  opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});
 
   goog.object.extend(opt_request.headers, {
     'Cache-Control': 'no-cache',
@@ -473,6 +476,7 @@ xhrdav.lib.Client.prototype.copy = function(
   path, dstPath, handler, opt_request, onXhrComplete) {
   this.copyOrMovePath_('COPY', path, dstPath, handler, opt_request, onXhrComplete);
 };
+
 
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.lib.Client', xhrdav.lib.Client);

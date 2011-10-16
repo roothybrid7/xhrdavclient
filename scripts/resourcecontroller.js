@@ -2,7 +2,7 @@
  * resourcecontroller.js - xhrdavclient resource object controller
  *
  * This is a WebDAV resource controller.
- * A single resource simply copy, move, rename, delete support.
+ * A single resource serialize, simply copy, move, rename, delete support.
  *
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
@@ -11,12 +11,14 @@ goog.provide('xhrdav.lib.ResourceController');
 goog.require('xhrdav.lib.Config');
 goog.require('xhrdav.lib.Resource');
 
+
 /**
  * xhrdavclient resource controller
  *
  * @constructor
- * @param {(xhrdav.lib.Resource|Object}=} resource  Json/Hash object for WebDAV resource.
+ * @param {(xhrdav.lib.Resource|Object)=} resource  Json/Hash object for WebDAV resource.
  * @see xhrdav.lib.Resource
+ * @see xhrdav.lib.DavFs.Request
  */
 xhrdav.lib.ResourceController = function(resource) {
   if (resource instanceof xhrdav.lib.Resource) {
@@ -33,18 +35,19 @@ xhrdav.lib.ResourceController = function(resource) {
     }
     goog.mixin(this, model);
   }
+
+  /** @type {xhrdav.lib.DavFs.Request} */
+  this.request_ = null;
 };
 
 /**
- * Get DavFs
+ * Set Request object for WebDAV request.
  *
- * @return {xhrdav.lib.DavFs}
+ * @param {xhrdav.lib.DavFs.Request} request  Request object for WebDAV request
+ * @see xhrdav.lib.DavFs#getRequest
  */
-xhrdav.lib.ResourceController.prototype.getConnection_ = function() {
-  if (!goog.isDefAndNotNull(this.davFs_)) {
-    this.davFs_ = xhrdav.lib.DavFs.getInstance();
-  }
-  return this.davFs_;
+xhrdav.lib.ResourceController.prototype.setRequest = function(request) {
+  this.request_ = request;
 };
 
 /**
@@ -135,7 +138,7 @@ xhrdav.lib.ResourceController.prototype.remove = function(
   if ('collection' == this.resourcetype) {
     this.destination_ = xhrdav.lib.utils.path.addLastSlash(this.destination_);
   }
-  this.getConnection_().remove(this.href,
+  this.request_ && this.request_.remove(this.href,
     handler, opt_headers, opt_params, context, onXhrComplete);
 };
 
@@ -153,11 +156,11 @@ xhrdav.lib.ResourceController.prototype.remove = function(
 xhrdav.lib.ResourceController.prototype.mkDir = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
   if (!goog.isDefAndNotNull(this.href)) {
-    return goog.functions.error(
+    goog.functions.error(
       'Not found Directory path: obj.href = directoryPath')();
   }
   this.href = xhrdav.lib.utils.path.addLastSlash(this.href);
-  this.getConnection_().mkDir(this.href,
+  this.request_ && this.request_.mkDir(this.href,
     handler, opt_headers, opt_params, context, onXhrComplete);
 };
 /**
@@ -178,7 +181,7 @@ xhrdav.lib.ResourceController.prototype.copy = function(
   if ('collection' == this.resourcetype) {
     this.destination_ = xhrdav.lib.utils.path.addLastSlash(this.destination_);
   }
-  this.getConnection_().copy(this.href, this.destination_,
+  this.request_ && this.request_.copy(this.href, this.destination_,
     handler, opt_headers, opt_params, context, onXhrComplete);
 };
 
@@ -197,7 +200,7 @@ xhrdav.lib.ResourceController.prototype.copy = function(
 xhrdav.lib.ResourceController.prototype.copyBeforeValidate = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
   if (!goog.isDefAndNotNull(this.destination_)) {
-    return goog.functions.error(
+    goog.functions.error(
       'Not found destination: obj.setDestination = destPath')();
   }
   return this.copy(handler, opt_headers, opt_params, context, onXhrComplete);
@@ -221,7 +224,7 @@ xhrdav.lib.ResourceController.prototype.move = function(
   if ('collection' == this.resourcetype) {
     this.destination_ = xhrdav.lib.utils.path.addLastSlash(this.destination_);
   }
-  this.getConnection_().move(this.href, this.destination_,
+  this.request_ && this.request_.move(this.href, this.destination_,
     handler, opt_headers, opt_params, context, onXhrComplete);
 };
 
@@ -240,7 +243,7 @@ xhrdav.lib.ResourceController.prototype.move = function(
 xhrdav.lib.ResourceController.prototype.moveBeforeValidate = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
   if (!goog.isDefAndNotNull(this.destination_)) {
-    return goog.functions.error(
+    goog.functions.error(
       'Not found destination: obj.setDestination = destPath')();
   }
   return this.move(handler, opt_headers, opt_params, context, onXhrComplete);
@@ -263,7 +266,7 @@ xhrdav.lib.ResourceController.prototype.rename = function(
   if ('collection' == this.resourcetype) {
     this.destination_ = xhrdav.lib.utils.path.addLastSlash(this.destination_);
   }
-  this.getConnection_().move(this.href, this.destination_,
+  this.request_ && this.request_.move(this.href, this.destination_,
     handler, opt_headers, opt_params, context, onXhrComplete);
 };
 
@@ -283,13 +286,14 @@ xhrdav.lib.ResourceController.prototype.rename = function(
 xhrdav.lib.ResourceController.prototype.renameBeforeValidate = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
   if (!goog.isDefAndNotNull(this.destination_)) {
-    return goog.functions.error(
-      'Not found destination: obj.setDestination = destPath')();
+    goog.functions.error(
+      'Not found destination: obj.setDestination = destPath')();  // Throw exception!!
   } else {
     var dstlist = xhrdav.lib.utils.path.split(this.destination_);
 
     if (dstlist[dstlist.length - 1] == this.pathlist[this.pathlist.length - 1]) {
-      return goog.functions.error(
+      // Throw exception!!
+      goog.functions.error(
         'Duplicate destination: obj.href and  obj.destination is same!!')();
     }
   }
@@ -299,6 +303,8 @@ xhrdav.lib.ResourceController.prototype.renameBeforeValidate = function(
 
 /* Entry point for closure compiler */
 goog.exportSymbol('xhrdav.lib.ResourceController', xhrdav.lib.ResourceController);
+goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'setRequest',
+  xhrdav.lib.ResourceController.prototype.setRequest);
 goog.exportSymbol('xhrdav.lib.ResourceController.serialize',
   xhrdav.lib.ResourceController.serialize);
 goog.exportProperty(xhrdav.lib.ResourceController.prototype, 'serialize',

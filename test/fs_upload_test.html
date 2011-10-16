@@ -65,8 +65,8 @@
       };
 
       asyncTestCase.waitForAsync(testId);
-      fs.upload(file, initData, assertUploadFile, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().upload(file, initData, assertUploadFile, null, null, this,
+        {xhrId: testId + '#upload'}, goog.partial(xhrLogging, logger));
     }
 
     function testUploadMissingPath() {
@@ -87,8 +87,8 @@
       };
 
       asyncTestCase.waitForAsync(testId);
-      fs.upload(dummyPath, initData, assertUploadFileFail, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().upload(dummyPath, initData, assertUploadFileFail, null, null, this,
+        {xhrId: testId + '#upload'}, goog.partial(xhrLogging, logger));
     }
 
     function testUploadUndefinedData() {
@@ -105,8 +105,8 @@
       };
 
       asyncTestCase.waitForAsync(testId);
-      fs.upload(file, undefined, assertUploadFileUndefined, null, null, this,
-        goog.partial(xhrLogging, logger));
+      fs.getRequest().upload(file, undefined, assertUploadFileUndefined, null, null, this,
+        {xhrId: testId + '#upload'}, goog.partial(xhrLogging, logger));
     }
   </script>
 </body>
