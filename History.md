@@ -1,4 +1,11 @@
 
+0.1.0a / 2011-10-21 
+==================
+
+  * fixed bug: port
+  * Merge branch 'release/v0.1.0' into develop
+  * update changelog and version string.
+
 0.1.0 / 2011-10-17 
 ==================
 
