@@ -43,7 +43,7 @@ xhrdav.Client.prototype.initialize_ = function(opt_uri) {
   /** @type {string} */
   this.domain_ = opt_uri.domain || locationUrl.getDomain();
   /** @type {number} */
-  this.port_ = opt_uri.port || locationUrl.getPort() || 80;
+  this.port_ = opt_uri.port || locationUrl.getPort();
   /** @type {?string} */
   this.auth_ = opt_uri.auth;
 };
