@@ -47,26 +47,14 @@ done
 
 PYTHON=$(which python)
 OUTPUTDIR="lib"
-OUTPUTFILE="xhrdavclient.js"
+OUTPUTFILE="xhrdavclient"
+FILE_SUFFIX=".js"
 ROOTS=(
   'closure-library/'
   'src/'
 )
 NAMESPACES=(
   'xhrdav'
-#  'xhrdav.lib'
-#  'xhrdav.Client'
-#  'xhrdav.DavFs'
-#  'xhrdav.Conf'
-#  'xhrdav.ext'
-#  'xhrdav.parser.DomHandler'
-#  'xhrdav.parser.DomParser'
-#  'xhrdav.Errors'
-#  'xhrdav.utils'
-#  'xhrdav.HttpStatus'
-#  'xhrdav.Resource'
-#  'xhrdav.ResourceBuilder'
-#  'xhrdav.ResourceController'
 )
 
 rootdir=
@@ -79,10 +67,13 @@ if [ "$FLG_GENERAGE" = "TRUE" ]; then
   options='-o script'
 elif [ "$FLG_ADVANCED" = "TRUE" ]; then
   options='-c tools/compiler/compiler.jar -f "--compilation_level=ADVANCED_OPTIMIZATIONS" -o compiled'
+  OUTPUTFILE="${OUTPUTFILE}-min-adv"
 elif [ "$FLG_WHITESPACE_ONLY" = "TRUE" ]; then
   options='-c tools/compiler/compiler.jar -f "--compilation_level=WHITESPACE_ONLY" -o compiled'
+  OUTPUTFILE="${OUTPUTFILE}-min"
 else
   options='-c tools/compiler/compiler.jar -f "--compilation_level=SIMPLE_OPTIMIZATIONS" -o compiled'
+  OUTPUTFILE="${OUTPUTFILE}-min"
 fi
 
 # Release build with debug off
@@ -96,7 +87,7 @@ if [ "$FLG_FORMAT" = "TRUE" ]; then
 fi
 
 
-command="$PYTHON closure-library/closure/bin/build/closurebuilder.py --output_file=${OUTPUTDIR}/${OUTPUTFILE}"
+command="$PYTHON closure-library/closure/bin/build/closurebuilder.py --output_file=${OUTPUTDIR}/${OUTPUTFILE}${FILE_SUFFIX}"
 echo $command $rootdir $entries $options | bash
 [ $? -ne 0 ] && usage
 
