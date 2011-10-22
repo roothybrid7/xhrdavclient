@@ -144,6 +144,12 @@ xhrdav.Client.prototype.processRequest_ = function(
     content = xhr.getResponseXml(xssGuard);
     if (this.canParseXml()) content = this.parseXml(content);
   }
+  if (!xhr.isSuccess() && xhr.getStatus() != xhrdav.HttpStatus.MULTI_STATUS) {
+    xhrdav.Conf.logging({'name': 'Client#processRequest_',
+      'uri': xhr.getLastUri(),
+      'errStatus': xhr.getLastErrorCode(),
+      'errMessage': xhr.getLastError()}, 'warning');
+  }
   if (handler) handler(xhr.getStatus() || 500, content, headers);
 };
 
@@ -154,7 +160,7 @@ xhrdav.Client.prototype.processRequest_ = function(
  * @param {string} path Path(<code>/foo</code>, <code>/foo/bar.txt</code>).
  */
 xhrdav.Client.prototype.generateUrl_ = function(path) {
-  xhrdav.Conf.logging({'Client#generateUrl_': path});
+  xhrdav.Conf.logging({'name': 'Client#generateUrl_', 'RequestURL': path});
   // scheme, userinfo, domain, port, path, query, fragment
   return goog.Uri.create(
     this.scheme_,
