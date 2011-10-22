@@ -6,7 +6,6 @@
  * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
  */
 
-//goog.provide('xhrdav.lib');
 goog.provide('xhrdav.Conf');
 goog.require('xhrdav.lib');
 goog.require('goog.net.XhrIo');

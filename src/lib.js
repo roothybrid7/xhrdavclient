@@ -24,5 +24,3 @@ goog.require('xhrdav.HttpStatus');
 /** @type {string} */
 xhrdav.lib.LIBNAME = 'xhrdavclient';
 
-/** @type {string} */
-xhrdav.lib.VERSION = '0.1.0';

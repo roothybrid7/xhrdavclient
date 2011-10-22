@@ -46,25 +46,27 @@ do
 done
 
 PYTHON=$(which python)
+OUTPUTDIR="lib"
 OUTPUTFILE="xhrdavclient.js"
 ROOTS=(
   'closure-library/'
-  'scripts/'
+  'src/'
 )
 NAMESPACES=(
-  'xhrdav.lib'
-  'xhrdav.Client'
-  'xhrdav.DavFs'
-  'xhrdav.Conf'
-  'xhrdav.ext'
-  'xhrdav.parser.DomHandler'
-  'xhrdav.parser.DomParser'
-  'xhrdav.Errors'
-  'xhrdav.utils'
-  'xhrdav.HttpStatus'
-  'xhrdav.Resource'
-  'xhrdav.ResourceBuilder'
-  'xhrdav.ResourceController'
+  'xhrdav'
+#  'xhrdav.lib'
+#  'xhrdav.Client'
+#  'xhrdav.DavFs'
+#  'xhrdav.Conf'
+#  'xhrdav.ext'
+#  'xhrdav.parser.DomHandler'
+#  'xhrdav.parser.DomParser'
+#  'xhrdav.Errors'
+#  'xhrdav.utils'
+#  'xhrdav.HttpStatus'
+#  'xhrdav.Resource'
+#  'xhrdav.ResourceBuilder'
+#  'xhrdav.ResourceController'
 )
 
 rootdir=
@@ -94,7 +96,7 @@ if [ "$FLG_FORMAT" = "TRUE" ]; then
 fi
 
 
-command="$PYTHON closure-library/closure/bin/build/closurebuilder.py --output_file=$OUTPUTFILE"
+command="$PYTHON closure-library/closure/bin/build/closurebuilder.py --output_file=${OUTPUTDIR}/${OUTPUTFILE}"
 echo $command $rootdir $entries $options | bash
 [ $? -ne 0 ] && usage
 
