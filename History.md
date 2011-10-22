@@ -1,4 +1,10 @@
 
+0.2.1 / 2011-10-22 
+==================
+
+  * Merge branch 'release/v0.2.0' into develop
+  * update changelog and version string.
+
 0.2.0 / 2011-10-22 
 ==================
 
