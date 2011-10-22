@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebDAV Directories Test</title>
+  <script src="../../closure-library/closure/goog/base.js" type="text/javascript"></script>
+  <script src="../../lib/xhrdavclientdeps.js" type="text/javascript"></script>
+  <script src="../utils.js" type="text/javascript"></script>
+</head>
+<body>
+  <script type="text/javascript">
+    goog.require('goog.testing.AsyncTestCase');
+    goog.require('goog.testing.jsunit');
+    goog.require('goog.debug.Console');
+    goog.require('goog.debug.Logger');
+    goog.require('goog.async.ConditionalDelay');
+
+    goog.require('goog.net.XhrManager');
+    goog.require('xhrdav.Client');
+    goog.require('xhrdav.HttpStatus');
+    goog.require('goog.crypt.base64');
+  </script>
+  <script type="text/javascript">
+    goog.debug.Console.autoInstall();
+    goog.debug.Console.instance.setCapturing(true);
+
+    // Prepare AsyncTest
+    var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall();
+    asyncTestCase.stepTimeout = 5000;   // Wait Multi HTTP Requests in each test.
+    var asyncContinue = function() {
+      asyncTestCase.continueTesting();
+    };
+
+    var parentDir = '/mydav/DirClientTest2/';
+    var dav = new xhrdav.Client();
+    var xmgr = new goog.net.XhrManager();
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
+
+    function setUp() {
+      asyncTestCase.waitForAsync('setUp');
+      dav.mkcol(parentDir, asyncContinue);
+    }
+
+    function tearDown() {
+      asyncTestCase.waitForAsync('tearDown');
+      dav._delete(parentDir, asyncContinue);
+    }
+
+    function testRename() {
+      var testId = 'Rename';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var dir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, 'bar/')) + '/';
+      var dstDir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, 'ほげ/')) + '/';
+      var opt_request = {xhrMgr: xmgr};
+
+      var assertRename = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+        asyncContinue();
+      };
+      var callbackCreate = function(statusCode, content, headers) {
+        opt_request.xhrId = goog.string.createUniqueString();
+        opt_request.headers = {};
+        opt_request.headers['Content-Type'] = 'text/html; charset=UTF-8';
+        dav.move(dir, dstDir, assertRename, opt_request,
+          goog.partial(xhrLogging, logger));
+      };
+
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.mkcol(dir, callbackCreate, opt_request);
+    }
+
+    function testMove() {
+      var testId = 'Move';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var dir = '/mydav/移動もと/';
+      var dir2 = '/mydav/異動先/';
+      var dstDir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, 'move/')) + '/';
+      var opt_request = {xhrMgr: xmgr};
+
+      var assertMoveAnotherTreeOverWrite = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        assertTrue('No Content?', goog.string.isEmptySafe(content));
+        asyncContinue();
+      };
+      var assertMove = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+
+        opt_request.xhrId = goog.string.createUniqueString();
+        opt_request.headers = {}, opt_request.headers['Overwrite'] = true;
+        dav.move(dir2, dstDir, assertMoveAnotherTreeOverWrite, opt_request,
+          goog.partial(xhrLogging, logger));
+      };
+      var executeMove = function(statusCode, content, headers) {
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.move(dir, dstDir, assertMove, opt_request,
+          goog.partial(xhrLogging, logger));
+      };
+      var createOtherDir = function(statusCode, content, headers) {
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.mkcol(dir2, executeMove, opt_request);
+      };
+
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.mkcol(dir, createOtherDir, opt_request);
+    }
+
+    function testCopy() {
+      var testId = 'Copy';
+      var logger = new goog.debug.Logger.getLogger(testId);
+
+      var dir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, 'コピーもと/')) + '/';
+      var dstDir = goog.string.path.normalizePath(
+        goog.string.path.join(parentDir, 'コピー先/')) + '/';
+      var opt_request = {xhrMgr: xmgr};
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertCopyOverWriteFalse = function(statusCode, content, headers) {
+        assertNotEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        asyncContinue();
+      };
+      var assertCopyOverWrite = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+        assertTrue('No Content?', goog.string.isEmptySafe(content));
+
+        opt_request.xhrId = goog.string.createUniqueString();
+        opt_request.headers['Overwrite'] = false;
+        dav.copy(dir, dstDir, assertCopyOverWriteFalse, opt_request,
+          goog.partial(xhrLogging, logger));
+      };
+      var assertCopy = function(statusCode, content, headers) {
+        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+        assertNotNullNorUndefined('Location?', headers['Location']);
+
+        opt_request.xhrId = goog.string.createUniqueString();
+        opt_request.headers = {}, opt_request.headers['Overwrite'] = true;
+        dav.copy(dstDir, dir, assertCopyOverWrite, opt_request,
+          goog.partial(xhrLogging, logger));
+      };
+      var callbackRequest1 = function(statusCode, content, headers) {
+        opt_request.xhrId = goog.string.createUniqueString();
+        dav.copy(dir, dstDir, assertCopy, opt_request,
+          goog.partial(xhrLogging, logger));
+      };
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.mkcol(dir, callbackRequest1, opt_request);
+    }
+
+    function testOptions() {
+      var testId = 'testOptions';
+      var logger = new goog.debug.Logger.getLogger(testId);
+      var opt_request = {xhrMgr: xmgr, xhrId: goog.string.createUniqueString()};
+
+      var assertOptions = function(statusCode, content, headers) {
+        assertEquals('StatusCode 200?', httpStatus.OK, statusCode);
+        assertTrue('No content?', goog.string.isEmptySafe(content));
+        assertNotNullNorUndefined('Get allow methos?', headers['Allow']);
+        var allowMethods = headers['Allow'].split(',');
+        assertContains('GET?', 'GET', allowMethods);
+        assertContains('HEAD?', 'HEAD', allowMethods);
+        assertContains('POST?', 'POST', allowMethods);
+        assertContains('DELETE?', 'DELETE', allowMethods);
+        assertContains('PROPFIND?', 'PROPFIND', allowMethods);
+        assertContains('PROPPATCH?', 'PROPPATCH', allowMethods);
+        assertContains('COPY?', 'COPY', allowMethods);
+        assertContains('MOVE?', 'MOVE', allowMethods);
+        assertContains('LOCK?', 'LOCK', allowMethods);
+        assertContains('UNLOCK?', 'UNLOCK', allowMethods);
+        assertNotContains('PUT?', 'PUT', allowMethods);  // Not support for directory
+        asyncContinue();
+      };
+
+      asyncTestCase.waitForAsync(testId);
+      dav.options(parentDir, assertOptions, opt_request);
+    }
+
+    function testHead() {
+      var testId = 'testHead';
+      var logger = new goog.debug.Logger.getLogger(testId);
+      var opt_request = {xhrMgr: xmgr, xhrId: goog.string.createUniqueString()};
+
+      var assertHead = function(statusCode, content, headers) {
+        assertEquals('Status = 200', httpStatus.OK, statusCode);
+        assertTrue('Content empty?', goog.string.isEmptySafe(content));
+        assertNotNullNorUndefined('Headers?', headers);
+        asyncContinue();
+      };
+      asyncTestCase.waitForAsync(testId);
+      dav.head(parentDir, assertHead, opt_request);
+    }
+
+    function testHeadFail() {
+      var testId = 'testHeadFail';
+      var logger = new goog.debug.Logger.getLogger(testId);
+      var opt_request = {xhrMgr: xmgr};
+
+      var delayListener = function() {
+        var count = xmgr.getOutstandingCount();
+        return (count == 0);
+      };
+      var delay = new goog.async.ConditionalDelay(delayListener);
+      delay.onSuccess = function() { asyncContinue(); };
+      delay.onFailure = function() { asyncContinue(); };
+
+      var assertHead = function(statusCode, content, headers) {
+        assertEquals('Status = 404', httpStatus.NOT_FOUND, statusCode);
+        assertTrue('Content empty?', goog.string.isEmptySafe(content));
+      };
+
+      delay.start(500, -1);
+      asyncTestCase.waitForAsync(testId);
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.head('/foo/bar/', assertHead, opt_request);
+      opt_request.xhrId = goog.string.createUniqueString();
+      dav.head('/foo/bar.txt', assertHead, opt_request);
+    }
+  </script>
+</body>
+</html>

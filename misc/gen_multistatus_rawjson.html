@@ -6,6 +6,9 @@
   <script src="../xhrdavclientdeps.js" type="text/javascript"></script>
   <script src="../test/utils.js" type="text/javascript"></script>
   <script type="text/javascript">
+    goog.require('goog.debug.Console');
+    goog.require('goog.debug.Logger');
+
     goog.require('goog.json');
     goog.require('goog.object');
     goog.require('goog.array');
@@ -15,12 +18,8 @@
     goog.require('goog.net.XhrIo');
     goog.require('goog.dom.xml');
     goog.require('goog.ds.JsDataSource');
-    goog.require('xhrdav.Client');
-    goog.require('xhrdav.parser.DomParser');
-    goog.require('xhrdav.utils.DomParse');
 
-    goog.require('goog.debug.Console');
-    goog.require('goog.debug.Logger');
+    goog.require('xhrdav');
   </script>
 </head>
 <body>

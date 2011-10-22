@@ -1,4 +1,14 @@
 
+0.1.1 / 2011-10-22 
+==================
+
+  * Merge branch 'feature/structure' into develop
+  * Add closure compiler scripts
+  * refactor testcase files
+  * rename src directory
+  * Merge branch 'release/v0.1.0a' into develop
+  * update changelog
+
 0.1.0a / 2011-10-21 
 ==================
 
