@@ -1,4 +1,12 @@
 
+0.2.0 / 2011-10-22 
+==================
+
+  * update library scripts
+  * Add logging for onCompleteHandler
+  * Merge branch 'release/v0.1.1' into develop
+  * update changelog and version string
+
 0.1.1 / 2011-10-22 
 ==================
 
