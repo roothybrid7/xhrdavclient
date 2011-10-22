@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>DAVFs Files Test</title>
+  <script src="../../closure-library/closure/goog/base.js" type="text/javascript"></script>
+  <script src="../../lib/xhrdavclientdeps.js" type="text/javascript"></script>
+  <script src="../utils.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    goog.require('goog.testing.AsyncTestCase');
+    goog.require('goog.testing.MockClassFactory');
+    goog.require('goog.testing.jsunit');
+    goog.require('goog.debug.Console');
+    goog.require('goog.debug.Logger');
+
+    goog.require('goog.object');
+    goog.require('goog.string.path');
+    goog.require('goog.net.XhrManager');
+    goog.require('xhrdav.DavFs');
+    goog.require('goog.array');
+  </script>
+</head>
+<body>
+  <script type="text/javascript">
+    goog.debug.Console.autoInstall();
+    goog.debug.Console.instance.setCapturing(true);
+
+    var mockFactory = new goog.testing.MockClassFactory();
+
+    // Prepare AsyncTest
+    var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall();
+    var asyncContinue = function() {
+      asyncTestCase.continueTesting();
+    };
+
+    var initData;
+    var parentDir = '/mydav/parentforfsfile/';
+
+    var file = goog.string.path.normalizePath(
+      goog.string.path.join(parentDir, 'testwebdav.txt'));
+    var dav = new xhrdav.Client();
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
+    var fs = xhrdav.DavFs.getInstance();
+
+
+    function setUp() {
+      initData = 'This is a WebDAV Test.';
+
+      asyncTestCase.waitForAsync('setUp');
+      dav.mkcol(parentDir, asyncContinue);
+    }
+
+    function tearDown() {
+      initData = null;
+      mockFactory.reset();
+
+      asyncTestCase.waitForAsync('tearDown');
+      dav._delete(parentDir, asyncContinue);
+    }
+
+    function testWriteFile() {
+      var testId = 'WriteFile';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertWriteFile = function(errors, newLoc) {
+        logger.config(goog.typeOf(errors));
+        assertFalse('No errors?', errors.hasRequest());
+        assertNotNullNorUndefined('new resource location?', newLoc);
+        logger.config(newLoc);
+        var createPath = newLoc.split('/').pop();
+        var requestPath = file.split('/').pop();
+        assertEquals('Filename is same?', requestPath, createPath);
+
+        asyncContinue();
+      };
+
+      fs.getRequest().write(file, initData, assertWriteFile, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
+    }
+
+    function testWriteMissingPath() {
+      var testId = 'WriteMissingPath';
+      var testPath = '/notfound/dummy.txt';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertWriteFail = function(errors, newLoc) {
+        assertTrue('xhrdav.Errors?', errors instanceof xhrdav.Errors);
+        assertTrue('No request Error?', errors.hasRequest());
+        logger.config(goog.debug.expose(errors.request));
+        assertFalse('Occured request errors?',
+          goog.object.isEmpty(errors.request));
+        assertEquals('Error path', testPath, errors.request.path);
+        assertEquals('Method Not Allowed?', httpStatus.METHOD_NOT_ALLOWED, errors.request.status);
+        assertNotNullNorUndefined('Not OK?', errors.request.message);
+        assertTrue('Not Create file?', goog.string.isEmptySafe(newLoc));
+
+        asyncContinue();
+      };
+
+      fs.getRequest().write(testPath, initData, assertWriteFail, {depth: 1}, {a: 'b'},
+        this, {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
+    }
+
+    function testWriteNullData() {
+      var testId = 'testWriteNullData';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertWriteNull = function(errors, newLoc) {
+        assertFalse('No errors', errors.hasRequest());
+        assertNotNullNorUndefined('new resource location?', newLoc);
+        logger.config(newLoc);
+        var createPath = newLoc.split('/').pop();
+        var requestPath = file.split('/').pop();
+        assertEquals('Filename is same?', requestPath, createPath);
+
+        asyncContinue();
+      };
+
+      fs.getRequest().write(file, null, assertWriteNull, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
+    }
+
+    function testReadFile() {
+      var testId = 'Read';
+      var logger = goog.debug.Logger.getLogger(testId);
+
+      asyncTestCase.waitForAsync(testId);
+
+      var assertFileNotFound = function(errors, content) {
+        assertTrue('Errors?', errors.hasRequest());
+        assertNotNullNorUndefined('No contents?', content);
+        asyncContinue();
+      };
+
+      var assertRead = function(errors, content) {
+        assertFalse('No errors?', errors.hasRequest());
+        logger.config(content);
+        fs.getRequest().read('/foo/bar.txt', assertFileNotFound, null, null, this,
+          {xhrId: testId + '#read2'}, goog.partial(xhrLogging, logger));
+      };
+
+      var callbackWrite = function(errors, newLoc) {
+        fs.getRequest().read(file, assertRead, null, null, this,
+          {xhrId: testId + '#read1'}, goog.partial(xhrLogging, logger));
+      };
+
+      fs.getRequest().write(file, initData, callbackWrite, null, null, this,
+        {xhrId: testId + '#write'}, goog.partial(xhrLogging, logger));
+    }
+  </script>
+</body>
+</html>

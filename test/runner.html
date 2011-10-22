@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Test Runner</title>
+  <link media="all" href="../closure-library/closure/goog/css/multitestrunner.css" type="text/css" rel="stylesheet" />
+  <script src="../closure-library/closure/goog/base.js" type="text/javascript"></script>
+</head>
+<body>
+  <div id="runner"></div>
+  <script type="text/javascript">
+    goog.require('goog.testing.MultiTestRunner');
+    goog.require('goog.dom');
+  </script>
+  <script type="text/javascript">
+    var testRunner = new goog.testing.MultiTestRunner();
+    testRunner.addTests([
+      'client/client_test.html',
+      'client/directories_test.html',
+      'client/directories_test2.html',
+      'client/files_test.html',
+      'client/clientwparser.html',
+      'davFs/fs_test.html',
+      'davFs/fs_directories_test.html',
+      'davFs/fs_upload_test.html',
+      'davFs/fs_dir2_test.html',
+      'davFs/fs_files_test.html',
+      'davFs/fs_files2_test.html',
+      'tip/auth_test.html',
+      'tip/parsexml_test.html',
+      'tip/errorobj_test.html',
+      'tip/config_test.html',
+      'utils/utils_test.html',
+      'utils/utils_path.html',
+      'utils/string_ext_test.html',
+      'resource/resource_controller_test.html',
+      'resource/resource_ctrl_apicall.html',
+      'resource/resourceobj_test.html',
+      'resource/resourcebuilder_test.html']);
+    testRunner.setPoolSize(2);
+    testRunner.render(document.getElementById('runner'));
+  </script>
+</body>
+</html>

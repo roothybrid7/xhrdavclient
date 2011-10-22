@@ -20,9 +20,10 @@
 set -o nounset                              # Treat unset variables as an error
 
 PYTHON=$(which python)
+OUTPUTDIR="lib"
 OUTPUTFILE="xhrdavclientdeps.js"
 #OUTPUTFILE="deps.js"
 
-$PYTHON closure-library/closure/bin/build/depswriter.py --root_with_prefix="scripts ../../../scripts" --output_file=$OUTPUTFILE
+$PYTHON closure-library/closure/bin/build/depswriter.py --root_with_prefix="src ../../../src" --output_file="${OUTPUTDIR}/${OUTPUTFILE}"
 [ $? -ne 0 ] && echo "USAGE: ./tools/$(basename $0)"
 
