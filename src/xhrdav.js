@@ -22,4 +22,4 @@ goog.require('xhrdav.parser.DomParser');
 
 
 /** @type {string} */
-xhrdav.VERSION = '0.1.0';
+xhrdav.VERSION = '0.1.1';
