@@ -7,12 +7,12 @@
  */
 
 goog.provide('xhrdav.Conf');
-goog.require('xhrdav.lib');
-goog.require('goog.net.XhrIo');
-
 goog.require('goog.debug.Console');
-goog.require('goog.debug.Logger');
 goog.require('goog.debug.ErrorHandler');
+goog.require('goog.debug.Logger');
+goog.require('goog.net.XhrIo');
+goog.require('xhrdav.lib');
+
 
 /*
  * Refs: goog.DEBUG=true|false
@@ -85,7 +85,7 @@ xhrdav.Conf.prototype.initializeErrorHandler_ = function() {
 /**
  * Get errorHandler
  *
- * @return {goog.debug.ErrorHandler} errorHandler
+ * @return {goog.debug.ErrorHandler} errorHandler.
  */
 xhrdav.Conf.prototype.getErrorHandler = function() {
   if (!goog.isDefAndNotNull(this.errorHandler_)) {
@@ -112,7 +112,7 @@ xhrdav.Conf.prototype.getXhrMgrConfig = function() {
  *  xhrdav.Conf.getInstance().getLogger().warning(
  *    'DavFs: ' + errors.request.message);
  *
- * @param {number=} level goog.debug.Logger.Level
+ * @param {number=} level goog.debug.Logger.Level.
  * @return {goog.debug.Logger} logger object.
  */
 xhrdav.Conf.prototype.getLogger = function(level) {
@@ -132,9 +132,9 @@ xhrdav.Conf.prototype.getLogger = function(level) {
  *  => [10.098s] [xhrdavclient] selected: true
  *  => [10.098s] [xhrdavclient] expanded: false
  *
- * @param {(Object|*)} message Log message. Json/Hash Object OR stirng|number|boolean
+ * @param {(Object|*)} message Log message. Json/Hash Object OR stirng|number|boolean.
  * @param {string=} opt_output logger output method(warning, info, config, fine, etc).
- *     [default: info]
+ *     [default: info].
  * @see goog.debug.Logger
  */
 xhrdav.Conf.logging = function(messages, opt_output) {

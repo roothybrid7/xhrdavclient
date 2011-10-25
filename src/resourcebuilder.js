@@ -134,7 +134,7 @@ xhrdav.ResourceBuilder.prototype.buildTree_ = function(resList) {
 
   this.resources_ = {};
   this.resources_.root = resList.shift();
-  this.resources_.childs = (resList.length > 0)  ? resList : [];
+  this.resources_.childs = (resList.length > 0) ? resList : [];
 };
 
 /**
@@ -162,7 +162,7 @@ xhrdav.ResourceBuilder.prototype.getResources = function() {
  *
  * @param {{root:xhrdav.ResourceController,
  *          childs:Array.<xhrdav.ResourceController}} resources
- * @param {boolean} asModel TRUE: xhrdav.Resource FALSE: {}
+ * @param {boolean} asModel TRUE: xhrdav.Resource FALSE: {}.
  * @return {{root:xhrdav.Resource, childs:Array.<xhrdav.Resource}}
  */
 xhrdav.ResourceBuilder.serialize = function(resources, asModel) {
@@ -182,7 +182,7 @@ xhrdav.ResourceBuilder.serialize = function(resources, asModel) {
 /**
  * Serialize resources
  *
- * @param {boolean} asModel TRUE: xhrdav.Resource FALSE: {}
+ * @param {boolean} asModel TRUE: xhrdav.Resource FALSE: {}.
  * @return {{root:xhrdav.Resource, childs:Array.<xhrdav.Resource}}
  * @see xhrdav.ResourceBuilder.serialize
  */

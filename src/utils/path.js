@@ -5,9 +5,9 @@
  */
 
 goog.provide('xhrdav.utils.path');
+goog.require('goog.array');
 goog.require('goog.string');
 goog.require('goog.string.path');
-goog.require('goog.array');
 
 /**
  * Remove last slash from path string.

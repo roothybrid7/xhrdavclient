@@ -43,7 +43,7 @@ xhrdav.ResourceController = function(resource) {
 /**
  * Set Request object for WebDAV request.
  *
- * @param {xhrdav.DavFs.Request} request  Request object for WebDAV request
+ * @param {xhrdav.DavFs.Request} request  Request object for WebDAV request.
  * @see xhrdav.DavFs#getRequest
  */
 xhrdav.ResourceController.prototype.setRequest = function(request) {
@@ -54,7 +54,7 @@ xhrdav.ResourceController.prototype.setRequest = function(request) {
  * Serialize resource [Class method]
  *
  * @param {(xhrdav.ResourceController|xhrdavlib.Resource|Object)} resource
- * @param {boolean} asModel true: xhrdav.Resource, false: {}
+ * @param {boolean} asModel true: xhrdav.Resource, false: {}.
  * @return {(xhrdav.Resource|Object)} converted Json/Hash object for WebDAV resource.
  * @see xhrdav.Resource
  */
@@ -77,7 +77,7 @@ xhrdav.ResourceController.serialize = function(resource, asModel) {
 /**
  * Serialize resource
  *
- * @param {boolean} asModel true: xhrdav.Resource, false: {}
+ * @param {boolean} asModel true: xhrdav.Resource, false: {}.
  * @return {(xhrdav.Resource|Object)} converted Json/Hash object for WebDAV resource.
  * @see xhrdav.ResourceController.serialize
  */
@@ -126,11 +126,11 @@ xhrdav.ResourceController.prototype.buildNewDestination_ = function() {
  * Remove resource
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  */
 xhrdav.ResourceController.prototype.remove = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
@@ -146,11 +146,11 @@ xhrdav.ResourceController.prototype.remove = function(
  * Create Directory before parameters validate.
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors, object]
+ *                            [callback args: errors, object].
  * @param {Object=} opt_headers Request headers.
  * @param {Object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  * @throws {Error} Not found href(Directory path).
  */
 xhrdav.ResourceController.prototype.mkDir = function(
@@ -167,11 +167,11 @@ xhrdav.ResourceController.prototype.mkDir = function(
  * Copy resource
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  */
 xhrdav.ResourceController.prototype.copy = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
@@ -189,11 +189,11 @@ xhrdav.ResourceController.prototype.copy = function(
  * Copy resource before parameter validate.
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  * @throws {Error} Not found destination.
  * @see #copy
  */
@@ -210,11 +210,11 @@ xhrdav.ResourceController.prototype.copyBeforeValidate = function(
  * Move resoruce
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  */
 xhrdav.ResourceController.prototype.move = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
@@ -232,11 +232,11 @@ xhrdav.ResourceController.prototype.move = function(
  * Move resource before parameter validate.
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  * @throws {Error} Not found destination.
  * @see #move
  */
@@ -253,11 +253,11 @@ xhrdav.ResourceController.prototype.moveBeforeValidate = function(
  * Rename resource
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Function=} onXhrComplete  [Callback args: errors object]
+ * @param {Function=} onXhrComplete  [Callback args: errors object].
  * @Deprecated  NOT IMPLEMNTS
  */
 xhrdav.ResourceController.prototype.rename = function(
@@ -274,11 +274,11 @@ xhrdav.ResourceController.prototype.rename = function(
  * Rename resource before parameters validate.
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Function=} onXhrComplete  [Callback args: errors object]
+ * @param {Function=} onXhrComplete  [Callback args: errors object].
  * @throws {Error} Not found of xhrdav.Resource or #destination
  * @see #rename
  * @Deprecated  NOT IMPLEMNTS

@@ -8,8 +8,8 @@
 
 goog.provide('xhrdav.Errors');
 goog.require('goog.array');
-goog.require('goog.object');
 goog.require('goog.json');
+goog.require('goog.object');
 
 /**
  * xhrdavclient error object

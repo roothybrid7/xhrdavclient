@@ -8,10 +8,10 @@
  */
 
 goog.provide('xhrdav.Client');
-goog.require('xhrdav.Conf');
-goog.require('goog.dom');
 goog.require('goog.Uri');
+goog.require('goog.dom');
 goog.require('goog.net.XhrIo');
+goog.require('xhrdav.Conf');
 
 
 /**
@@ -318,7 +318,7 @@ xhrdav.Client.prototype.get = function(path, handler, opt_request, onXhrComplete
  * Upload Resource(WebDAV: PUT)
  *
  * @param {string} path Path(<code>/foo/bar.xml</code>, <code>/foo/bar.txt</code>).
- * @param {Object} data Upload filedata(text OR binary)
+ * @param {Object} data Upload filedata(text OR binary).
  * @param {Function} handler Callback chain after request processing.
  * @param {{xhrMgr:goog.net.XhrManager, xhrId,
  *         headers:Object, query:Object}=} opt_request
@@ -421,7 +421,7 @@ xhrdav.Client.prototype.lock = function(path, handler, opt_request, onXhrComplet
 
   goog.object.extend(opt_request, {body:
     '<?xml version="1.0" encoding="UTF-8"?>' +
-    '<D:lockinfo xmlns:D="DAV:">\n'+
+    '<D:lockinfo xmlns:D="DAV:">\n' +
     '<D:lockscope><D:' + (opt_request.scope || 'exclusive') + ' /></D:lockscope>\n' +
     '<D:locktype><D:' + (opt_request.type || 'write') + ' /></D:locktype>\n' +
     '<D:owner></D:owner>\n</D:lockinfo>\n'});

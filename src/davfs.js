@@ -13,8 +13,8 @@
 goog.provide('xhrdav.DavFs');
 goog.provide('xhrdav.DavFs.Request');
 goog.require('goog.net.XhrManager');
-goog.require('xhrdav.Conf');
 goog.require('xhrdav.Client');
+goog.require('xhrdav.Conf');
 goog.require('xhrdav.Errors');
 goog.require('xhrdav.ResourceBuilder');
 goog.require('xhrdav.ResourceController');
@@ -224,7 +224,7 @@ xhrdav.DavFs.Request.prototype.responseHandler_ = function(
  * @param {number} statusCode HTTP Status code.
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
- * @return {Array.<xhrdav.Errors, string=>} Errors, new Location
+ * @return {Array.<xhrdav.Errors, string=>} Errors, new Location.
  * @see xhrdav.Errors
  */
 xhrdav.DavFs.Request.prototype.contentReadHandler_ = function(
@@ -251,7 +251,7 @@ xhrdav.DavFs.Request.prototype.contentReadHandler_ = function(
  * @param {number} statusCode HTTP Status code.
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
- * @return {Array.<xhrdav.Errors, boolean>} Errors, new Location
+ * @return {Array.<xhrdav.Errors, boolean>} Errors, new Location.
  * @see xhrdav.Errors
  */
 xhrdav.DavFs.Request.prototype.existsHandler_ = function(
@@ -280,7 +280,7 @@ xhrdav.DavFs.Request.prototype.existsHandler_ = function(
  * @param {number} statusCode HTTP Status code.
  * @param {Object} content Response body data.
  * @param {Object} headers Response headers.
- * @return {Array.<xhrdav.Errors, string=>} Errors, new Location
+ * @return {Array.<xhrdav.Errors, string=>} Errors, new Location.
  * @see xhrdav.Errors
  */
 xhrdav.DavFs.Request.prototype.simpleErrorHandler_ = function(
@@ -340,7 +340,7 @@ xhrdav.DavFs.Request.getListDirFromMultistatus = function(content, opt_helper) {
  * @param {Object=} opt_headers Request headers options.
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.DavFs.Request.prototype.updateRequestHandler_ = function(
   method, path, dstPath, handler, opt_request, context, onXhrComplete) {
@@ -362,7 +362,7 @@ xhrdav.DavFs.Request.prototype.updateRequestHandler_ = function(
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {{hasCtrl:boolean, asModel:boolean}=} opt_helper  response options.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.DavFs.Request.prototype.propfindRequestHandler_ = function(
   path, handler, opt_request, context, opt_helper, onXhrComplete) {
@@ -417,7 +417,7 @@ xhrdav.DavFs.Request.prototype.createRequestParameters_ = function(
   if (!goog.isDefAndNotNull(this.xhrIo_)) {
     // Nothing to do.
   } else if (this.xhrIo_ instanceof goog.net.XhrIo) {
-    goog.object.extend(opt_request,{xhrIo: this.xhrIo_});
+    goog.object.extend(opt_request, {xhrIo: this.xhrIo_});
   } else if (this.xhrIo_ instanceof goog.net.XhrManager) {
     var map;
     if (!goog.string.isEmptySafe(opt_xhrId)) {
@@ -441,7 +441,7 @@ xhrdav.DavFs.Request.prototype.createRequestParameters_ = function(
  * @param {Object=} context Callback scope.
  * @param {{hasCtrl:boolean=, asModel:boolean=, xhrId:string=}=} opt_helper
  *     xhr and response options.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  * @see #propfindRequestHandler_
  */
 xhrdav.DavFs.Request.prototype.listDir = function(
@@ -464,7 +464,7 @@ xhrdav.DavFs.Request.prototype.listDir = function(
  * @param {Object=} context Callback scope.
  * @param {{hasCtrl:boolean=, asModel:boolean=, xhrId:string=}=} opt_helper
  *     xhr and response options.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  * @see #propfindRequestHandler_
  */
 xhrdav.DavFs.Request.prototype.getProps = function(
@@ -484,7 +484,7 @@ xhrdav.DavFs.Request.prototype.getProps = function(
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {{xhrId:string=}=} opt_helper xhr options.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.DavFs.Request.prototype.mkDir = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
@@ -506,7 +506,7 @@ xhrdav.DavFs.Request.prototype.mkDir = function(
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {{xhrId:string=}=} opt_helper xhr options.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.DavFs.Request.prototype.remove = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
@@ -529,7 +529,7 @@ xhrdav.DavFs.Request.prototype.remove = function(
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {{xhrId:string=}=} opt_helper xhr options.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.DavFs.Request.prototype.move = function(
   path, dstPath, handler, opt_headers, opt_params, context,
@@ -551,7 +551,7 @@ xhrdav.DavFs.Request.prototype.move = function(
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {{xhrId:string=}=} opt_helper xhr options.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  * @see #updateRequestHandler_
  */
 xhrdav.DavFs.Request.prototype.copy = function(
@@ -571,7 +571,7 @@ xhrdav.DavFs.Request.prototype.copy = function(
  * @param {Object=} opt_headers Request headers options.
  * @param {Object=} opt_params  Request query paramters.
  * @param {{xhrId:string=}=} opt_helper xhr options.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.DavFs.Request.prototype.read = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
@@ -596,7 +596,7 @@ xhrdav.DavFs.Request.prototype.read = function(
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {{xhrId:string=}=} opt_helper xhr options.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.DavFs.Request.prototype.write = function(
   path, content, handler, opt_headers, opt_params, context,
@@ -616,13 +616,13 @@ xhrdav.DavFs.Request.prototype.write = function(
  * Upload data to WebDAV server
  *
  * @param {string} path upload file path.
- * @param {File} file File object(File API)
+ * @param {File} file File object(File API).
  * @param {Function} handler callback handler function.
  * @param {Object=} opt_headers Request headers options.
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {{xhrId:string=}=} opt_helper xhr options.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  * @throws {Error} Not a file object.
  */
 xhrdav.DavFs.Request.prototype.upload = function(
@@ -658,7 +658,7 @@ xhrdav.DavFs.Request.prototype.upload = function(
  * @param {Object=} opt_params  Request query paramters.
  * @param {Object=} context Callback scope.
  * @param {{xhrId:string=}=} opt_helper xhr options.
- * @param {Function=} onXhrComplete onXhrComplete callback function
+ * @param {Function=} onXhrComplete onXhrComplete callback function.
  */
 xhrdav.DavFs.Request.prototype.exists = function(
   path, handler, opt_headers, opt_params, context, opt_helper, onXhrComplete) {
