@@ -23,4 +23,4 @@ goog.require('xhrdav.utils');
 
 
 /** @type {string} */
-xhrdav.VERSION = '0.2.1';
+xhrdav.VERSION = '0.2.2';
