@@ -1,4 +1,12 @@
 
+0.2.2 / 2011-10-26 
+==================
+
+  * bugfixed and modified jsstyle.
+  * fixjsstyle scripts.
+  * Merge branch 'release/v0.2.1' into develop
+  * update changelog and version string.
+
 0.2.1 / 2011-10-22 
 ==================
 
