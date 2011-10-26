@@ -1,7 +1,8 @@
 /**
  * httpstatus.js - Contents for WebDAV HTTP Extensions status codes.
  *
- * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
+ * @license Copyright 2011 The xhrdavclient library authors.
+ * All rights reserved.
  */
 
 goog.provide('xhrdav.HttpStatus');
@@ -73,7 +74,7 @@ xhrdav.HttpStatus = {
    * headers are ''. Known to occur on IE 6 on XP through IE9 on Win7.
    */
   QUIRK_IE_NO_CONTENT: 1223
-}
+};
 
 /**
  * WebDAV HTTP Extensions Status Text.
@@ -142,7 +143,7 @@ xhrdav.HttpStatus.text = {
    * headers are ''. Known to occur on IE 6 on XP through IE9 on Win7.
    */
   1223: 'Unknown'
-}
+};
 
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.HttpStatus', xhrdav.HttpStatus);

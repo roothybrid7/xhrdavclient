@@ -3,7 +3,8 @@
  *
  * This is a xml dom parse handler.
  *
- * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
+ * @license Copyright 2011 The xhrdavclient library authors.
+ * All rights reserved.
  */
 
 goog.provide('xhrdav.parser.DomHandler');
@@ -16,7 +17,10 @@ goog.require('goog.Disposable');
  * @extends {goog.Disposable}
  */
 xhrdav.parser.DomHandler = function() {
-  /** @type {Object} */
+  /**
+   * @private
+   * @type {Object}
+   */
   this.resources_ = null;
 };
 goog.inherits(xhrdav.parser.DomHandler, goog.Disposable);
@@ -42,8 +46,8 @@ xhrdav.parser.DomHandler.prototype.endDocument = function() {};
 /**
  * Execute parse Document
  *
- * @param {xhrdav.DomParser} parser
- * @param {Object} xml
+ * @param {xhrdav.DomParser} parser Xml dom parser object.
+ * @param {Object} xml  parsing xml.
  * @see xhrdav.DomParser
  */
 xhrdav.parser.DomHandler.prototype.execute = function(parser, xml) {

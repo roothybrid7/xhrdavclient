@@ -4,7 +4,8 @@
  * This is a WebDAV resource controller.
  * A single resource serialize, simply copy, move, rename, delete support.
  *
- * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
+ * @license Copyright 2011 The xhrdavclient library authors.
+ * All rights reserved.
  */
 
 goog.provide('xhrdav.ResourceController');
@@ -16,7 +17,8 @@ goog.require('xhrdav.Resource');
  * xhrdavclient resource controller
  *
  * @constructor
- * @param {(xhrdav.Resource|Object)=} resource  Json/Hash object for WebDAV resource.
+ * @param {(xhrdav.Resource|Object)=} resource
+ *     Json/Hash object for WebDAV resource.
  * @see xhrdav.Resource
  * @see xhrdav.DavFs.Request
  */
@@ -36,14 +38,17 @@ xhrdav.ResourceController = function(resource) {
     goog.mixin(this, model);
   }
 
-  /** @type {xhrdav.DavFs.Request} */
+  /**
+   * @private
+   * @type {xhrdav.DavFs.Request}
+   */
   this.request_ = null;
 };
 
 /**
  * Set Request object for WebDAV request.
  *
- * @param {xhrdav.DavFs.Request} request  Request object for WebDAV request
+ * @param {xhrdav.DavFs.Request} request  Request object for WebDAV request.
  * @see xhrdav.DavFs#getRequest
  */
 xhrdav.ResourceController.prototype.setRequest = function(request) {
@@ -54,8 +59,10 @@ xhrdav.ResourceController.prototype.setRequest = function(request) {
  * Serialize resource [Class method]
  *
  * @param {(xhrdav.ResourceController|xhrdavlib.Resource|Object)} resource
- * @param {boolean} asModel true: xhrdav.Resource, false: {}
- * @return {(xhrdav.Resource|Object)} converted Json/Hash object for WebDAV resource.
+ *     Converted WebDAV collection data.
+ * @param {boolean} asModel true: xhrdav.Resource, false: {}.
+ * @return {(xhrdav.Resource|Object)} converted
+ *     Json/Hash object for WebDAV resource.
  * @see xhrdav.Resource
  */
 xhrdav.ResourceController.serialize = function(resource, asModel) {
@@ -77,8 +84,9 @@ xhrdav.ResourceController.serialize = function(resource, asModel) {
 /**
  * Serialize resource
  *
- * @param {boolean} asModel true: xhrdav.Resource, false: {}
- * @return {(xhrdav.Resource|Object)} converted Json/Hash object for WebDAV resource.
+ * @param {boolean} asModel true: xhrdav.Resource, false: {}.
+ * @return {(xhrdav.Resource|Object)}
+ *     converted Json/Hash object for WebDAV resource.
  * @see xhrdav.ResourceController.serialize
  */
 xhrdav.ResourceController.prototype.serialize = function(asModel) {
@@ -106,12 +114,15 @@ xhrdav.ResourceController.prototype.getDestination = function() {
 
 /**
  * build destination path.
+ *
+ * @private
  */
 xhrdav.ResourceController.prototype.buildNewDestination_ = function() {
   if (goog.isDefAndNotNull(this.destination_)) {
     var dstlist = xhrdav.utils.path.split(this.destination_);
 
-    if (dstlist[dstlist.length - 1] != this.pathlist[this.pathlist.length - 1]) {
+    if (dstlist[dstlist.length - 1] !=
+      this.pathlist[this.pathlist.length - 1]) {
       dstlist.push(this.pathlist[this.pathlist.length - 1]);
     }
     if (dstlist[0] == '/') {
@@ -126,11 +137,11 @@ xhrdav.ResourceController.prototype.buildNewDestination_ = function() {
  * Remove resource
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  */
 xhrdav.ResourceController.prototype.remove = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
@@ -146,11 +157,11 @@ xhrdav.ResourceController.prototype.remove = function(
  * Create Directory before parameters validate.
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors, object]
+ *                            [callback args: errors, object].
  * @param {Object=} opt_headers Request headers.
  * @param {Object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  * @throws {Error} Not found href(Directory path).
  */
 xhrdav.ResourceController.prototype.mkDir = function(
@@ -167,11 +178,11 @@ xhrdav.ResourceController.prototype.mkDir = function(
  * Copy resource
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  */
 xhrdav.ResourceController.prototype.copy = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
@@ -189,13 +200,14 @@ xhrdav.ResourceController.prototype.copy = function(
  * Copy resource before parameter validate.
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  * @throws {Error} Not found destination.
  * @see #copy
+ * @deprecated  NOT IMPLEMNTS.
  */
 xhrdav.ResourceController.prototype.copyBeforeValidate = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
@@ -203,18 +215,18 @@ xhrdav.ResourceController.prototype.copyBeforeValidate = function(
     goog.functions.error(
       'Not found destination: obj.setDestination = destPath')();
   }
-  return this.copy(handler, opt_headers, opt_params, context, onXhrComplete);
+  this.copy(handler, opt_headers, opt_params, context, onXhrComplete);
 };
 
 /**
  * Move resoruce
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  */
 xhrdav.ResourceController.prototype.move = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
@@ -232,13 +244,14 @@ xhrdav.ResourceController.prototype.move = function(
  * Move resource before parameter validate.
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Fuction=} onXhrComplete [Callback args: xhr event object]
+ * @param {Fuction=} onXhrComplete [Callback args: xhr event object].
  * @throws {Error} Not found destination.
  * @see #move
+ * @deprecated  NOT IMPLEMNTS.
  */
 xhrdav.ResourceController.prototype.moveBeforeValidate = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
@@ -246,19 +259,18 @@ xhrdav.ResourceController.prototype.moveBeforeValidate = function(
     goog.functions.error(
       'Not found destination: obj.setDestination = destPath')();
   }
-  return this.move(handler, opt_headers, opt_params, context, onXhrComplete);
+  this.move(handler, opt_headers, opt_params, context, onXhrComplete);
 };
 
 /**
  * Rename resource
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Function=} onXhrComplete  [Callback args: errors object]
- * @Deprecated  NOT IMPLEMNTS
+ * @param {Function=} onXhrComplete  [Callback args: errors object].
  */
 xhrdav.ResourceController.prototype.rename = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
@@ -274,30 +286,31 @@ xhrdav.ResourceController.prototype.rename = function(
  * Rename resource before parameters validate.
  *
  * @param {Function=} handler callback handler function
- *                            [callback args: errors object]
+ *                            [callback args: errors object].
  * @param {Object=} opt_headers Request headers.
  * @param {object=} opt_params  Request query params.
  * @param {Object=} context Callback scope.
- * @param {Function=} onXhrComplete  [Callback args: errors object]
+ * @param {Function=} onXhrComplete  [Callback args: errors object].
  * @throws {Error} Not found of xhrdav.Resource or #destination
  * @see #rename
- * @Deprecated  NOT IMPLEMNTS
+ * @deprecated  NOT IMPLEMNTS.
  */
 xhrdav.ResourceController.prototype.renameBeforeValidate = function(
   handler, opt_headers, opt_params, context, onXhrComplete) {
   if (!goog.isDefAndNotNull(this.destination_)) {
     goog.functions.error(
-      'Not found destination: obj.setDestination = destPath')();  // Throw exception!!
+      'Not found destination: obj.setDestination = destPath')();
   } else {
     var dstlist = xhrdav.utils.path.split(this.destination_);
 
-    if (dstlist[dstlist.length - 1] == this.pathlist[this.pathlist.length - 1]) {
+    if (dstlist[dstlist.length - 1] ==
+      this.pathlist[this.pathlist.length - 1]) {
       // Throw exception!!
       goog.functions.error(
         'Duplicate destination: obj.href and  obj.destination is same!!')();
     }
   }
-  return this.rename(handler, opt_headers, opt_params, context, onXhrComplete);
+  this.rename(handler, opt_headers, opt_params, context, onXhrComplete);
 };
 
 

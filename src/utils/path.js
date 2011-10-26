@@ -1,18 +1,19 @@
 /**
  * path.js - modify path string function.
  *
- * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
+ * @license Copyright 2011 The xhrdavclient library authors.
+ * All rights reserved.
  */
 
 goog.provide('xhrdav.utils.path');
+goog.require('goog.array');
 goog.require('goog.string');
 goog.require('goog.string.path');
-goog.require('goog.array');
 
 /**
  * Remove last slash from path string.
  *
- * @param {string} path
+ * @param {string} path path string.
  * @return {string} converted new path.
  */
 xhrdav.utils.path.removeLastSlash = function(path) {
@@ -28,7 +29,7 @@ xhrdav.utils.path.removeLastSlash = function(path) {
 /**
  * Add last slash to path string.
  *
- * @param {string} path
+ * @param {string} path path string.
  * @return {string} converted new path.
  */
 xhrdav.utils.path.addLastSlash = function(path) {
@@ -39,7 +40,7 @@ xhrdav.utils.path.addLastSlash = function(path) {
 /**
  * Split path.
  *
- * @param {string} path
+ * @param {string} path path string.
  * @return {Array.<string>} split path list.
  */
 xhrdav.utils.path.split = function(path) {
