@@ -1,7 +1,8 @@
 /**
  * resourcebuilder.js - xhrdavclient resource object builder
  *
- * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
+ * @license Copyright 2011 The xhrdavclient library authors.
+ * All rights reserved.
  */
 
 goog.provide('xhrdav.ResourceBuilder');
@@ -15,10 +16,14 @@ goog.require('xhrdav.ResourceController');
  * @constructor
  */
 xhrdav.ResourceBuilder = function() {
-  /** @type {Object} */
+  /**
+   * @private
+   * @type {Object}
+   */
   this.rawData_ = null;
 
   /**
+   * @private
    * @type {{root:xhrdav.ResourceController,
    *          childs:Array.<xhrdav.ResourceController}}
    * @see xhrdav.ResourceController
@@ -30,7 +35,7 @@ xhrdav.ResourceBuilder = function() {
  * Create Resource and returning builder
  *
  * @param {Object} rawObj Converted WebDAV resoruce json/hash object.
- * @return {xhrdav.ResourceBuilder}
+ * @return {xhrdav.ResourceBuilder} Resource builder object.
  */
 xhrdav.ResourceBuilder.createCollection = function(rawObj) {
   var builder = new xhrdav.ResourceBuilder();
@@ -125,6 +130,7 @@ xhrdav.ResourceBuilder.prototype.convertRaw2Models = function() {
  *
  * @private
  * @param {Array.<xhrdav.ResourceController>} resList
+ *     converted WebDAV collection controller object.
  * @see xhrdav.ResourceController
  */
 xhrdav.ResourceBuilder.prototype.buildTree_ = function(resList) {
@@ -140,7 +146,7 @@ xhrdav.ResourceBuilder.prototype.buildTree_ = function(resList) {
 /**
  * Getter rawData
  *
- * @return {Object}
+ * @return {Object} associated array of WebDAV collection.
  */
 xhrdav.ResourceBuilder.prototype.getRawData = function() {
   return this.rawData_;
@@ -151,6 +157,7 @@ xhrdav.ResourceBuilder.prototype.getRawData = function() {
  *
  * @return {{root:xhrdav.ResourceController,
  *          childs:Array.<xhrdav.ResourceController}}
+ *     stored converted resource object.
  * @see xhrdav.ResourceController
  */
 xhrdav.ResourceBuilder.prototype.getResources = function() {
@@ -236,7 +243,8 @@ goog.exportProperty(xhrdav.ResourceBuilder.prototype, 'serialize',
 /*
   Structure converted data: Json/Hash repr
     {href: '/mydav/',
-     status: 'HTTP/1.1 200 OK', statuscode: 200, statustext: 'OK', protocol: 'HTTP/1.1',
+     status: 'HTTP/1.1 200 OK',
+     statuscode: 200, statustext: 'OK', protocol: 'HTTP/1.1',
      resourcetype: ('collection' | null),
      contenttype: ('http/unix-directory' | 'image/jpeg' | 'text/plain'),
      contentlength: 4096

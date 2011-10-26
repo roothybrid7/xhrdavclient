@@ -1,7 +1,8 @@
 /**
  * lib.js - xhrdavclient library.
  *
- * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
+ * @license Copyright 2011 The xhrdavclient library authors.
+ * All rights reserved.
  */
 
 goog.provide('xhrdav.lib');

@@ -3,7 +3,8 @@
  *
  * This is a Xml dom parser for WebDAV collection.
  *
- * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
+ * @license Copyright 2011 The xhrdavclient library authors.
+ * All rights reserved.
  */
 
 goog.provide('xhrdav.parser.DomParser');
@@ -24,13 +25,15 @@ xhrdav.parser.DomParser = function() {
  * @param {Object} xml XML Document.
  * @param {Object} handler Dom Handler.
  * @param {Object} options Parse options.
- * @return {xhrdav.DomParser}
+ * @return {xhrdav.DomParser} self object.
  */
 xhrdav.parser.DomParser.prototype.initialize = function(xml, handler, options) {
   if (!(goog.isDefAndNotNull(xml) && xml instanceof Document)) {
     goog.functions.error('Xml document is NOT GIVEN!!')();
   }
-  if (!goog.isDefAndNotNull(handler)) goog.functions.error('Parse handler is NOT GIVEN!!')();
+  if (!goog.isDefAndNotNull(handler)) {
+    goog.functions.error('Parse handler is NOT GIVEN!!')();
+  }
 
   /** @type {Object} */
   this.xml_ = goog.dom.xml.loadXml(
@@ -52,7 +55,7 @@ xhrdav.parser.DomParser.prototype.initialize = function(xml, handler, options) {
 /**
  * Parse XML to Javascript Object
  *
- * @return {xhrdav.DomParser}
+ * @return {xhrdav.DomParser} self object.
  */
 xhrdav.parser.DomParser.prototype.parse = function() {
   var xml = this.xml_;
@@ -65,7 +68,8 @@ xhrdav.parser.DomParser.prototype.parse = function() {
 /**
  * Execute parse XML Document to Javascript Object
  *
- * @param {Object} xml
+ * @param {Object} xml  parsing xml.
+ * @return {Object} parsed object for xml.
  */
 xhrdav.parser.DomParser.prototype.parseDocument = function(xml) {
   var obj = {};
@@ -104,7 +108,8 @@ xhrdav.parser.DomParser.prototype.parseDocument = function(xml) {
  * XML attribute nodename to Javascript object key
  *
  * @private
- * @param {string} nodeName
+ * @param {string} nodeName Xml attribute nodename.
+ * @return {string} converted object key for XML attribute nodename.
  */
 xhrdav.parser.DomParser.prototype.parseAttributeName_ = function(nodeName) {
   return this.attributePrefix_ + nodeName.replace(/:/, this.nsSeparator_);
@@ -114,7 +119,8 @@ xhrdav.parser.DomParser.prototype.parseAttributeName_ = function(nodeName) {
  * XML nodename to Javascript object key
  *
  * @private
- * @param {string} nodeName
+ * @param {string} nodeName Xml nodename.
+ * @return {string} converted nodename.
  */
 xhrdav.parser.DomParser.prototype.parseNodeName_ = function(nodeName) {
   return nodeName

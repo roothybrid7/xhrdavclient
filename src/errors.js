@@ -3,7 +3,8 @@
  *
  * This is a Error object for Request and WebDAV resources.
  *
- * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
+ * @license Copyright 2011 The xhrdavclient library authors.
+ * All rights reserved.
  */
 
 goog.provide('xhrdav.Errors');

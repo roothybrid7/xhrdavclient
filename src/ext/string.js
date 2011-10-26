@@ -1,7 +1,8 @@
 /**
  * string.js - string prototype extensions
  *
- * @license Copyright 2011 The xhrdavclient library authors. All rights reserved.
+ * @license Copyright 2011 The xhrdavclient library authors.
+ * All rights reserved.
  */
 
 goog.provide('xhrdav.ext.string');
@@ -35,8 +36,8 @@ String.prototype.capitalize = function() {
  *
  * Example:
  *   "puni_puni" # => "puni-puni"
+ * @return {string} converted string.
  */
-// underscored_word.gsub(/_/, '-')
 String.prototype.dasherize = function() {
   return this.split('_').join('-');
 };
@@ -64,7 +65,8 @@ String.prototype.camelize = function(options) {
   var self = this;
   var lType = xhrdav.ext.string.LetterType;
   if (!goog.isDef(options)) options = {};
-  if (!goog.isDefAndNotNull(options.firstLetter) || options.firstLetter > lType.UPPER) {
+  if (!goog.isDefAndNotNull(options.firstLetter) ||
+    options.firstLetter > lType.UPPER) {
     options.firstLetter = lType.UPPER;
   }
 
