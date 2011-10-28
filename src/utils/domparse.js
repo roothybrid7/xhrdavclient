@@ -21,8 +21,9 @@ xhrdav.utils.domparse.parseXml = function(xml) {
   try {
     parser = new xhrdav.parser.DomParser().initialize(xml, handler).parse();
   } catch (e) {
-    // TODO: [Replace goog.debug.Logger]
-    console.log('Error: ' + e.message);
+    xhrdav.Conf.logging({'name': 'xhrdav.utils.domparse.parseXml',
+      'errMsg': e.message}, 'warning');
+    xhrdav.Conf.getLogger().warning('Error: ' + e.message, e);
   } finally {
     obj = handler.getObject() || {};
     handler.dispose();
