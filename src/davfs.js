@@ -255,8 +255,8 @@ xhrdav.DavFs.Request.prototype.contentReadHandler_ = function(
 
   var args = [];
   if (statusCode != httpStatus.OK) {
-    errors.setRequest({status: statusCode,
-      message: httpStatus.text[statusCode], path: path});
+    var data = {statusCode: statusCode, path: path, content: content};
+    errors.setRequest(xhrdav.DavFs.Request.buildRequestErrors(data));
   }
   args.push(errors);
   args.push(content);
@@ -285,8 +285,8 @@ xhrdav.DavFs.Request.prototype.existsHandler_ = function(
   if (!goog.array.contains(
     [httpStatus.OK, httpStatus.CREATED, httpStatus.NO_CONTENT],
     statusCode)) {
-    errors.setRequest(
-      {status: statusCode, message: httpStatus.text[statusCode], path: path});
+    var data = {statusCode: statusCode, path: path, content: content};
+    errors.setRequest(xhrdav.DavFs.Request.buildRequestErrors(data));
   }
   args.push(errors);
   args.push(errors.hasRequest() ? false : true);
@@ -295,6 +295,11 @@ xhrdav.DavFs.Request.prototype.existsHandler_ = function(
 
 /**
  * Error Handler
+ *
+ * Errors object structure:
+ *     {status: <HTTP status code>, path: <request path>,
+ *      summary: <Request error summary message>,
+ *      message: <Request error detail message>}
  *
  * @private
  * @param {string} path HTTP Request path.
@@ -314,14 +319,45 @@ xhrdav.DavFs.Request.prototype.simpleErrorHandler_ = function(
   if (!goog.array.contains(
     [httpStatus.OK, httpStatus.CREATED, httpStatus.NO_CONTENT],
     statusCode)) {
-    errors.setRequest(
-      {status: statusCode, message: httpStatus.text[statusCode], path: path});
+    var data = {statusCode: statusCode, path: path, content: content};
+    errors.setRequest(xhrdav.DavFs.Request.buildRequestErrors(data));
   }
   args.push(errors);
   if (statusCode == httpStatus.CREATED) {
     args.push(headers['Location']);
   }
   return args;
+};
+
+/**
+ * Building request errors
+ *
+ * @param {{statusCode: number, path: string, content: string=}} data
+ *     Response data.
+ * @return {{status: number, path: string, html: string,
+ *     summary: string=, message: string=}} errors Map data.
+ */
+xhrdav.DavFs.Request.buildRequestErrors = function(data) {
+  var errMap = {};
+
+  var errorHtmlDom = goog.isDefAndNotNull(data.content) ?
+    goog.dom.htmlToDocumentFragment(data.content) : null;
+  if (goog.isDefAndNotNull(errorHtmlDom)) {
+    var summary = goog.dom.getElementsByTagNameAndClass(
+      'title', null, errorHtmlDom)[0];
+    var description = goog.dom.getElementsByTagNameAndClass(
+      'p', null, errorHtmlDom)[0];
+    goog.object.extend(errMap, {
+    summary: goog.dom.getTextContent(summary),
+    message: goog.dom.getTextContent(description)});
+  }
+
+  goog.object.extend(errMap, {
+    status: data.statusCode,
+    path: data.path,
+    html: data.content});
+
+  return errMap;
 };
 
 /**
@@ -415,8 +451,8 @@ xhrdav.DavFs.Request.prototype.processMultistatus_ = function(
   if (statusCode == httpStatus.MULTI_STATUS) {
     content = this.getListDirFromMultistatus(content, opt_helper);
   } else {
-    errors.setRequest({status: statusCode,
-      message: httpStatus.text[statusCode], path: path});
+    var data = {statusCode: statusCode, path: path, content: content};
+    errors.setRequest(xhrdav.DavFs.Request.buildRequestErrors(data));
   }
   args.push(errors);
   args.push(content);
@@ -729,6 +765,8 @@ goog.exportProperty(xhrdav.DavFs.prototype, 'getRequest',
   xhrdav.DavFs.prototype.getRequest);
 
 goog.exportSymbol('xhrdav.DavFs.Request', xhrdav.DavFs.Request);
+goog.exportSymbol('xhrdav.DavFs.Request.buildRequestErrors',
+  xhrdav.DavFs.Request.buildRequestErrors);
 goog.exportProperty(xhrdav.DavFs.Request.prototype,
   'getListDirFromMultistatus',
   xhrdav.DavFs.Request.prototype.getListDirFromMultistatus);
