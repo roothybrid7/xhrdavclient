@@ -1,4 +1,11 @@
 
+0.3.0 / 2011-10-28 
+==================
+
+  * replace console.log and modified dav error object.
+  * Merge branch 'release/v0.2.2' into develop
+  * update changelog and version string.
+
 0.2.2 / 2011-10-26 
 ==================
 
