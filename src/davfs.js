@@ -353,8 +353,8 @@ xhrdav.DavFs.Request.buildRequestErrors = function(data) {
       message: goog.dom.getTextContent(description)});
   } else {
     goog.object.extend(errMap, {
-      summary: data.statusCode + ' ' +  httpStatusText[data.statusCode],
-      message: data.statusCode + ' ' +  httpStatusText[data.statusCode]});
+      summary: data.statusCode + ' ' + httpStatusText[data.statusCode],
+      message: data.statusCode + ' ' + httpStatusText[data.statusCode]});
   }
 
   goog.object.extend(errMap, {
