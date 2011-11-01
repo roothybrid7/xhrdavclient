@@ -190,6 +190,29 @@
       assertEquals('Childs Entry: Dav Request object is same.', req, resources.childs[0].request_);
 //      req.getListDirFromMultistatus.call(this, rawDataList, {hasCtrl: true});
     }
+
+    function testBuildRequestErrors() {
+      var testId = 'testBuildRequestErrors';
+
+      var httpStatus = xhrdav.HttpStatus;
+      var httpStatusText = xhrdav.HttpStatus.text;
+      var errDesc = httpStatus.INTERNAL_SERVER_ERROR + ' ' +
+        httpStatusText[httpStatus.INTERNAL_SERVER_ERROR] + 'Description.';
+      var errors = {
+        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+        path: '/foo/bar/',
+        content: '<html><head><title>' + testId + '</title></head>' +
+          '<body><h1>' + httpStatus.INTERNAL_SERVER_ERROR + ' ' +
+          httpStatusText[httpStatus.INTERNAL_SERVER_ERROR] + '</h1>' +
+          '<p>' + errDesc + '</p></body></html>'
+      };
+      var errMap = xhrdav.DavFs.Request.buildRequestErrors(errors);
+      assertEquals('error code?', errors.statusCode, errMap.status);
+      assertEquals('error path?', errors.path, errMap.path);
+      assertEquals('error html?', errors.content, errMap.html);
+      assertEquals('error summary?', testId, errMap.summary);
+      assertEquals('error descripiton?', errDesc, errMap.message);
+    }
   </script>
 </body>
 </html>
