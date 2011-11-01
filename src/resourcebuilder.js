@@ -50,14 +50,15 @@ xhrdav.ResourceBuilder.createCollection = function(rawObj) {
  * Convert raw data to model objects.
  */
 xhrdav.ResourceBuilder.prototype.convertRaw2Models = function() {
-  if (!goog.isDefAndNotNull(this.rawData_.D$response)) return;
-
-  var resp;
-  if (this.rawData_.D$response instanceof Array) {
-    resp = this.rawData_.D$response;
-  } else {
-    resp = [this.rawData_.D$response];
+  var resp = [];
+  if (goog.isDefAndNotNull(this.rawData_.D$response)) {
+    if (this.rawData_.D$response instanceof Array) {
+      resp = this.rawData_.D$response;
+    } else {
+      resp = [this.rawData_.D$response];
+    }
   }
+
   // get properties from respnse data
   var resList = [];
   goog.array.forEach(resp, function(val, key) {

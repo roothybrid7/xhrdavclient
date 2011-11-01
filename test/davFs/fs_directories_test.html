@@ -161,7 +161,7 @@
       };
 
       davFs.getRequest().listDir(dir, assertListDir, null, null, this,
-        {xhrId: testId + '#listDir', hasCtrl: true});
+        {xhrId: testId + '#listDir', hasCtrl: true}, goog.partial(xhrLogging, logger));
     }
 
     function testMkDir() {

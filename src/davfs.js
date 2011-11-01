@@ -338,9 +338,10 @@ xhrdav.DavFs.Request.prototype.simpleErrorHandler_ = function(
  *     summary: string=, message: string=}} errors Map data.
  */
 xhrdav.DavFs.Request.buildRequestErrors = function(data) {
+  var httpStatusText = xhrdav.HttpStatus.text;
   var errMap = {};
 
-  var errorHtmlDom = goog.isDefAndNotNull(data.content) ?
+  var errorHtmlDom = !goog.string.isEmptySafe(data.content) ?
     goog.dom.htmlToDocumentFragment(data.content) : null;
   if (goog.isDefAndNotNull(errorHtmlDom)) {
     var summary = goog.dom.getElementsByTagNameAndClass(
@@ -348,8 +349,12 @@ xhrdav.DavFs.Request.buildRequestErrors = function(data) {
     var description = goog.dom.getElementsByTagNameAndClass(
       'p', null, errorHtmlDom)[0];
     goog.object.extend(errMap, {
-    summary: goog.dom.getTextContent(summary),
-    message: goog.dom.getTextContent(description)});
+      summary: goog.dom.getTextContent(summary),
+      message: goog.dom.getTextContent(description)});
+  } else {
+    goog.object.extend(errMap, {
+      summary: data.statusCode + ' ' + httpStatusText[data.statusCode],
+      message: data.statusCode + ' ' + httpStatusText[data.statusCode]});
   }
 
   goog.object.extend(errMap, {
@@ -380,7 +385,7 @@ xhrdav.DavFs.Request.prototype.getListDirFromMultistatus = function(
     if (!goog.array.isEmpty(resources.childs)) {
       goog.array.forEach(resources.childs, function(child) {
         child.setRequest(this);
-      });
+      }, this);
     }
   } else {
     resources = builder.serialize(opt_helper.asModel);
@@ -449,6 +454,9 @@ xhrdav.DavFs.Request.prototype.processMultistatus_ = function(
 
   var args = [];
   if (statusCode == httpStatus.MULTI_STATUS) {
+    // TODO: research scope
+    xhrdav.Conf.logging({'name': 'xhrdav.DavFs.Request#processMultistatus_',
+      'scope': this instanceof xhrdav.DavFs.Request}, 'config');
     content = this.getListDirFromMultistatus(content, opt_helper);
   } else {
     var data = {statusCode: statusCode, path: path, content: content};

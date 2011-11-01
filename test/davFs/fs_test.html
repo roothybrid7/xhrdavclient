@@ -28,10 +28,19 @@
       asyncTestCase.continueTesting();
     };
 
+    var rawData, rawDataList;
+
     function setUp() {
+      rawData = {D$response: {D$href: {$t: '/foo/bar/'}}};
+      rawDataList = {D$response: [
+          {D$href: {$t: '/foo/bar/'}},
+          {D$href: {$t: '/foo/bar/buz/'}}
+      ]};
     }
 
     function tearDown() {
+      rawData = null;
+      rawDataList = null;
     }
 
     function testCreateXhrManager() {
@@ -132,7 +141,7 @@
       assertNotUndefined('upload', req.upload);
       assertNotUndefined('exists', req.exists);
       assertNotUndefined('getListDirFromMultistatus',
-        xhrdav.DavFs.Request.getListDirFromMultistatus);
+        req.getListDirFromMultistatus);
     }
 
     function testCreateRequestByXhrIo() {
@@ -151,6 +160,58 @@
       xhrIo.setWithCredentials(true);
       var req4 = fs.getRequest({davSiteName: 'default', xhrIo: xhrIo});
       assertTrue('With Credentials?', req4.xhrIo_.getWithCredentials());
+    }
+
+    function testCreateRequestForSerializedObject() {
+      var testId = 'testCreateRequestForSerializedObject';
+
+      var fs = xhrdav.DavFs.getInstance();
+      var req = fs.getRequest();
+      var resources = req.getListDirFromMultistatus(rawDataList);
+      assertFalse('Dav root resource', goog.object.isEmpty(resources.root));
+      assertFalse('Dav child resources', goog.array.isEmpty(resources.childs));
+      assertEquals('Dav child resources', 1, resources.childs.length);
+      assertEquals('Dav root resource href', '/foo/bar/', resources.root.href);
+      assertEquals('Dav childs resource href', '/foo/bar/buz/', resources.childs[0].href);
+    }
+
+    function testCreateRequestForResourceObject() {
+      var testId = 'testCreateRequestForResourceObject';
+
+      var fs = xhrdav.DavFs.getInstance();
+      var req = fs.getRequest();
+      var resources = req.getListDirFromMultistatus(rawDataList, {hasCtrl: true});
+      assertFalse('Dav root resource', goog.object.isEmpty(resources.root));
+      assertFalse('Dav child resources', goog.array.isEmpty(resources.childs));
+      assertEquals('Dav child resources', 1, resources.childs.length);
+      assertEquals('Dav root resource href', '/foo/bar/', resources.root.href);
+      assertEquals('Dav childs resource href', '/foo/bar/buz/', resources.childs[0].href);
+      assertEquals('Root Entry: Dav Request object is same.', req, resources.root.request_);
+      assertEquals('Childs Entry: Dav Request object is same.', req, resources.childs[0].request_);
+//      req.getListDirFromMultistatus.call(this, rawDataList, {hasCtrl: true});
+    }
+
+    function testBuildRequestErrors() {
+      var testId = 'testBuildRequestErrors';
+
+      var httpStatus = xhrdav.HttpStatus;
+      var httpStatusText = xhrdav.HttpStatus.text;
+      var errDesc = httpStatus.INTERNAL_SERVER_ERROR + ' ' +
+        httpStatusText[httpStatus.INTERNAL_SERVER_ERROR] + 'Description.';
+      var errors = {
+        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+        path: '/foo/bar/',
+        content: '<html><head><title>' + testId + '</title></head>' +
+          '<body><h1>' + httpStatus.INTERNAL_SERVER_ERROR + ' ' +
+          httpStatusText[httpStatus.INTERNAL_SERVER_ERROR] + '</h1>' +
+          '<p>' + errDesc + '</p></body></html>'
+      };
+      var errMap = xhrdav.DavFs.Request.buildRequestErrors(errors);
+      assertEquals('error code?', errors.statusCode, errMap.status);
+      assertEquals('error path?', errors.path, errMap.path);
+      assertEquals('error html?', errors.content, errMap.html);
+      assertEquals('error summary?', testId, errMap.summary);
+      assertEquals('error descripiton?', errDesc, errMap.message);
     }
   </script>
 </body>

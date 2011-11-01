@@ -132,27 +132,33 @@ xhrdav.Client.prototype.setXmlParseFunction = function(funcObj) {
  * @param {Function} onXhrComplete onXhrComplete callback function.
  * @param {Object} event XHR Event Object.
  */
-// TODO: UNFIXED Logic
+// TODO: Testcase of HTTP Request Error
 xhrdav.Client.prototype.processRequest_ = function(
   handler, onXhrComplete, event) {
   if (onXhrComplete && onXhrComplete instanceof Function) onXhrComplete(event);
 
   var xhr = event.target;
   var xssGuard = 'while(1);';
-  var headers = this.parseHeaders_(xhr.getAllResponseHeaders());
+  var statusCode = xhr.getStatus();
+  var headers = {};
   var content = xhr.getResponse(xssGuard);
 
-  if (goog.string.contains(headers['Content-Type'], 'xml')) {
-    content = xhr.getResponseXml(xssGuard);
-    if (this.canParseXml()) content = this.parseXml(content);
-  }
   if (!xhr.isSuccess() && xhr.getStatus() != xhrdav.HttpStatus.MULTI_STATUS) {
     xhrdav.Conf.logging({'name': 'Client#processRequest_',
       'uri': xhr.getLastUri(),
       'errStatus': xhr.getLastErrorCode(),
+      'errStatusText':
+        goog.net.ErrorCode.getDebugMessage(xhr.getLastErrorCode()),
       'errMessage': xhr.getLastError()}, 'warning');
+  } else {
+    headers = this.parseHeaders_(xhr.getAllResponseHeaders());
+    if (goog.string.contains(headers['Content-Type'], 'xml')) {
+      content = xhr.getResponseXml(xssGuard);
+      if (this.canParseXml()) content = this.parseXml(content);
+      if (goog.object.isEmpty(content)) statusCode = 500;
+    }
   }
-  if (handler) handler(xhr.getStatus() || 500, content, headers);
+  if (handler) handler(statusCode || 500, content, headers);
 };
 
 /**
@@ -525,6 +531,17 @@ xhrdav.Client.prototype.copy = function(
     path, dstPath, handler, opt_request, onXhrComplete);
 };
 
+/**
+ * Error Handler of exception[Mix-in function]
+ *
+ * @param {Error} e Error object.
+ */
+xhrdav.Client.prototype.errorHandler = function(e) {
+  xhrdav.Conf.logging({'Client#errorHandler': e.name,
+    'message': e.message}, 'warning');
+  xhrdav.Conf.getInstance().getLogger().warning(e.name, e);
+};
+
 
 /* Entry Point for closure compiler */
 goog.exportSymbol('xhrdav.Client', xhrdav.Client);
@@ -558,3 +575,5 @@ goog.exportProperty(xhrdav.Client.prototype, 'move',
   xhrdav.Client.prototype.move);
 goog.exportProperty(xhrdav.Client.prototype, 'copy',
   xhrdav.Client.prototype.copy);
+goog.exportProperty(xhrdav.Client.prototype, 'errorHandler',
+  xhrdav.Client.prototype.errorHandler);
