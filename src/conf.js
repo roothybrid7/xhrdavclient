@@ -19,12 +19,6 @@ goog.require('xhrdav.lib');
  * Refs: goog.DEBUG=true|false
  */
 
-///** @type {string} */
-//xhrdav.lib.LIBNAME = 'xhrdavclient';
-//
-///** @type {string} */
-//xhrdav.lib.VERSION = '0.0.22';
-
 /**
  * xhrdavclient Global config
  *
@@ -49,7 +43,7 @@ xhrdav.Conf.prototype.initialize_ = function() {
    @ @private
    * @type {goog.debug.Logger}
    */
-  this.logger_ = new goog.debug.Logger.getLogger(xhrdav.lib.LIBNAME);
+  this.logger_ = new goog.debug.Logger.getLogger('xhrdavclient');
 
   if (goog.DEBUG) {
     this.logger_.setLevel(goog.debug.Logger.Level.ALL);
@@ -79,7 +73,7 @@ xhrdav.Conf.prototype.initialize_ = function() {
  */
 xhrdav.Conf.prototype.initializeErrorHandler_ = function() {
   var handler = goog.bind(function(e) {
-    this.logger_.warning(e.name || 'Throws exception', e);
+    this.logger_.warning(e.name + ': ' + e.message, e);
   }, this);
   this.errorHandler_ = new goog.debug.ErrorHandler(handler);
 //  this.errorHandler_.protectWindowSetInterval();

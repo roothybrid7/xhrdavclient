@@ -132,25 +132,28 @@ xhrdav.Client.prototype.setXmlParseFunction = function(funcObj) {
  * @param {Function} onXhrComplete onXhrComplete callback function.
  * @param {Object} event XHR Event Object.
  */
-// TODO: UNFIXED Logic
+// TODO: Testcase of HTTP Request Error
 xhrdav.Client.prototype.processRequest_ = function(
   handler, onXhrComplete, event) {
   if (onXhrComplete && onXhrComplete instanceof Function) onXhrComplete(event);
 
   var xhr = event.target;
   var xssGuard = 'while(1);';
-  var headers = this.parseHeaders_(xhr.getAllResponseHeaders());
+  var headers = {};
   var content = xhr.getResponse(xssGuard);
 
-  if (goog.string.contains(headers['Content-Type'], 'xml')) {
-    content = xhr.getResponseXml(xssGuard);
-    if (this.canParseXml()) content = this.parseXml(content);
-  }
   if (!xhr.isSuccess() && xhr.getStatus() != xhrdav.HttpStatus.MULTI_STATUS) {
     xhrdav.Conf.logging({'name': 'Client#processRequest_',
       'uri': xhr.getLastUri(),
       'errStatus': xhr.getLastErrorCode(),
+      'errStatusText': goog.net.ErrorCode.getDebugMessage(xhr.getLastErrorCode()),
       'errMessage': xhr.getLastError()}, 'warning');
+  } else {
+    headers = this.parseHeaders_(xhr.getAllResponseHeaders());
+    if (goog.string.contains(headers['Content-Type'], 'xml')) {
+      content = xhr.getResponseXml(xssGuard);
+      if (this.canParseXml()) content = this.parseXml(content);
+    }
   }
   if (handler) handler(xhr.getStatus() || 500, content, headers);
 };
