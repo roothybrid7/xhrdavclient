@@ -1,4 +1,16 @@
 
+0.3.1 / 2011-11-01 
+==================
+
+  * fixed style.
+  * fixjsstyle
+  * bugfixed error handling
+  * fixed bug
+  * bugfix: xhr request error etc.
+  * bugfix: logging
+  * Merge branch 'release/v0.3.0' into develop
+  * update changelog and version string.
+
 0.3.0 / 2011-10-28 
 ==================
 
