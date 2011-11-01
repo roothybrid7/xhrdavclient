@@ -15,6 +15,7 @@ goog.require('xhrdav.parser.DomParser');
  *
  * @param {Object} xml WebDAV Multi-Status collections.
  * @return {Object} converted multistatus object(Associate array).
+ * @this {Function}
  */
 xhrdav.utils.domparse.parseXml = function(xml) {
   var handler = new xhrdav.parser.DomHandler();

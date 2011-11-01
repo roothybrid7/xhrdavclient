@@ -147,7 +147,8 @@ xhrdav.Client.prototype.processRequest_ = function(
     xhrdav.Conf.logging({'name': 'Client#processRequest_',
       'uri': xhr.getLastUri(),
       'errStatus': xhr.getLastErrorCode(),
-      'errStatusText': goog.net.ErrorCode.getDebugMessage(xhr.getLastErrorCode()),
+      'errStatusText':
+        goog.net.ErrorCode.getDebugMessage(xhr.getLastErrorCode()),
       'errMessage': xhr.getLastError()}, 'warning');
   } else {
     headers = this.parseHeaders_(xhr.getAllResponseHeaders());
