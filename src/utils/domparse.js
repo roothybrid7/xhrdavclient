@@ -6,8 +6,10 @@
  */
 
 goog.provide('xhrdav.utils.domparse');
+goog.require('xhrdav.Conf');
 goog.require('xhrdav.parser.DomHandler');
 goog.require('xhrdav.parser.DomParser');
+
 
 /**
  * Parse WebDAV Multi-Status to row structure by Dom parser
@@ -23,7 +25,7 @@ xhrdav.utils.domparse.parseXml = function(xml) {
   } catch (e) {
     xhrdav.Conf.logging({'name': 'xhrdav.utils.domparse.parseXml',
       'errMsg': e.message}, 'warning');
-    xhrdav.Conf.getLogger().warning('Error: ' + e.message, e);
+    xhrdav.Conf.getInstance().getLogger().warning('Error: ' + e.message, e);
   } finally {
     obj = handler.getObject() || {};
     handler.dispose();
