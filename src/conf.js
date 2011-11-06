@@ -57,7 +57,7 @@ xhrdav.Conf.prototype.initialize_ = function() {
    * @private
    * @type {Object}
    */
-  this.xmgr_ = {};
+  this.xmgr_ = {timeoutInterval: 120000};
 
   /**
    * @private
