@@ -139,7 +139,7 @@ xhrdav.Client.prototype.processRequest_ = function(
 
   var xhr = event.target;
   var xssGuard = 'while(1);';
-  var statusCode = xhr.getStatus();
+  var statusCode = xhr.getStatus() || 0;
   var headers = {};
   var content = xhr.getResponse(xssGuard);
 
@@ -158,7 +158,7 @@ xhrdav.Client.prototype.processRequest_ = function(
       if (goog.object.isEmpty(content)) statusCode = 500;
     }
   }
-  if (handler) handler(statusCode || 500, content, headers);
+  if (handler) handler((statusCode < 1) ? 500 : statusCode, content, headers);
 };
 
 /**
