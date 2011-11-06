@@ -1,3 +1,6 @@
 [submodule "closure-library"]
 	path = closure-library
 	url = https://github.com/jarib/google-closure-library.git
+[submodule "jsDAV"]
+	path = jsDAV
+	url = git@github.com:roothybrid7/jsDAV.git

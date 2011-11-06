@@ -13,6 +13,7 @@
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
     goog.require('goog.json');
+    goog.require('goog.net.Jsonp');
 
     goog.require('xhrdav.ResourceBuilder');
     goog.require('xhrdav.HttpStatus');
@@ -30,13 +31,19 @@
     var multistatusDironlyParseRaw = function(json) {
       fixtureDirOnlyData = json;
     };
-    loadJson('../../fixtures/multistatusDironlyParseRaw.js');
+//    loadJson('../../fixtures/multistatusDironlyParseRaw.js');
+    new goog.net.Jsonp(
+      '../../fixtures/multistatusDironlyParseRaw.js').send(
+      null, multistatusDironlyParseRaw);
 
     var fixtureCurrDirData;
     var multistatusCurrentDirParseRaw = function(json) {
       fixtureCurrDirData = json;
     };
-    loadJson('../../fixtures/multistatusCurrentDirParseRaw.js');
+//    loadJson('../../fixtures/multistatusCurrentDirParseRaw.js');
+    new goog.net.Jsonp(
+      '../../fixtures/multistatusCurrentDirParseRaw.js').send(
+      null, multistatusCurrentDirParseRaw);
 
     function setUp() {
       initDirOnlyData = fixtureDirOnlyData['json'];

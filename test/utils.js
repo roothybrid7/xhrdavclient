@@ -3,11 +3,15 @@
  *
  * @param src script src file.
  */
-function loadJson(src) {
-  var script = document.createElement('script');
-  script.src = src;
-  document.body.appendChild(script);
-}
+//function loadJson(src) {
+//  var headDom = document.getElementsByTagName('head')[0];
+//  var script = document.createElement('script');
+//  script.setAttribute('src', src);
+//  script.setAttribute('id', 'jsonp' + new Date().getTime() + Math.random() * 3);
+//  script.setAttribute('type', 'text/javascript');
+//  script.setAttribute('charset', 'UTF-8');
+//  headDom.appendChild(script);
+//}
 
 /**
  * Logging for XHR

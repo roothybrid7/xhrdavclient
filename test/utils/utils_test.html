@@ -13,6 +13,7 @@
     goog.require('goog.debug.Logger');
     goog.require('goog.testing.MockClassFactory');
     goog.require('goog.testing.MethodMock');
+    goog.require('goog.net.Jsonp');
 
     goog.require('goog.object');
     goog.require('goog.array');
@@ -39,7 +40,10 @@
     var multistatusCurrentdir = function(json) {
       fixtureData = json;
     }
-    loadJson('../../fixtures/multistatus_currentdir.js');
+//    loadJson('../../fixtures/multistatus_currentdir.js');
+    new goog.net.Jsonp(
+      '../../fixtures/multistatus_currentdir.js').send(
+      null, multistatusCurrentdir);
 
     function setUp() {
       func = xhrdav.utils.domparse;

@@ -11,6 +11,7 @@
     goog.require('goog.testing.jsunit');
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
+    goog.require('goog.net.Jsonp');
 
     goog.require('goog.object');
     goog.require('goog.array');
@@ -36,7 +37,9 @@
     var multistatusCurrentdir = function(json) {
       fixtureData = json;
     }
-    loadJson('../../fixtures/multistatus_currentdir.js');
+//    loadJson('../../fixtures/multistatus_currentdir.js');
+    var jsonp = new goog.net.Jsonp('../../fixtures/multistatus_currentdir.js');
+    jsonp.send(null, multistatusCurrentdir);
 
     function setUp() {
       initData = goog.dom.xml.loadXml(
