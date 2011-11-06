@@ -17,12 +17,8 @@ goog.require('goog.string.path');
  * @return {string} converted new path.
  */
 xhrdav.utils.path.removeLastSlash = function(path) {
-  var converted;
-  if (path.match(/^(.+)\/$/)) {
-    converted = RegExp.$1;
-  } else {
-    converted = path;
-  } // Preserve GET
+  var converted = goog.string.endsWith(path, '/') ?
+    path.slice(0, -1) || '/' : path;
   return converted;
 };
 
