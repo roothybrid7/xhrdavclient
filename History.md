@@ -1,4 +1,15 @@
 
+0.3.2 / 2011-11-07 
+==================
+
+  * bugfix response processing and update README
+  * bugfixed xhr error handling
+  * Add xhrmanager timeout and use goog.net.jsonp in testcase
+  * add server.js
+  * add submodule jsDAV
+  * Merge branch 'release/v0.3.1' into develop
+  * update changelog and version string.
+
 0.3.1 / 2011-11-01 
 ==================
 

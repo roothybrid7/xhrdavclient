@@ -40,7 +40,7 @@ xhrdav.Conf.prototype.initialize_ = function() {
   this.xmlParseFuncObj = 'xhrdav.utils.domparse';
 
   /**
-   @ @private
+   * @private
    * @type {goog.debug.Logger}
    */
   this.logger_ = new goog.debug.Logger.getLogger('xhrdavclient');

@@ -336,12 +336,9 @@ xhrdav.Client.prototype.put = function(
   path, data, handler, opt_request, onXhrComplete) {
   if (!goog.isDefAndNotNull(opt_request)) opt_request = {};
 
-  var url;
-  if (goog.string.isEmptySafe(path) && path.match(/^(.+)\/$/)) {
-    url = this.generateUrl_(goog.string.urlDecode(RegExp.$1 || ''));
-  } else {
-    url = this.generateUrl_(goog.string.urlDecode(path || ''));
-  } // Preserve GET
+  var decodedPath = goog.string.urlDecode(
+    xhrdav.utils.path.removeLastSlash(path || ''));
+  var url = this.generateUrl_(decodedPath);
   this.setParameters_(url, opt_request.query);
 
   opt_request.headers = this.convertHeadersKeys_(opt_request.headers || {});

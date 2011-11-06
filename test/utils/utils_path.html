@@ -24,11 +24,17 @@
     function testRemoveSlash() {
       var path1 = '/foo/bar/';
       var path2 = '/foo/bar';
+      var path3 = '/';
+      var path4 = '.';
 
       assertEquals(path1,
         '/foo/bar', xhrdav.utils.path.removeLastSlash(path1));
       assertEquals(path2,
         '/foo/bar', xhrdav.utils.path.removeLastSlash(path2));
+      assertEquals(path3,
+        '/', xhrdav.utils.path.removeLastSlash(path3));
+      assertEquals(path4,
+        '.', xhrdav.utils.path.removeLastSlash(path4));
     }
 
     function testAddLastSlash() {
