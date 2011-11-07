@@ -55,9 +55,9 @@ Write code
     var httpStatusText = xhrdav.lib.HttpStatus.text;
 
     var callback = function(status, content, headers) {
-      console.log(status); # => 207
+      console.log(status); // => 207
       console.log(content);
-      # => <D:multistatus xmlns:D="DAV:" xmlns:ns0="DAV:">...</D:multistatus>
+      // => <D:multistatus xmlns:D="DAV:" xmlns:ns0="DAV:">...</D:multistatus>
     };
 
     dav.propfind(dir, callback);
@@ -83,9 +83,9 @@ Write code
     var httpStatusText = xhrdav.lib.HttpStatus.text;
 
     var callback = function(errors, content) {
-      console.log(errors.hasRequest()); # => false
+      console.log(errors.hasRequest()); // => false
       console.log(content);
-      # => {root: {href: '/mydav/', ...}, childs: [{href: '/mydav/foo.txt', ...}, {href: '/mydav/bar/', ...}]}
+      // => {root: {href: '/mydav/', ...}, childs: [{href: '/mydav/foo.txt', ...}, {href: '/mydav/bar/', ...}]}
     };
 
     davFs.getRequest().listDir(dir, callback, null, null, this);
