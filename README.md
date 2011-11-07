@@ -56,7 +56,7 @@ Write code
 
     var callback = function(status, content, headers) {
       console.log(status); # => 207
-      content.log(content);
+      console.log(content);
       # => <D:multistatus xmlns:D="DAV:" xmlns:ns0="DAV:">...</D:multistatus>
     };
 
@@ -84,7 +84,7 @@ Write code
 
     var callback = function(errors, content) {
       console.log(errors.hasRequest()); # => false
-      content.log(content);
+      console.log(content);
       # => {root: {href: '/mydav/', ...}, childs: [{href: '/mydav/foo.txt', ...}, {href: '/mydav/bar/', ...}]}
     };
 
