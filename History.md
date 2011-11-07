@@ -1,4 +1,12 @@
 
+0.3.2a / 2011-11-07 
+==================
+
+  * Merge branch 'hotfix/fix_readme'
+  * fixed typo
+  * Merge branch 'release/v0.3.2'
+  * update changelog
+
 0.3.2 / 2011-11-07 
 ==================
 
