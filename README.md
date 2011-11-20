@@ -51,8 +51,8 @@ Write code
   <script type="text/javascript">
     var dir = '/mydav/'
     var dav = new xhrdav.lib.Client();
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var httpStatusText = xhrdav.lib.HttpStatus.text;
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
 
     var callback = function(status, content, headers) {
       console.log(status); // => 207
@@ -79,8 +79,8 @@ Write code
   <script type="text/javascript">
     var dir = '/mydav/'
     var davFs = xhrdav.DavFs.getInstance();
-    var httpStatus = xhrdav.lib.HttpStatus;
-    var httpStatusText = xhrdav.lib.HttpStatus.text;
+    var httpStatus = xhrdav.HttpStatus;
+    var httpStatusText = xhrdav.HttpStatus.text;
 
     var callback = function(errors, content) {
       console.log(errors.hasRequest()); // => false
