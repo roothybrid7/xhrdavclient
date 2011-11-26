@@ -1,4 +1,15 @@
 
+0.3.3 / 2011-11-26 
+==================
+
+  * Add resource properties: id, parentId, name
+  * typo sample code in README
+  * Merge branch 'hotfix/v0.3.2b' into develop
+  * fixed typo
+  * Merge branch 'hotfix/v0.3.2a' into develop
+  * Merge branch 'hotfix/v0.3.2a'
+  * hotfixed
+
 0.3.2a / 2011-11-07 
 ==================
 
