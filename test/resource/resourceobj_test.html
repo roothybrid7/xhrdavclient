@@ -47,7 +47,8 @@
       var resource = new xhrdav.Resource();
       assertNotNullNorUndefined('Create Resource?', resource);
 
-      var hash = {href: null, pathlist: [],
+      var hash = {id: null, parentId: null,
+        name: null, href: null, pathlist: [],
         status: null, protocol: null, statuscode: 0, statustext: null,
         resourcetype: null, creationdate: null, lastmodified: null,
         contenttype: null, contentlength: 0, etag: null, executable: false};

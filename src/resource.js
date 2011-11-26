@@ -19,6 +19,12 @@ goog.require('goog.object');
  */
 xhrdav.Resource = function() {
   /** @type {string} */
+  this.id = null;
+  /** @type {string} */
+  this.parentId = null;
+  /** @type {string} */
+  this.name = null;
+  /** @type {string} */
   this.href = null;
   /** @type {Array.<string>} */
   this.pathlist = [];
