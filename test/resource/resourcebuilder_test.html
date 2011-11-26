@@ -73,8 +73,12 @@
       assertNotEquals('Contains D:response?',
         0, goog.object.getCount(builder.getRawData().D$response));
       assertNotNullNorUndefined('Get Resources', builder.getResources());
-      assertNotNullNorUndefined('root', builder.getResources().root);
+      var root = builder.getResources().root;
+      assertNotNullNorUndefined('root', root);
       assertTrue('Empty childs', goog.array.isEmpty(builder.getResources().childs));
+      assertFalse('Created id', goog.string.isEmptySafe(root.id));
+      assertEquals('Resoruce name?',
+        root.pathlist[root.pathlist.length - 1], root.name);
     }
 
     function testCreateResoruces() {
@@ -91,8 +95,12 @@
       //logger.config(goog.json.serialize(builder.getResources()));
 //      logger.config(goog.json.serialize(builder.getResources().root));
 //      logger.config(goog.object.getKeys(builder.getResources().root));
-      assertNotNullNorUndefined('root', builder.getResources().root);
-      assertNotNullNorUndefined('childs', builder.getResources().childs);
+      var res = builder.getResources();
+      assertNotNullNorUndefined('root', res.root);
+      assertNotNullNorUndefined('childs', res.childs);
+      assertEvaluatesToTrue('set parentId?',
+        goog.array.every(res.childs, function(val) {
+          return res.root.id == val.parentId; }));
 //      logger.config(goog.json.serialize(builder.getRawData().D$response));
 //      logger.config(goog.json.serialize(builder.getResources().childs));
     }

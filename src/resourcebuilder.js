@@ -68,6 +68,8 @@ xhrdav.ResourceBuilder.prototype.convertRaw2Models = function() {
     res.pathlist = xhrdav.utils.path.split(res.href);
     if (goog.string.startsWith(
       res.pathlist[res.pathlist.length - 1], '.')) return;  // Skip dot file.
+    res.id = goog.string.hashCode(goog.string.urlDecode(res.href));
+    res.name = res.pathlist[res.pathlist.length - 1];
 
     if (!goog.isDefAndNotNull(val.D$propstat)) {
       goog.array.extend(resList, res);
@@ -141,6 +143,9 @@ xhrdav.ResourceBuilder.prototype.buildTree_ = function(resList) {
 
   this.resources_ = {};
   this.resources_.root = resList.shift();
+  goog.array.forEach(resList, function(val) {
+    val.parentId = this.resources_.root.id;
+  }, this);
   this.resources_.childs = (resList.length > 0) ? resList : [];
 };
 
