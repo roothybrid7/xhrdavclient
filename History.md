@@ -1,4 +1,12 @@
 
+0.3.4 / 2011-11-27 
+==================
+
+  * update version string and library.
+  * unset parentId
+  * Merge branch 'release/v0.3.3' into develop
+  * update changelog and version string.
+
 0.3.3 / 2011-11-26 
 ==================
 
