@@ -98,9 +98,6 @@
       var res = builder.getResources();
       assertNotNullNorUndefined('root', res.root);
       assertNotNullNorUndefined('childs', res.childs);
-      assertEvaluatesToTrue('set parentId?',
-        goog.array.every(res.childs, function(val) {
-          return res.root.id == val.parentId; }));
 //      logger.config(goog.json.serialize(builder.getRawData().D$response));
 //      logger.config(goog.json.serialize(builder.getResources().childs));
     }

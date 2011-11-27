@@ -143,9 +143,6 @@ xhrdav.ResourceBuilder.prototype.buildTree_ = function(resList) {
 
   this.resources_ = {};
   this.resources_.root = resList.shift();
-  goog.array.forEach(resList, function(val) {
-    val.parentId = this.resources_.root.id;
-  }, this);
   this.resources_.childs = (resList.length > 0) ? resList : [];
 };
 
