@@ -1,4 +1,3 @@
-
 WebDAV Client Ajax API
 =======================
 
@@ -6,6 +5,27 @@ This is a WebDAV Client Ajax API Library Using Google Closure library.
 
 [Closure-library](http://code.google.com/p/closure-library/) - Closure Library
 ===============================================================================
+
+
+Browsers
+---------
+
+Full Support
+
+- Chrome 13.0+
+- Safari 5.1+
+- Firefox 3.6+ (Maybe 3.5.19)
+
+Partial Support
+
+- Chrome 3+
+- Safari 4+
+- Firefox 3.5+
+- IE 8+
+- Opera 10+
+
+File upload is not supported in IE8/9 and Opera 10.
+
 
 Scripts
 --------
