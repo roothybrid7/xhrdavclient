@@ -1,4 +1,11 @@
 
+0.3.5 / 2012-09-24 
+==================
+
+  * fix bug
+  * Merge branch 'release/v0.3.4' into develop
+  * update changelog
+
 0.3.4 / 2011-11-27 
 ==================
 
