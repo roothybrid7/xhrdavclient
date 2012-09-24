@@ -1,4 +1,11 @@
 
+0.3.7 / 2012-09-24 
+==================
+
+  * typecheck by closure library.
+  * Merge branch 'release/v0.3.6' into develop
+  * Update version
+
 0.3.6 / 2012-09-24 
 ==================
 

@@ -135,7 +135,7 @@ xhrdav.Client.prototype.setXmlParseFunction = function(funcObj) {
 // TODO: Testcase of HTTP Request Error
 xhrdav.Client.prototype.processRequest_ = function(
   handler, onXhrComplete, event) {
-  if (onXhrComplete && onXhrComplete instanceof Function) onXhrComplete(event);
+  if (onXhrComplete && goog.isFunction(onXhrComplete)) onXhrComplete(event);
 
   var xhr = event.target;
   var xssGuard = 'while(1);';
@@ -192,7 +192,7 @@ xhrdav.Client.prototype.generateUrl_ = function(path) {
 xhrdav.Client.prototype.setParameters_ = function(url, query) {
   if (goog.isDefAndNotNull(query) && !goog.object.isEmpty(query)) {
     goog.object.forEach(query, function(val, key) {
-      if (val instanceof Array && !goog.array.isEmpty(val)) {
+      if (goog.isArray(val) && !goog.array.isEmpty(val)) {
         url.setParameterValues(key.camelize({with_dasherize: true}), val);
       } else if (goog.string.isEmptySafe(val)) {
         url.setParameterValue(key.camelize({with_dasherize: true}), val);
