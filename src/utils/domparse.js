@@ -25,7 +25,7 @@ xhrdav.utils.domparse.parseXml = function(xml) {
     parser.parse();
   } catch (e) {
     errorFlag = true;
-    if (this.errorHandler && this.errorHandler instanceof Function) {
+    if (this.errorHandler && goog.isFunction(this.errorHandler)) {
       this.errorHandler(e);
     }
   } finally {

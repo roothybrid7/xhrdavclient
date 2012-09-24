@@ -131,7 +131,7 @@ xhrdav.Conf.prototype.getLogger = function(level) {
  *  => [10.098s] [xhrdavclient] selected: true
  *  => [10.098s] [xhrdavclient] expanded: false
  *
- * @param {(Object|*)} message
+ * @param {(Object|*)} messages
  *     Log message. Json/Hash Object OR stirng|number|boolean.
  * @param {string=} opt_output
  *     logger output method(warning, info, config, fine, etc).
@@ -143,7 +143,7 @@ xhrdav.Conf.logging = function(messages, opt_output) {
     var methodName = goog.isDefAndNotNull(opt_output) &&
       goog.isDef(logger[opt_output]) ? opt_output : 'info';
 
-    if (messages && messages instanceof Object) {
+    if (messages && goog.isObject(messages)) {
         var logMessages = {};
         goog.mixin(logMessages, messages);
         goog.object.forEach(logMessages, function(v, k) {

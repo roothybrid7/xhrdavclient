@@ -52,7 +52,7 @@ xhrdav.ResourceBuilder.createCollection = function(rawObj) {
 xhrdav.ResourceBuilder.prototype.convertRaw2Models = function() {
   var resp = [];
   if (goog.isDefAndNotNull(this.rawData_.D$response)) {
-    if (this.rawData_.D$response instanceof Array) {
+    if (goog.isArray(this.rawData_.D$response)) {
       resp = this.rawData_.D$response;
     } else {
       resp = [this.rawData_.D$response];
