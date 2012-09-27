@@ -24,7 +24,7 @@ Partial Support
 - IE 8+
 - Opera 10+
 
-File upload is not supported in IE8/9 and Opera 10.
+WebDAV File upload is not supported in IE8/9 and Opera 10.
 
 
 Scripts
