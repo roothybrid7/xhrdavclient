@@ -29,7 +29,7 @@ xhrdav.parser.DomParser = function() {
  */
 xhrdav.parser.DomParser.prototype.initialize = function(xml, handler, options) {
   if (!(goog.isDefAndNotNull(xml) &&
-      (xml instanceof Document || typeof xml === 'object'))) {
+      (xml instanceof Document || xml.xml))) {
     goog.functions.error('Xml document is NOT GIVEN!!')();
   }
   if (!goog.isDefAndNotNull(handler)) {
