@@ -1,4 +1,11 @@
 
+0.3.9 / 2012-09-27 
+==================
+
+  * Fix check xmldoc for IE
+  * Merge branch 'release/v0.3.8' into develop
+  * Update README
+
 0.3.8 / 2012-09-24 
 ==================
 
