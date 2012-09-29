@@ -58,7 +58,7 @@
         assertTrue('Content-Type?',
           goog.string.startsWith(headers['Content-Type'], 'text/xml;'));
         assertNotNull('ResponseXML?', content);
-        assertTrue('ResposeType?', (content instanceof Document));
+        assertTrue('ResponseType?', content.nodeName === '#document' || content instanceof Document);
         asyncContinue();
       };
 
@@ -79,7 +79,7 @@
         assertTrue('Content-Type?',
           goog.string.startsWith(headers['Content-Type'], 'text/xml;'));
         assertNotNull('ResponseXML?', content);
-        assertTrue('ResposeType?', (content instanceof Document));
+        assertTrue('ResponseType?', content.nodeName === '#document' || content instanceof Document);
         asyncContinue();
       };
 

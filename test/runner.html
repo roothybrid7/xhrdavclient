@@ -8,13 +8,17 @@
   <script type="text/javascript">
     goog.require('goog.testing.MultiTestRunner');
     goog.require('goog.dom');
+    goog.require('goog.userAgent');
+    goog.require('goog.userAgent.product');
+    goog.require('goog.userAgent.product.isVersion');
   </script>
+  <script src="helpers.js" type="text/javascript"></script>
 </head>
 <body>
   <div id="runner"></div>
   <script type="text/javascript">
     var testRunner = new goog.testing.MultiTestRunner();
-    testRunner.addTests([
+    var tests = [
 //      'client/cros.html',
       'client/client_test.html',
       'client/directories_test.html',
@@ -23,7 +27,6 @@
       'client/clientwparser.html',
       'davFs/fs_test.html',
       'davFs/fs_directories_test.html',
-      'davFs/fs_upload_test.html',
       'davFs/fs_dir2_test.html',
       'davFs/fs_files_test.html',
       'davFs/fs_files2_test.html',
@@ -33,12 +36,17 @@
       'tip/config_test.html',
       'utils/utils_test.html',
       'utils/utils_path.html',
-      'utils/string_ext_test.html',
+      'utils/string_utils_test.html',
       'resource/resource_controller_test.html',
       'resource/resource_ctrl_apicall.html',
       'resource/resourceobj_test.html',
-      'resource/resourcebuilder_test.html']);
-//    testRunner.setPoolSize(3);
+      'resource/resourcebuilder_test.html'
+    ];
+    if (testhelpers.canFileUpload(goog.userAgent.product)) {
+      tests.push('davFs/fs_upload_test.html');
+    }
+    testRunner.addTests(tests);
+    testRunner.setPoolSize(3);
     testRunner.render(document.getElementById('runner'));
   </script>
 </body>
