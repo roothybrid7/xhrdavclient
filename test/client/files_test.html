@@ -13,6 +13,9 @@
     goog.require('goog.testing.jsunit');
     goog.require('goog.debug.Console');
     goog.require('goog.debug.Logger');
+    goog.require('goog.userAgent');
+    goog.require('goog.userAgent.product');
+    goog.require('goog.userAgent.product.isVersion');
 
     goog.require('goog.object');
     goog.require('goog.string.path');
@@ -20,6 +23,7 @@
     goog.require('xhrdav.Client');
     goog.require('xhrdav.HttpStatus');
   </script>
+  <script src="../utils/helpers.js" type="text/javascript"></script>
   <script type="text/javascript">
     goog.debug.Console.autoInstall();
     goog.debug.Console.instance.setCapturing(true);
@@ -126,28 +130,30 @@
       var testId = 'UploadFile';
       var logger = new goog.debug.Logger.getLogger(testId);
 
-      asyncTestCase.waitForAsync(testId);
+      if (testhelpers.canFileUpload(goog.userAgent.product)) {
+        asyncTestCase.waitForAsync(testId);
 
-      var opt_request = {xhrMgr: xmgr};
+        var opt_request = {xhrMgr: xmgr};
 
-      var assertUploadFileOverWrite = function(statusCode, content, headers) {
-        assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
-        assertTrue('No Content?', goog.string.isEmptySafe(content));
-        asyncContinue();
-      };
-      var assertUploadFile = function(statusCode, content, headers) {
-        assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
-        assertNotNullNorUndefined('Location?', headers['Location']);
-        assertTrue('Location match:',
-          goog.string.endsWith(headers['Location'], file));
+        var assertUploadFileOverWrite = function(statusCode, content, headers) {
+          assertEquals('StatusCode?', httpStatus.NO_CONTENT, statusCode);
+          assertTrue('No Content?', goog.string.isEmptySafe(content));
+          asyncContinue();
+        };
+        var assertUploadFile = function(statusCode, content, headers) {
+          assertEquals('StatusCode?', httpStatus.CREATED, statusCode);
+          assertNotNullNorUndefined('Location?', headers['Location']);
+          assertTrue('Location match:',
+            goog.string.endsWith(headers['Location'], file));
 
+          opt_request.xhrId = goog.string.createUniqueString();
+          dav.put(file, initData + "<MODIFIED>", assertUploadFileOverWrite, opt_request,
+            goog.partial(xhrLogging, logger));
+        };
         opt_request.xhrId = goog.string.createUniqueString();
-        dav.put(file, initData + "<MODIFIED>", assertUploadFileOverWrite, opt_request,
+        dav.put(file, initData, assertUploadFile, opt_request,
           goog.partial(xhrLogging, logger));
-      };
-      opt_request.xhrId = goog.string.createUniqueString();
-      dav.put(file, initData, assertUploadFile, opt_request,
-        goog.partial(xhrLogging, logger));
+      }
     }
 
     function testPutLastSlash() {

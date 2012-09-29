@@ -12,13 +12,11 @@
     goog.require('goog.userAgent.product');
     goog.require('goog.userAgent.product.isVersion');
   </script>
+  <script src="utils/helpers.js" type="text/javascript"></script>
 </head>
 <body>
   <div id="runner"></div>
   <script type="text/javascript">
-    var isIE = goog.userAgent.product.IE,
-        version = goog.userAgent.product.VERSION;
-
     var testRunner = new goog.testing.MultiTestRunner();
     var tests = [
 //      'client/cros.html',
@@ -44,7 +42,7 @@
       'resource/resourceobj_test.html',
       'resource/resourcebuilder_test.html'
     ];
-    if (!isIE || goog.string.compareVersions(version, '10.0') >= 0) {
+    if (testhelpers.canFileUpload(goog.userAgent.product)) {
       tests.push('davFs/fs_upload_test.html');
     }
     testRunner.addTests(tests);
