@@ -296,7 +296,7 @@
       var assertHead = function(statusCode, content, headers) {
         assertEquals('Status = 200', httpStatus.OK, statusCode);
         assertTrue('Content empty?', goog.string.isEmptySafe(content));
-        assertEquals('text/plain?', 'text/plain', headers['Content-Type']);
+        assertEvaluatesToTrue('text/plain?', headers['Content-Type'].indexOf('text/plain') >= 0);
         asyncContinue();
       };
 
