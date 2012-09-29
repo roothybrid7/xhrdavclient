@@ -50,7 +50,7 @@
       initData = null;
     }
 
-    function testParseNullOrEmpty() {
+    function testParseNullOrUndefined() {
       var testId = 'ParseNullOrEmpty';
       var logger = goog.debug.Logger.getLogger(testId);
       var handler = new xhrdav.parser.DomHandler();
@@ -62,7 +62,7 @@
         assertEquals('Error message?', 'Xml document is NOT GIVEN!!', e.message);
       }
       try {
-        parser = new xhrdav.parser.DomParser().initialize('', handler).parse();
+        parser = new xhrdav.parser.DomParser().initialize(undefined, handler).parse();
       } catch(e) {
         assertNotNullNorUndefined('Error object?', e);
         assertEquals('Error message?', 'Xml document is NOT GIVEN!!', e.message);
