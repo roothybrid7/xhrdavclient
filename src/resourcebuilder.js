@@ -106,7 +106,8 @@ xhrdav.ResourceBuilder.prototype.convertRaw2Models = function() {
     }
     if (goog.isDefAndNotNull(props.lp1$creationdate) &&
       goog.isDefAndNotNull(props.lp1$creationdate.$t)) {
-      res.creationdate = new Date(props.lp1$creationdate.$t);
+      var googDate = goog.date.fromIsoString(props.lp1$creationdate.$t);
+      res.creationdate = new Date(googDate.getTime());
     }
     if (goog.isDefAndNotNull(props.lp1$getlastmodified) &&
       goog.isDefAndNotNull(props.lp1$getlastmodified.$t)) {

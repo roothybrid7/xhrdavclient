@@ -59,16 +59,6 @@
         dav.canParseXml());
     }
 
-    function testParseXml() {
-      var testId = 'testParseXml';
-      var logger = new goog.debug.Logger.getLogger(testId);
-
-      var dav = new xhrdav.Client();
-      dav.setXmlParseFunction(func);
-      var jsData = dav.parseXml('<?xml version="1.0"?><foo></foo>');
-      assertTrue('Empty?', goog.object.isEmpty(jsData));
-    }
-
     function testPropfindWithParse() {
       var testId = 'PropfindWithParse';
       var logger = new goog.debug.Logger.getLogger(testId);

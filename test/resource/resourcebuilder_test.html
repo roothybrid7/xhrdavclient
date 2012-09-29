@@ -79,6 +79,11 @@
       assertFalse('Created id', goog.string.isEmptySafe(root.id));
       assertEquals('Resoruce name?',
         root.pathlist[root.pathlist.length - 1], root.name);
+
+      var isoDateString = initDirOnlyData.D$response.D$propstat.D$prop.lp1$creationdate.$t;
+      var googDate = goog.date.fromIsoString(isoDateString);
+      var srcDate = new Date(googDate.getTime());
+      assertEquals('Same Datetime', srcDate.getTime(), root.creationdate.getTime())
     }
 
     function testCreateResoruces() {

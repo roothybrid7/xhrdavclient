@@ -153,9 +153,21 @@ xhrdav.Client.prototype.processRequest_ = function(
   } else {
     headers = this.parseHeaders_(xhr.getAllResponseHeaders());
     if (goog.string.contains(headers['Content-Type'], 'xml')) {
-      content = xhr.getResponseXml(xssGuard);
-      if (this.canParseXml()) content = this.parseXml(content);
-      if (goog.object.isEmpty(content)) statusCode = 500;
+      var xml = xhr.getResponseXml(xssGuard);
+      // HACK: Convert native Document in IE9.
+      if (typeof Document !== 'undefined') {
+        if (!(xml instanceof Document)) {
+          // IE9.
+          xml = goog.dom.xml.loadXml(content);
+        }
+      }
+      if (this.canParseXml()) {
+        xml = this.parseXml(xml);
+      }
+      if (!goog.isDefAndNotNull(xml)) {
+        statusCode = 500;
+      }
+      content = xml;
     }
   }
   if (handler) handler((statusCode < 1) ? 500 : statusCode, content, headers);
@@ -193,9 +205,11 @@ xhrdav.Client.prototype.setParameters_ = function(url, query) {
   if (goog.isDefAndNotNull(query) && !goog.object.isEmpty(query)) {
     goog.object.forEach(query, function(val, key) {
       if (goog.isArray(val) && !goog.array.isEmpty(val)) {
-        url.setParameterValues(key.camelize({with_dasherize: true}), val);
-      } else if (goog.string.isEmptySafe(val)) {
-        url.setParameterValue(key.camelize({with_dasherize: true}), val);
+        url.setParameterValues(
+            xhrdav.utils.string.camelize(key, {with_dasherize: true}), val);
+      } else if (!goog.string.isEmptySafe(val)) {
+        url.setParameterValue(
+            xhrdav.utils.string.camelize(key, {with_dasherize: true}), val);
       }
     });
   }
@@ -213,7 +227,7 @@ xhrdav.Client.prototype.convertHeadersKeys_ = function(headers) {
   var converted = {};
   if (goog.isDefAndNotNull(headers) && !goog.object.isEmpty(headers)) {
     goog.object.forEach(headers, function(val, key) {
-      var convKey = key.camelize({with_dasherize: true});
+      var convKey = xhrdav.utils.string.camelize(key, {with_dasherize: true});
       goog.object.set(converted, convKey, val);
     });
   }
