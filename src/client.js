@@ -193,9 +193,10 @@ xhrdav.Client.prototype.setParameters_ = function(url, query) {
   if (goog.isDefAndNotNull(query) && !goog.object.isEmpty(query)) {
     goog.object.forEach(query, function(val, key) {
       if (goog.isArray(val) && !goog.array.isEmpty(val)) {
-        url.setParameterValues(key.camelize({with_dasherize: true}), val);
+        url.setParameterValues(
+            xhrdav.utils.string.camelize(key, {with_dasherize: true}), val);
       } else if (goog.string.isEmptySafe(val)) {
-        url.setParameterValue(key.camelize({with_dasherize: true}), val);
+        url.setParameterValue(xhrdav.utils.string.camelize(key, {with_dasherize: true}), val);
       }
     });
   }
@@ -213,7 +214,7 @@ xhrdav.Client.prototype.convertHeadersKeys_ = function(headers) {
   var converted = {};
   if (goog.isDefAndNotNull(headers) && !goog.object.isEmpty(headers)) {
     goog.object.forEach(headers, function(val, key) {
-      var convKey = key.camelize({with_dasherize: true});
+      var convKey = xhrdav.utils.string.camelize(key, {with_dasherize: true});
       goog.object.set(converted, convKey, val);
     });
   }

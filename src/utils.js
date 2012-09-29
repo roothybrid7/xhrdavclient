@@ -8,3 +8,4 @@
 goog.provide('xhrdav.utils');
 goog.require('xhrdav.utils.domparse');
 goog.require('xhrdav.utils.path');
+goog.require('xhrdav.utils.string');

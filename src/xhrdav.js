@@ -15,7 +15,6 @@ goog.require('xhrdav.HttpStatus');
 goog.require('xhrdav.Resource');
 goog.require('xhrdav.ResourceBuilder');
 goog.require('xhrdav.ResourceController');
-goog.require('xhrdav.ext');
 goog.require('xhrdav.lib');
 goog.require('xhrdav.parser.DomHandler');
 goog.require('xhrdav.parser.DomParser');
