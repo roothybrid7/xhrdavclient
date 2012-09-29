@@ -1,119 +1,200 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset='utf-8'>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Xhrdavclient by roothybrid7</title>
 
-  <title>roothybrid7/xhrdavclient @ GitHub</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Xhrdavclient</h1>
+        <p class="header">WebDAV Client ajax API using google closure library</p>
 
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #05b93d;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #fa46c2; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #fa46c2; }
-    h3 { text-align: center; color: #fa46c2; }
-    a { color: #fa46c2; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
-</head>
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/roothybrid7/xhrdavclient/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/roothybrid7/xhrdavclient/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/roothybrid7/xhrdavclient">View On GitHub</a></li>
+        </ul>
 
-<body>
-  <a href="http://github.com/roothybrid7/xhrdavclient"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/roothybrid7">roothybrid7</a></p>
 
-  <div id="container">
 
-    <div class="download">
-      <a href="http://github.com/roothybrid7/xhrdavclient/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/roothybrid7/xhrdavclient/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+      </header>
+      <section>
+        <h1>WebDAV Client Ajax API</h1>
+
+<p>This is a WebDAV Client Ajax API Library Using Google Closure library.</p>
+
+<h1>
+<a href="http://code.google.com/p/closure-library/">Closure-library</a> - Closure Library</h1>
+
+<h2>Browsers</h2>
+
+<p>Full Support</p>
+
+<ul>
+<li>Chrome 13.0+</li>
+<li>Safari 5.1+</li>
+<li>Firefox 3.6+ (Maybe 3.5.19)</li>
+<li>Maybe IE 10+</li>
+</ul><p>Partial Support</p>
+
+<ul>
+<li>Chrome 3+</li>
+<li>Safari 4+</li>
+<li>Firefox 3.5+</li>
+<li>IE 8+</li>
+<li>Opera 10+</li>
+</ul><p>WebDAV File upload is not supported in IE8/9 and Opera 10.</p>
+
+<h2>Scripts</h2>
+
+<ul>
+<li>
+<p>library</p>
+
+<ul>
+<li>xhrdavclient.js</li>
+<li>xhrdavclient-min.js (Optimized)</li>
+</ul>
+</li>
+<li>
+<p>src</p>
+
+<ul>
+<li>client.js (Low-level API)</li>
+<li>davfs.js (High-level API like FileSystem)</li>
+<li>resourcecontroller.js (resource base API: model-controller)</li>
+</ul>
+</li>
+</ul><h2>How to settings</h2>
+
+<ul>
+<li>Quick Start</li>
+</ul><p>Checkout source</p>
+
+<pre><code>git clone git://github.com/roothybrid7/xhrdavclient.git
+</code></pre>
+
+<p>Copy your application7's javascript directory</p>
+
+<pre><code>cp xhrdavclient/lib/xhrdavclient-min.js your-appdir/lib/
+</code></pre>
+
+<p>Write code</p>
+
+<div class="highlight"><pre># Get WebDAV resource properties
+<span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"ja"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"lib/xhrdavclient-min.js"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"runner"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+    <span class="kd">var</span> <span class="nx">dir</span> <span class="o">=</span> <span class="s1">'/mydav/'</span>
+    <span class="kd">var</span> <span class="nx">dav</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">xhrdav</span><span class="p">.</span><span class="nx">lib</span><span class="p">.</span><span class="nx">Client</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">httpStatus</span> <span class="o">=</span> <span class="nx">xhrdav</span><span class="p">.</span><span class="nx">HttpStatus</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">httpStatusText</span> <span class="o">=</span> <span class="nx">xhrdav</span><span class="p">.</span><span class="nx">HttpStatus</span><span class="p">.</span><span class="nx">text</span><span class="p">;</span>
+
+    <span class="kd">var</span> <span class="nx">callback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">,</span> <span class="nx">content</span><span class="p">,</span> <span class="nx">headers</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span> <span class="c1">// =&gt; 207</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">content</span><span class="p">);</span>
+      <span class="c1">// =&gt; &lt;D:multistatus xmlns:D="DAV:" xmlns:ns0="DAV:"&gt;...&lt;/D:multistatus&gt;</span>
+    <span class="p">};</span>
+
+    <span class="nx">dav</span><span class="p">.</span><span class="nx">propfind</span><span class="p">(</span><span class="nx">dir</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+  <span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+<div class="highlight"><pre># Get current directory file list.
+<span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"ja"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"lib/xhrdavclient-min.js"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"runner"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+    <span class="kd">var</span> <span class="nx">dir</span> <span class="o">=</span> <span class="s1">'/mydav/'</span>
+    <span class="kd">var</span> <span class="nx">davFs</span> <span class="o">=</span> <span class="nx">xhrdav</span><span class="p">.</span><span class="nx">DavFs</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">httpStatus</span> <span class="o">=</span> <span class="nx">xhrdav</span><span class="p">.</span><span class="nx">HttpStatus</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">httpStatusText</span> <span class="o">=</span> <span class="nx">xhrdav</span><span class="p">.</span><span class="nx">HttpStatus</span><span class="p">.</span><span class="nx">text</span><span class="p">;</span>
+
+    <span class="kd">var</span> <span class="nx">callback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">errors</span><span class="p">,</span> <span class="nx">content</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">errors</span><span class="p">.</span><span class="nx">hasRequest</span><span class="p">());</span> <span class="c1">// =&gt; false</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">content</span><span class="p">);</span>
+      <span class="c1">// =&gt; {root: {href: '/mydav/', ...}, childs: [{href: '/mydav/foo.txt', ...}, {href: '/mydav/bar/', ...}]}</span>
+    <span class="p">};</span>
+
+    <span class="nx">davFs</span><span class="p">.</span><span class="nx">getRequest</span><span class="p">().</span><span class="nx">listDir</span><span class="p">(</span><span class="nx">dir</span><span class="p">,</span> <span class="nx">callback</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+  <span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+<h2>Cross-domain Ajax</h2>
+
+<p>Nothing. Setting Reverse-proxy server.</p>
+
+<p>For apache example</p>
+
+<pre><code># XHR domain -&gt; WebDAV domain
+ProxyPass /crosmydav http://other-sitedav/crosmydav
+ProxyPassReverse /crosmydav http://other-sitedav/crosmydav
+</code></pre>
+
+<h2>To use closure-library and xdavclient library</h2>
+
+<p>Copy src/*.js and generate deps.js for closure-library</p>
+
+<pre><code># Example(App js dir: js/{app,xhrdavclient})
+cp -r xhrdavclient/src/* your-appdir/js/xhrdavclient/
+cd your-appdir
+python closure-library/closure/bin/build/depswriter.py
+--root_with_prefix="js ../../../js"
+--output_file=deps.js
+</code></pre>
+
+<h2>Closure compiler</h2>
+
+<p>If not use closure-library, Generate script file with optimization.</p>
+
+<ul>
+<li><p>AdvancedOptimizations(No working/Not support)</p></li>
+<li><p>SimpleOptimizations(Default)</p></li>
+</ul><pre><code>cd xhrdavclient
+./tools/builder.sh -s
+OR
+./tools/builder.sh
+=&gt; generated 'lib/xhrdavclient-min.js' in current directory.
+</code></pre>
+
+<ul>
+<li>WhitespaceOnly</li>
+</ul><pre><code>cd xhrdavclient
+./tools/builder.sh -w
+=&gt; generated 'lib/xhrdavclient-min.js' in current directory.
+</code></pre>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
     </div>
-
-    <h1><a href="http://github.com/roothybrid7/xhrdavclient">xhrdavclient</a>
-      <span class="small">by <a href="http://github.com/roothybrid7">roothybrid7</a></span></h1>
-
-    <div class="description">
-      WebDAV Client ajax API using google closure library(UNFIXED)
-    </div>
-
-    <p>WebDAV Client Ajax API library using google closure library</p><h2>Dependencies</h2>
-    <p><a href="http://code.google.com/intl/ja/closure/library/docs/overview.html">Closure Library</a></p>
-    <h2>Install</h2>
-    <p>
-    1. Integrate and compile scripts
-    <pre>
-    # Integrate scripts
-    $ cd unzip OR untar directory
-    $ ./tools/builder.sh
-    =&gt; xhrdavclient.js       # Generate integrated scripts
-
-    # Integrate, compile and optimize scripts
-    $ ./tools/builder.sh -s     # SIMPLE_OPTIMIZATIONS
-    $ ./tools/builder.sh -w     # WHITESPACE TRIMING ONLY
-    =&gt; xhrdavclient.js       # Generate compiled scripts
-
-    # Release build scripts(goog.DEBUG=off)
-    $ ./tools/builder.sh -sr
-    =&gt; xhrdavclient.js       # Generate compiled scripts
-    </pre>
-    </p>
-    <p>
-    2. Put the generated script in Application.
-    </p>
-    <p>
-    3. Configuration
-    <pre>
-    &lt;script src="xhrdavclient.js" type="text/javascript"&gt;&lt;/script&gt;
-    &lt;script type="text/javascript"&gt;
-      goog.require('xhrdav.lib.DavFs');
-    &lt;/script&gt;
-    </pre>
-    </p>
-    <h2>License</h2>
-    <p>Apache License 2.0</p><h2>Authors</h2>
-<p>Satoshi Ohki (roothybrid7@gmail.com)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Satoshi Ohki (roothybrid7@gmail.com)<br/>      </p>
-
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/roothybrid7/xhrdavclient/zipball/master">zip</a> or
-      <a href="http://github.com/roothybrid7/xhrdavclient/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/roothybrid7/xhrdavclient</pre>
-    </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/roothybrid7/xhrdavclient">roothybrid7/xhrdavclient</a>
-    </div>
-
-  </div>
-
-   <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-25401771-3");
-pageTracker._trackPageview();
-} catch(err) {}</script>
-</body>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
 </html>
