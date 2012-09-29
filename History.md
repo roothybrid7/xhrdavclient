@@ -1,4 +1,30 @@
 
+0.4.0 / 2012-09-30 
+==================
+
+  * Merge branch 'feature/iesupport' into develop
+  * fix bug
+  * Modify testrunner pool size
+  * Fix bug of responseXml
+  * remove Stirng.prototype extensions
+  * fix error handle for IE
+  * remove fileupload test in IE
+  * except fileupload testcase for ie
+  * Add creationdate testcase
+  * remove window.console from testcase.
+  * modify testcase
+  * fix checking xml type.
+  * remove console
+  * Fix to get error html for IE
+  * fix testcase
+  * fix setting status by checking content for ie
+  * modify testcase of content-type
+  * remove old testcode
+  * fix xml type checking
+  * fix bug IE7 NaN from IsoDate and xml type checking
+  * Merge branch 'release/v0.3.9' into develop
+  * Update checking xml for IE
+
 0.3.9 / 2012-09-27 
 ==================
 
