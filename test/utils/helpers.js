@@ -11,6 +11,11 @@ var testhelpers = (function(undefined) {
       var isIE = product.IE,
           version = product.VERSION;
       return (!isIE || goog.string.compareVersions(version, '10.0') >= 0);
+    },
+    canFullDocumentFragment: function(product) {
+      var isIE = product.IE,
+          version = product.VERSION;
+      return (!isIE || goog.string.compareVersions(version, '9.0') >= 0);
     }
   };
 }());
