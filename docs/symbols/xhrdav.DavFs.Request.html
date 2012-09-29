@@ -1,0 +1,1561 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="JsDoc Toolkit" />
+	<title>JsDoc Reference - xhrdav.DavFs.Request</title>
+
+	<link media="all" rel="stylesheet" href="../css/common.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../css/prettify.css" type="text/css" />
+	<link media="all" rel="stylesheet" href="../css/bootstrap.min.css" type="text/css" />
+	<style type="text/css">
+		.icon-jsdoc {
+			background: url("../img/classicons.png") no-repeat;
+		}
+	</style>
+	<script src="../js/jquery-1.7.2.min.js" type="text/javascript"></script>
+	<script src="../js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="../js/prettify.js" type="text/javascript"></script>
+	<script src="../js/accordion.js" type="text/javascript"></script>
+</head>
+
+<body onload="prettyPrint()"><div class="container-fluid">
+<!-- ============================== header ================================= -->	
+	<!-- begin static/header.html -->
+	<header class="header navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="brand" href="#"><strong>JsDoc</strong> Reference</a>
+				<ul id="class-file-selector" class="nav">
+					<li><a href="../index.html">Class Index</a></li>
+					<li><a href="../files.html">File Index</a></li>
+				</ul>
+			</div>
+		</div>
+	</header>
+	<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+	<div class="row-fluid">
+		<div id="index" class="span3">
+			<!-- begin publish.classesIndex -->
+			<div class="well" id="class-list">
+	<ul class="nav nav-list">
+		<li class="nav-header">Classes</li>
+		
+			<li><a href="../symbols/_global_.html"><span class="indent" style="padding-left:0px;"><i class="icon-jsdoc icon-jsdoc-namespace"></i><span class="jsdoc-class-index">_global_</span></span></a></li>
+		
+			<li><a href="../symbols/xhrdav.Client.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">Client</span></span></a></li>
+		
+			<li><a href="../symbols/xhrdav.Conf.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">Conf</span></span></a></li>
+		
+			<li><a href="../symbols/xhrdav.DavFs.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">DavFs</span></span></a></li>
+		
+			<li><a href="../symbols/xhrdav.DavFs.Request.html"><span class="indent" style="padding-left:28px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">Request</span></span></a></li>
+		
+			<li><a href="../symbols/xhrdav.Errors.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">Errors</span></span></a></li>
+		
+			<li><a href="../symbols/xhrdav.Resource.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">Resource</span></span></a></li>
+		
+			<li><a href="../symbols/xhrdav.ResourceBuilder.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">ResourceBuilder</span></span></a></li>
+		
+			<li><a href="../symbols/xhrdav.ResourceController.html"><span class="indent" style="padding-left:14px;"><i class="icon-jsdoc icon-jsdoc-class"></i><span class="jsdoc-class-index">ResourceController</span></span></a></li>
+		
+	</ul>
+</div>
+
+			<!-- end publish.classesIndex -->
+		</div>
+		
+		<div id="content" class="span9">
+<!-- ============================== class title ============================ -->
+			<h1 class="classTitle">
+				
+				<img src="../img/class.png" alt="Class " class="jsdoc-large-icon" />xhrdav.DavFs.Request
+				
+				
+				
+				
+				
+				
+			</h1>
+			
+			
+			<div class="jsdoc-hierarchy-nav">
+				<ul class="breadcrumb">
+					
+						<li class="jsdoc-hierarchy-caption">Inheritance</li>
+							
+						<li class="active">Request</li>
+					
+				</ul>
+			</div>
+
+<!-- ============================== constructor summary ==================== -->
+			
+				<h3>Constructor</h3>
+				<div class="jsdoc-members">
+					<div class="jsdoc-member accordion-button">
+						<div class="jsdoc-member-definition">
+							<b><a id="Request" href="../symbols/xhrdav.DavFs.Request.html">Request</a></b>
+							( <span class="jsdoc-typedesc"><a href="../symbols/xhrdav.Client.html">xhrdav.Client</a></span> davSite, <span class="jsdoc-typedesc">(goog.net.XhrIo/goog.net.XhrManager)</span> xhrIo )
+							
+							
+							
+							
+							
+							
+							<span class="label label-jsdoc label-jsdoc-static">Static</span>
+						</div>
+						<div class="jsdoc-member-description">
+							<div class="jsdoc-member-content">
+								<div class="jsdoc-member-summary">
+									An encapsulation of everything needed to make a DavFs request.
+									<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+								</div>
+								
+								
+								
+								
+								
+								
+								
+									<div class="jsdoc-member-detail accordion-content">
+										
+											<b>Parameters</b>
+											<dl>
+												
+													<dt>davSite : <span class="jsdoc-typedesc"><a href="../symbols/xhrdav.Client.html">xhrdav.Client</a></span></dt>
+													<dd>WebDAV site.</dd>
+												
+													<dt>xhrIo : <span class="jsdoc-typedesc">(goog.net.XhrIo/goog.net.XhrManager)</span></dt>
+													<dd>request object
+    of closure library (For Cross-site resource sharing[CORS]).</dd>
+												
+											</dl>
+										
+										
+									</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			
+
+<!-- ============================== instance members summary ===================== -->
+			
+			
+				<h3>Instance members</h3>
+				
+					<h4>Instance Methods<span class="jsdoc-inherits-caption pull-right">Defined By</span></h4>
+					<div class="jsdoc-members">
+						
+							<div class="jsdoc-member accordion-button container-jsdoc-private">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="contentReadHandler_" href="../symbols/xhrdav.DavFs.Request.html#contentReadHandler_">contentReadHandler_</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">number</span> statusCode, <span class="jsdoc-typedesc">Object</span> content, <span class="jsdoc-typedesc">Object</span> headers )</span>
+										 : <span class="jsdoc-typedesc">Array.<xhrdav.Errors/string=></span>
+										<span class="label label-jsdoc label-jsdoc-private">Private</span>
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Content read Handler
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-see jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-see">See</span>
+												
+													<span class="jsdoc-symbol-enum"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
+												
+											</div>
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>HTTP Request path.</dd>
+														
+															<dt>statusCode : <span class="jsdoc-typedesc">number</span></dt>
+															<dd>HTTP Status code.</dd>
+														
+															<dt>content : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>Response body data.</dd>
+														
+															<dt>headers : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>Response headers.</dd>
+														
+													</dl>
+												
+												
+													<b>Returns</b>
+													<dl>
+														
+															<dt><span class="jsdoc-typedesc">Array.<xhrdav.Errors/string=></span></dt>
+															<dd>Errors, new Location.</dd>
+														
+													</dl>
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="copy" href="../symbols/xhrdav.DavFs.Request.html#copy">copy</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">string</span> dstPath, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_headers, <span class="jsdoc-typedesc">Object=</span> opt_params, <span class="jsdoc-typedesc">Object=</span> context, <span class="jsdoc-typedesc">{xhrId:string=}=</span> opt_helper, <span class="jsdoc-typedesc">Function=</span> onXhrComplete )</span>
+										
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Copy resource
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-see jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-see">See</span>
+												
+													<span class="jsdoc-symbol-enum">#updateRequestHandler_</span>
+												
+											</div>
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Move src resource path.</dd>
+														
+															<dt>dstPath : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Move destination path.</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_headers : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request headers options.</dd>
+														
+															<dt>opt_params : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request query paramters.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Callback scope.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">{xhrId:string=}=</span></dt>
+															<dd>xhr options.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button container-jsdoc-private">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="createRequestParameters_" href="../symbols/xhrdav.DavFs.Request.html#createRequestParameters_">createRequestParameters_</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">Object=</span> opt_headers, <span class="jsdoc-typedesc">Object=</span> opt_params, <span class="jsdoc-typedesc">string=</span> opt_xhrId )</span>
+										 : <span class="jsdoc-typedesc">Object</span>
+										<span class="label label-jsdoc label-jsdoc-private">Private</span>
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Create Request paramters.
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+											<div class="jsdoc-member-exception jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-exceptions">Throws</span>
+												
+													<span class="jsdoc-symbol-enum">Not found of xhrIo object.</span>
+												
+											</div>
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>opt_headers : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>HTTP Request Headers.</dd>
+														
+															<dt>opt_params : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>HTTP Query parameters.</dd>
+														
+															<dt>opt_xhrId : <span class="jsdoc-typedesc">string=</span></dt>
+															<dd>Xhrmanager Id.</dd>
+														
+													</dl>
+												
+												
+													<b>Returns</b>
+													<dl>
+														
+															<dt><span class="jsdoc-typedesc">Object</span></dt>
+															<dd>created request map object.</dd>
+														
+													</dl>
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="createResourceController" href="../symbols/xhrdav.DavFs.Request.html#createResourceController">createResourceController</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">(xhrdav.Resource/Object)=</span> resource )</span>
+										 : <span class="jsdoc-typedesc"><a href="../symbols/xhrdav.ResourceController.html">xhrdav.ResourceController</a></span>
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Create ResourceController.
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-see jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-see">See</span>
+												
+													<span class="jsdoc-symbol-enum"><a href="../symbols/xhrdav.ResourceController.html">xhrdav.ResourceController</a></span>
+												
+											</div>
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>resource : <span class="jsdoc-typedesc">(xhrdav.Resource/Object)=</span></dt>
+															<dd>Json/Hash object for WebDAV resource.</dd>
+														
+													</dl>
+												
+												
+													<b>Returns</b>
+													<dl>
+														
+															<dt><span class="jsdoc-typedesc"><a href="../symbols/xhrdav.ResourceController.html">xhrdav.ResourceController</a></span></dt>
+															<dd>createed request resource controller object.</dd>
+														
+													</dl>
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="exists" href="../symbols/xhrdav.DavFs.Request.html#exists">exists</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_headers, <span class="jsdoc-typedesc">Object=</span> opt_params, <span class="jsdoc-typedesc">Object=</span> context, <span class="jsdoc-typedesc">{xhrId:string=}=</span> opt_helper, <span class="jsdoc-typedesc">Function=</span> onXhrComplete )</span>
+										
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Resource Exists to WebDAV server
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>exists resource path.</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_headers : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request headers options.</dd>
+														
+															<dt>opt_params : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request query paramters.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Callback scope.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">{xhrId:string=}=</span></dt>
+															<dd>xhr options.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button container-jsdoc-private">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="existsHandler_" href="../symbols/xhrdav.DavFs.Request.html#existsHandler_">existsHandler_</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">number</span> statusCode, <span class="jsdoc-typedesc">Object</span> content, <span class="jsdoc-typedesc">Object</span> headers )</span>
+										 : <span class="jsdoc-typedesc">Array.<xhrdav.Errors/boolean></span>
+										<span class="label label-jsdoc label-jsdoc-private">Private</span>
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Exists Handler
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-see jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-see">See</span>
+												
+													<span class="jsdoc-symbol-enum"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
+												
+											</div>
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>HTTP Request path.</dd>
+														
+															<dt>statusCode : <span class="jsdoc-typedesc">number</span></dt>
+															<dd>HTTP Status code.</dd>
+														
+															<dt>content : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>Response body data.</dd>
+														
+															<dt>headers : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>Response headers.</dd>
+														
+													</dl>
+												
+												
+													<b>Returns</b>
+													<dl>
+														
+															<dt><span class="jsdoc-typedesc">Array.<xhrdav.Errors/boolean></span></dt>
+															<dd>Errors, new Location.</dd>
+														
+													</dl>
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="getListDirFromMultistatus" href="../symbols/xhrdav.DavFs.Request.html#getListDirFromMultistatus">getListDirFromMultistatus</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">Object</span> content, <span class="jsdoc-typedesc">Object=</span> opt_helper )</span>
+										 : <span class="jsdoc-typedesc">(xhrdav.Resource/<a href="../symbols/xhrdav.ResourceController.html">xhrdav.ResourceController</a>/Object)</span>
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Build Directory tree from multistatus
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-see jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-see">See</span>
+												
+													<span class="jsdoc-symbol-enum"><a href="../symbols/xhrdav.ResourceBuilder.html#.createCollection">xhrdav.ResourceBuilder.createCollection</a></span>
+												
+											</div>
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>content : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>multistatus response data.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Returning resource controller.</dd>
+														
+													</dl>
+												
+												
+													<b>Returns</b>
+													<dl>
+														
+															<dt><span class="jsdoc-typedesc">(xhrdav.Resource/<a href="../symbols/xhrdav.ResourceController.html">xhrdav.ResourceController</a>/Object)</span></dt>
+															<dd>converted object for WebDAV resources.</dd>
+														
+													</dl>
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="getProps" href="../symbols/xhrdav.DavFs.Request.html#getProps">getProps</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_headers, <span class="jsdoc-typedesc">Object=</span> opt_params, <span class="jsdoc-typedesc">Object=</span> context, <span class="jsdoc-typedesc">{hasCtrl:boolean=/asModel:boolean=/xhrId:string=}=</span> opt_helper, <span class="jsdoc-typedesc">Function=</span> onXhrComplete )</span>
+										
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Get property for a single resource.
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-see jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-see">See</span>
+												
+													<span class="jsdoc-symbol-enum">#propfindRequestHandler_</span>
+												
+											</div>
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>property get request path.</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_headers : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request headers options.</dd>
+														
+															<dt>opt_params : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request query paramters.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Callback scope.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">{hasCtrl:boolean=/asModel:boolean=/xhrId:string=}=</span></dt>
+															<dd>xhr and response options.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="listDir" href="../symbols/xhrdav.DavFs.Request.html#listDir">listDir</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_headers, <span class="jsdoc-typedesc">Object=</span> opt_params, <span class="jsdoc-typedesc">Object=</span> context, <span class="jsdoc-typedesc">{hasCtrl:boolean=/asModel:boolean=/xhrId:string=}=</span> opt_helper, <span class="jsdoc-typedesc">Function=</span> onXhrComplete )</span>
+										
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											listing collection
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-see jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-see">See</span>
+												
+													<span class="jsdoc-symbol-enum">#propfindRequestHandler_</span>
+												
+											</div>
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Listing request path.</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_headers : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request headers options.</dd>
+														
+															<dt>opt_params : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request query paramters.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Callback scope.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">{hasCtrl:boolean=/asModel:boolean=/xhrId:string=}=</span></dt>
+															<dd>xhr and response options.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="mkDir" href="../symbols/xhrdav.DavFs.Request.html#mkDir">mkDir</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_headers, <span class="jsdoc-typedesc">Object=</span> opt_params, <span class="jsdoc-typedesc">Object=</span> context, <span class="jsdoc-typedesc">{xhrId:string=}=</span> opt_helper, <span class="jsdoc-typedesc">Function=</span> onXhrComplete )</span>
+										
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Create directory (collection)
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Create dierctory path.</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_headers : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request headers options.</dd>
+														
+															<dt>opt_params : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request query paramters.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Callback scope.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">{xhrId:string=}=</span></dt>
+															<dd>xhr options.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="move" href="../symbols/xhrdav.DavFs.Request.html#move">move</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">string</span> dstPath, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_headers, <span class="jsdoc-typedesc">Object=</span> opt_params, <span class="jsdoc-typedesc">Object=</span> context, <span class="jsdoc-typedesc">{xhrId:string=}=</span> opt_helper, <span class="jsdoc-typedesc">Function=</span> onXhrComplete )</span>
+										
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Move resource
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Move src resource path.</dd>
+														
+															<dt>dstPath : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Move destination path.</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_headers : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request headers options.</dd>
+														
+															<dt>opt_params : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request query paramters.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Callback scope.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">{xhrId:string=}=</span></dt>
+															<dd>xhr options.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button container-jsdoc-private">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="processMultistatus_" href="../symbols/xhrdav.DavFs.Request.html#processMultistatus_">processMultistatus_</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">number</span> statusCode, <span class="jsdoc-typedesc">Object</span> content, <span class="jsdoc-typedesc">Object</span> headers, <span class="jsdoc-typedesc">unknown</span> headers )</span>
+										 : <span class="jsdoc-typedesc">Array.<xhrdav.Errors/xhrdav.Response></span>
+										<span class="label label-jsdoc label-jsdoc-private">Private</span>
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Processing Reponse Multi-Status Data
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-see jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-see">See</span>
+												
+													<span class="jsdoc-symbol-enum"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
+												
+											</div>
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>HTTP Request path.</dd>
+														
+															<dt>statusCode : <span class="jsdoc-typedesc">number</span></dt>
+															<dd>HTTP Status code.</dd>
+														
+															<dt>content : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>Response body data.</dd>
+														
+															<dt>headers : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>Response headers.</dd>
+														
+															<dt>headers : <span class="jsdoc-typedesc">unknown</span></dt>
+															<dd>No description.</dd>
+														
+													</dl>
+												
+												
+													<b>Returns</b>
+													<dl>
+														
+															<dt><span class="jsdoc-typedesc">Array.<xhrdav.Errors/xhrdav.Response></span></dt>
+															<dd>response contents.</dd>
+														
+													</dl>
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button container-jsdoc-private">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="propfindRequestHandler_" href="../symbols/xhrdav.DavFs.Request.html#propfindRequestHandler_">propfindRequestHandler_</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> method, <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_request, <span class="jsdoc-typedesc">Object=</span> context, <span class="jsdoc-typedesc">{hasCtrl:boolean/asModel:boolean}=</span> opt_helper, <span class="jsdoc-typedesc">Function=</span> onXhrComplete )</span>
+										
+										<span class="label label-jsdoc label-jsdoc-private">Private</span>
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Propfind request(listDir, getProps) handler.
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>method : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Method name of xhrdav.Client instance.</dd>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>propfind request path.</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_request : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request parameters.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Callback scope.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">{hasCtrl:boolean/asModel:boolean}=</span></dt>
+															<dd>response options.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="read" href="../symbols/xhrdav.DavFs.Request.html#read">read</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_headers, <span class="jsdoc-typedesc">Object=</span> opt_params, <span class="jsdoc-typedesc">{xhrId:string=}=</span> opt_helper, <span class="jsdoc-typedesc">Function=</span> onXhrComplete, <span class="jsdoc-typedesc">unknown</span> onXhrComplete )</span>
+										
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Read data from WebDAV server
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>read file path.</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_headers : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request headers options.</dd>
+														
+															<dt>opt_params : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request query paramters.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">{xhrId:string=}=</span></dt>
+															<dd>xhr options.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">unknown</span></dt>
+															<dd>No description.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="remove" href="../symbols/xhrdav.DavFs.Request.html#remove">remove</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_headers, <span class="jsdoc-typedesc">Object=</span> opt_params, <span class="jsdoc-typedesc">Object=</span> context, <span class="jsdoc-typedesc">{xhrId:string=}=</span> opt_helper, <span class="jsdoc-typedesc">Function=</span> onXhrComplete )</span>
+										
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Remove resource
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Remove resource path.</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_headers : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request headers options.</dd>
+														
+															<dt>opt_params : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request query paramters.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Callback scope.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">{xhrId:string=}=</span></dt>
+															<dd>xhr options.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button container-jsdoc-private">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="responseHandler_" href="../symbols/xhrdav.DavFs.Request.html#responseHandler_">responseHandler_</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Function</span> processHandler, <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">*</span> context, <span class="jsdoc-typedesc">number</span> statusCode, <span class="jsdoc-typedesc">Object</span> content, <span class="jsdoc-typedesc">Object</span> headers )</span>
+										
+										<span class="label label-jsdoc label-jsdoc-private">Private</span>
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											WebDAV Response process handler(callback)
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback client.</dd>
+														
+															<dt>processHandler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback process response handler.</dd>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Request path.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">*</span></dt>
+															<dd>callback function scope.</dd>
+														
+															<dt>statusCode : <span class="jsdoc-typedesc">number</span></dt>
+															<dd>HTTP Status code.</dd>
+														
+															<dt>content : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>Response body data.</dd>
+														
+															<dt>headers : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>Response headers.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button container-jsdoc-private">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="simpleErrorHandler_" href="../symbols/xhrdav.DavFs.Request.html#simpleErrorHandler_">simpleErrorHandler_</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">number</span> statusCode, <span class="jsdoc-typedesc">Object</span> content, <span class="jsdoc-typedesc">Object</span> headers )</span>
+										 : <span class="jsdoc-typedesc">Array.<xhrdav.Errors/string=></span>
+										<span class="label label-jsdoc label-jsdoc-private">Private</span>
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Error Handler
+
+Errors object structure:
+    {status: <HTTP status code>, path: <request path>,
+     summary: <Request error summary message>,
+     message: <Request error detail message>}
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-see jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-see">See</span>
+												
+													<span class="jsdoc-symbol-enum"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
+												
+											</div>
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>HTTP Request path.</dd>
+														
+															<dt>statusCode : <span class="jsdoc-typedesc">number</span></dt>
+															<dd>HTTP Status code.</dd>
+														
+															<dt>content : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>Response body data.</dd>
+														
+															<dt>headers : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>Response headers.</dd>
+														
+													</dl>
+												
+												
+													<b>Returns</b>
+													<dl>
+														
+															<dt><span class="jsdoc-typedesc">Array.<xhrdav.Errors/string=></span></dt>
+															<dd>Errors, new Location.</dd>
+														
+													</dl>
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button container-jsdoc-private">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="updateRequestHandler_" href="../symbols/xhrdav.DavFs.Request.html#updateRequestHandler_">updateRequestHandler_</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> method, <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">string</span> dstPath, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_request, <span class="jsdoc-typedesc">Object=</span> context, <span class="jsdoc-typedesc">Function=</span> onXhrComplete )</span>
+										
+										<span class="label label-jsdoc label-jsdoc-private">Private</span>
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Update(move, copy) request handler.
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>method : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Method name of xhrdav.Client instance.</dd>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Update src file path.</dd>
+														
+															<dt>dstPath : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>Update destination path.</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_request : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request parameters.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Callback scope.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="upload" href="../symbols/xhrdav.DavFs.Request.html#upload">upload</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">File</span> file, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_headers, <span class="jsdoc-typedesc">Object=</span> opt_params, <span class="jsdoc-typedesc">Object=</span> context, <span class="jsdoc-typedesc">{xhrId:string=}=</span> opt_helper, <span class="jsdoc-typedesc">Function=</span> onXhrComplete )</span>
+										
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Upload data to WebDAV server
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+											<div class="jsdoc-member-exception jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-exceptions">Throws</span>
+												
+													<span class="jsdoc-symbol-enum">Not a file object.</span>
+												
+											</div>
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>upload file path.</dd>
+														
+															<dt>file : <span class="jsdoc-typedesc">File</span></dt>
+															<dd>File object(File API).</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_headers : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request headers options.</dd>
+														
+															<dt>opt_params : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request query paramters.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Callback scope.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">{xhrId:string=}=</span></dt>
+															<dd>xhr options.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<div class="jsdoc-member-content">
+										<b><a id="write" href="../symbols/xhrdav.DavFs.Request.html#write">write</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">string</span> path, <span class="jsdoc-typedesc">Object</span> content, <span class="jsdoc-typedesc">Function</span> handler, <span class="jsdoc-typedesc">Object=</span> opt_headers, <span class="jsdoc-typedesc">Object=</span> opt_params, <span class="jsdoc-typedesc">Object=</span> context, <span class="jsdoc-typedesc">{xhrId:string=}=</span> opt_helper, <span class="jsdoc-typedesc">Function=</span> onXhrComplete )</span>
+										
+										
+										
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+									</div>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Write data to WebDAV server
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>path : <span class="jsdoc-typedesc">string</span></dt>
+															<dd>upload file path.</dd>
+														
+															<dt>content : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>data string.</dd>
+														
+															<dt>handler : <span class="jsdoc-typedesc">Function</span></dt>
+															<dd>callback handler function.</dd>
+														
+															<dt>opt_headers : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request headers options.</dd>
+														
+															<dt>opt_params : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Request query paramters.</dd>
+														
+															<dt>context : <span class="jsdoc-typedesc">Object=</span></dt>
+															<dd>Callback scope.</dd>
+														
+															<dt>opt_helper : <span class="jsdoc-typedesc">{xhrId:string=}=</span></dt>
+															<dd>xhr options.</dd>
+														
+															<dt>onXhrComplete : <span class="jsdoc-typedesc">Function=</span></dt>
+															<dd>onXhrComplete callback function.</dd>
+														
+													</dl>
+												
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+					</div>
+				
+				
+					<h4>Instance Properties<span class="jsdoc-inherits-caption pull-right">Defined By</span></h4>
+					<div class="jsdoc-members">
+						
+							<div class="jsdoc-member container-jsdoc-private">
+								<div class="jsdoc-member-definition">
+									<b><a id="davSite_" href="../symbols/xhrdav.DavFs.Request.html#davSite_">davSite_</a></b>
+									
+									
+									<span class="label label-jsdoc label-jsdoc-private">Private</span>
+									
+									
+									<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											No description.
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+									</div>
+								</div>
+							</div>
+						
+							<div class="jsdoc-member container-jsdoc-private">
+								<div class="jsdoc-member-definition">
+									<b><a id="xhrIo_" href="../symbols/xhrdav.DavFs.Request.html#xhrIo_">xhrIo_</a></b>
+									
+									
+									<span class="label label-jsdoc label-jsdoc-private">Private</span>
+									
+									
+									<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											No description.
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+									</div>
+								</div>
+							</div>
+						
+					</div>
+				
+			
+
+<!-- ============================== static members summary ======================== -->
+			
+			
+				<h3>Static members</h3>
+				
+				
+				
+					<h4>Static Methods<span class="jsdoc-inherits-caption pull-right">Defined By</span></h4>
+					<div class="jsdoc-members">
+						
+							<div class="jsdoc-member accordion-button">
+								<div class="jsdoc-member-definition">
+									<b><a id="buildRequestErrors" href="../symbols/xhrdav.DavFs.Request.html#.buildRequestErrors">buildRequestErrors</a></b>
+									<span class="signature">( <span class="jsdoc-typedesc">{statusCode: number/path: string/content: string=}</span> data )</span>
+									 : {status: number|path: string|html: string|summary: string=|message: string=}
+									
+									
+									
+									
+									<span class="label label-jsdoc label-jsdoc-static">Static</span>
+									<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.DavFs.Request.html">xhrdav.DavFs.Request</a></span>
+								</div>
+								<div class="jsdoc-member-description">
+									<div class="jsdoc-member-content">
+										<div class="jsdoc-member-summary">
+											Building request errors
+											<span class="pull-right"><a href="../symbols/src/src_davfs.js.html">code »</a></span>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+											<div class="jsdoc-member-detail accordion-content">
+												
+													<b>Parameters</b>
+													<dl>
+														
+															<dt>data : <span class="jsdoc-typedesc">{statusCode: number/path: string/content: string=}</span></dt>
+															<dd>Response data.</dd>
+														
+													</dl>
+												
+												
+													<b>Returns</b>
+													<dl>
+														
+															<dt><span class="jsdoc-typedesc">{status: number/path: string/html: string/summary: string=/message: string=}</span></dt>
+															<dd>errors Map data.</dd>
+														
+													</dl>
+												
+											</div>
+										
+									</div>
+								</div>
+							</div>
+						
+					</div>
+				
+				
+			
+
+<!-- ============================== footer ================================= -->
+	<footer class="footer">
+		<p>&copy;2012</p>
+		<p>Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blankt">JsDoc Toolkit</a> 2.4.0 on Sun Sep 30 2012 01:44:51 GMT+0900 (JST)</p>
+	</footer>
+</div></body>
+</html>
