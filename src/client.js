@@ -155,7 +155,7 @@ xhrdav.Client.prototype.processRequest_ = function(
     if (goog.string.contains(headers['Content-Type'], 'xml')) {
       content = xhr.getResponseXml(xssGuard);
       if (this.canParseXml()) content = this.parseXml(content);
-      if (goog.object.isEmpty(content)) statusCode = 500;
+      if (!goog.isDefAndNotNull(content)) statusCode = 500;
     }
   }
   if (handler) handler((statusCode < 1) ? 500 : statusCode, content, headers);
