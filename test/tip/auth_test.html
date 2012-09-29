@@ -43,7 +43,7 @@
       var password = '1qaz2wsx';
       var seed = username + ':' + password;
       var hash = goog.crypt.base64.encodeString(seed, true);
-      console.log(hash);
+//      console.log(hash);
       validBasicAuth = 'Basic ' + hash;
       davFs.addConnection();
     }
@@ -58,7 +58,7 @@
 
       var seed = username + ':' + password;
       var hash = goog.crypt.base64.encodeString(seed, true);
-      console.log(hash);
+//      console.log(hash);
       var basicAuth = 'Basic ' + hash;
 
       var opts = {auth: basicAuth};
@@ -71,7 +71,7 @@
 
       var seed2 = username2 + ':' + password2;
       var hash2 = goog.crypt.base64.encodeString(seed2, true);
-      console.log(hash2);
+//      console.log(hash2);
       var basicAuth2 = 'Basic ' + hash2;
 
       dav.setAuthCredentials(basicAuth2);
@@ -156,7 +156,7 @@
       var assertListWAuth = function(errors, content) {
         assertFalse('No errors', errors.hasRequest());
         assertNotNullNorUndefined('Content', content);
-        console.log(content.root);
+//        console.log(content.root);
         assertNotNullNorUndefined('root', content.root);
         assertEquals('/davauth/', authRootDir, content.root.href);
         asyncContinue();
@@ -178,7 +178,7 @@
       var assertListWAuth = function(errors, content) {
         assertFalse('No errors', errors.hasRequest());
         assertNotNullNorUndefined('Content', content);
-        console.log(content.root);
+//        console.log(content.root);
         assertNotNullNorUndefined('root', content.root);
         assertEquals('/davauth/', authRootDir, content.root.href);
         assertEquals(validBasicAuth, davFs.getConnection().getAuthCredentials());
@@ -198,7 +198,7 @@
       var assertListWAuth = function(errors, content) {
         assertFalse('No errors', errors.hasRequest());
         assertNotNullNorUndefined('Content', content);
-        console.log(content.root);
+//        console.log(content.root);
         assertNotNullNorUndefined('root', content.root);
         assertEquals('/davauth/', authRootDir, content.root.href);
         assertFalse('No set Auth credentials',
