@@ -139,7 +139,6 @@
       var assertListWAuth = function(errors, content) {
         assertFalse('No errors', errors.hasRequest());
         assertNotNullNorUndefined('Content', content);
-        console.log(content.root);
         assertNotNullNorUndefined('root', content.root);
         assertEquals('/davauth/', authRootDir, content.root.href);
         asyncContinue();
