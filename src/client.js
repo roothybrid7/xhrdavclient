@@ -207,8 +207,9 @@ xhrdav.Client.prototype.setParameters_ = function(url, query) {
       if (goog.isArray(val) && !goog.array.isEmpty(val)) {
         url.setParameterValues(
             xhrdav.utils.string.camelize(key, {with_dasherize: true}), val);
-      } else if (goog.string.isEmptySafe(val)) {
-        url.setParameterValue(xhrdav.utils.string.camelize(key, {with_dasherize: true}), val);
+      } else if (!goog.string.isEmptySafe(val)) {
+        url.setParameterValue(
+            xhrdav.utils.string.camelize(key, {with_dasherize: true}), val);
       }
     });
   }
