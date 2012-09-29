@@ -94,7 +94,7 @@
         assertNull('Destruct object?', handler.getObject());
       }
       assertNotNullNorUndefined('RootObject', obj);
-      assertTrue('Object?', obj instanceof Object);
+      assertTrue('Object?', goog.isObject(obj));
       assertNotNaN('Resources?', goog.object.getCount(obj['D$response']))
 //      var nodeList = goog.dom.xml.selectNodes(initData, '//D:response'); // => Array.<node>
 //     logger.config(goog.typeOf(nodeList));
