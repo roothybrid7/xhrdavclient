@@ -15,6 +15,7 @@ Full Support
 - Chrome 13.0+
 - Safari 5.1+
 - Firefox 3.6+ (Maybe 3.5.19)
+- Maybe IE 10+
 
 Partial Support
 
