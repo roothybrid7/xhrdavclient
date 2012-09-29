@@ -8,13 +8,19 @@
   <script type="text/javascript">
     goog.require('goog.testing.MultiTestRunner');
     goog.require('goog.dom');
+    goog.require('goog.userAgent');
+    goog.require('goog.userAgent.product');
+    goog.require('goog.userAgent.product.isVersion');
   </script>
 </head>
 <body>
   <div id="runner"></div>
   <script type="text/javascript">
+    var isIE = goog.userAgent.product.IE,
+        version = goog.userAgent.product.VERSION;
+
     var testRunner = new goog.testing.MultiTestRunner();
-    testRunner.addTests([
+    var tests = [
 //      'client/cros.html',
       'client/client_test.html',
       'client/directories_test.html',
@@ -23,7 +29,6 @@
       'client/clientwparser.html',
       'davFs/fs_test.html',
       'davFs/fs_directories_test.html',
-      'davFs/fs_upload_test.html',
       'davFs/fs_dir2_test.html',
       'davFs/fs_files_test.html',
       'davFs/fs_files2_test.html',
@@ -37,7 +42,12 @@
       'resource/resource_controller_test.html',
       'resource/resource_ctrl_apicall.html',
       'resource/resourceobj_test.html',
-      'resource/resourcebuilder_test.html']);
+      'resource/resourcebuilder_test.html'
+    ];
+    if (!isIE || goog.string.compareVersions(version, '10.0') >= 0) {
+      tests.push('davFs/fs_upload_test.html');
+    }
+    testRunner.addTests(tests);
 //    testRunner.setPoolSize(3);
     testRunner.render(document.getElementById('runner'));
   </script>
