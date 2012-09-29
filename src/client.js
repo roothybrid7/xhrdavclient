@@ -153,9 +153,21 @@ xhrdav.Client.prototype.processRequest_ = function(
   } else {
     headers = this.parseHeaders_(xhr.getAllResponseHeaders());
     if (goog.string.contains(headers['Content-Type'], 'xml')) {
-      content = xhr.getResponseXml(xssGuard);
-      if (this.canParseXml()) content = this.parseXml(content);
-      if (!goog.isDefAndNotNull(content)) statusCode = 500;
+      var xml = xhr.getResponseXml(xssGuard);
+      // HACK: Convert native Document in IE9.
+      if (typeof Document !== 'undefined') {
+        if (!(xml instanceof Document)) {
+          // IE9.
+          xml = goog.dom.xml.loadXml(content);
+        }
+      }
+      if (this.canParseXml()) {
+        xml = this.parseXml(xml);
+      }
+      if (!goog.isDefAndNotNull(xml)) {
+        statusCode = 500;
+      }
+      content = xml;
     }
   }
   if (handler) handler((statusCode < 1) ? 500 : statusCode, content, headers);
