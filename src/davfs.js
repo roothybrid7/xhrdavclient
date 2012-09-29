@@ -343,19 +343,21 @@ xhrdav.DavFs.Request.buildRequestErrors = function(data) {
 
   var errorHtmlDom = !goog.string.isEmptySafe(data.content) ?
     goog.dom.htmlToDocumentFragment(data.content) : null;
+  var summary = null, description = null;
   if (goog.isDefAndNotNull(errorHtmlDom)) {
-    var summary = goog.dom.getElementsByTagNameAndClass(
+    summary = goog.dom.getElementsByTagNameAndClass(
       'title', null, errorHtmlDom)[0];
-    var description = goog.dom.getElementsByTagNameAndClass(
+    description = goog.dom.getElementsByTagNameAndClass(
       'p', null, errorHtmlDom)[0];
-    goog.object.extend(errMap, {
-      summary: goog.dom.getTextContent(summary),
-      message: goog.dom.getTextContent(description)});
-  } else {
-    goog.object.extend(errMap, {
-      summary: data.statusCode + ' ' + httpStatusText[data.statusCode],
-      message: data.statusCode + ' ' + httpStatusText[data.statusCode]});
   }
+  goog.object.extend(errMap, {
+    summary: goog.isDefAndNotNull(summary) ?
+        goog.dom.getTextContent(summary) :
+        data.statusCode + ' ' + httpStatusText[data.statusCode],
+    message: goog.isDefAndNotNull(description) ?
+        goog.dom.getTextContent(description) :
+        data.statusCode + ' ' + httpStatusText[data.statusCode]
+  });
 
   goog.object.extend(errMap, {
     status: data.statusCode,
