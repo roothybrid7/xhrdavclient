@@ -28,7 +28,7 @@ xhrdav.parser.DomParser = function() {
  * @return {xhrdav.DomParser} self object.
  */
 xhrdav.parser.DomParser.prototype.initialize = function(xml, handler, options) {
-  if (!goog.isDefAndNotNull(xml)) {
+  if (goog.string.isEmptySafe(xml)) {
     goog.functions.error('Xml document is NOT GIVEN!!')();
   }
   if (!goog.isDefAndNotNull(handler)) {
