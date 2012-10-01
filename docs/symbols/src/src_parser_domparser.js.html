@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Source - src/httpstatus.js</title>
+	<title>Source - src/parser/domparser.js</title>
 	<meta name="generator" content="JsDoc Toolkit" />
 	
 	<link media="all" rel="stylesheet" href="../../css/common.css" type="text/css" />
@@ -74,155 +74,143 @@
 
 			<pre id="source-code" class="prettyprint linenums">
 				/**
- * httpstatus.js - Contents for WebDAV HTTP Extensions status codes.
+ * domparser.js - WebDAV Client dom parser.
+ *
+ * This is a Xml dom parser for WebDAV collection.
  *
  * @license Copyright 2011 The xhrdavclient library authors.
  * All rights reserved.
  */
 
-goog.provide('xhrdav.HttpStatus');
+goog.provide('xhrdav.parser.DomParser');
+goog.require('goog.dom.xml');
+goog.require('goog.functions');
 
 /**
- * WebDAV HTTP Extentions Status Codes.
- * @enum {number}
+ * Dom parser for WebDAV Client API
+ *
+ * @constructor
  */
-xhrdav.HttpStatus = {
-  // Informational 1xx
-  CONTINUE: 100,
-  SWITCHING_PROTOCOLS: 101,
-  PROCESSING: 102,
-
-  // Successful 2xx
-  OK: 200,
-  CREATED: 201,
-  ACCEPTED: 202,
-  NON_AUTHORITATIVE_INFORMATION: 203,
-  NO_CONTENT: 204,
-  RESET_CONTENT: 205,
-  PARTIAL_CONTENT: 206,
-  MULTI_STATUS: 207,
-
-  // Redirection 3xx
-  MULTIPLE_CHOICES: 300,
-  MOVED_PERMANENTLY: 301,
-  FOUND: 302,
-  SEE_OTHER: 303,
-  NOT_MODIFIED: 304,
-  USE_PROXY: 305,
-  TEMPORARY_REDIRECT: 307,
-
-  // Client Error 4xx
-  BAD_REQUEST: 400,
-  UNAUTHORIZED: 401,
-  PAYMENT_REQUIRED: 402,
-  FORBIDDEN: 403,
-  NOT_FOUND: 404,
-  METHOD_NOT_ALLOWED: 405,
-  NOT_ACCEPTABLE: 406,
-  PROXY_AUTHENTICATION_REQUIRED: 407,
-  REQUEST_TIMEOUT: 408,
-  CONFLICT: 409,
-  GONE: 410,
-  LENGTH_REQUIRED: 411,
-  PRECONDITION_FAILED: 412,
-  REQUEST_ENTITY_TOO_LARGE: 413,
-  REQUEST_URI_TOO_LONG: 414,
-  UNSUPPORTED_MEDIA_TYPE: 415,
-  REQUEST_RANGE_NOT_SATISFIABLE: 416,
-  EXPECTATION_FAILED: 417,
-  UNPROCESSABLE_ENTITY: 422,
-  LOCKED: 423,
-  FAILED_DEPENDENCY: 424,
-
-  // Server Error 5xx
-  INTERNAL_SERVER_ERROR: 500,
-  NOT_IMPLEMENTED: 501,
-  BAD_GATEWAY: 502,
-  SERVICE_UNAVAILABLE: 503,
-  GATEWAY_TIMEOUT: 504,
-  HTTP_VERSION_NOT_SUPPORTED: 505,
-  INSUFFICIENT_STORAGE: 507,
-
-  /*
-   * IE returns this code for 204 due to its use of URLMon, which returns this
-   * code for 'Operation Aborted'. The status text is 'Unknown', the response
-   * headers are ''. Known to occur on IE 6 on XP through IE9 on Win7.
-   */
-  QUIRK_IE_NO_CONTENT: 1223
+xhrdav.parser.DomParser = function() {
 };
 
 /**
- * WebDAV HTTP Extensions Status Text.
- * @type {Array.&lt;string&gt;}
+ * Initialize parser
+ *
+ * @param {Object} xml XML Document.
+ * @param {Object} handler Dom Handler.
+ * @param {Object} options Parse options.
+ * @return {xhrdav.DomParser} self object.
  */
-xhrdav.HttpStatus.text = {
-// Informational 1xx
-  100: 'Continue',
-  101: 'Switching Protocols',
-  102: 'Processing',
+xhrdav.parser.DomParser.prototype.initialize = function(xml, handler, options) {
+  if (!goog.isDefAndNotNull(xml)) {
+    goog.functions.error('Xml document is NOT GIVEN!!')();
+  }
+  if (!goog.isDefAndNotNull(handler)) {
+    goog.functions.error('Parse handler is NOT GIVEN!!')();
+  }
 
-  // Successful 2xx
-  200: 'OK',
-  201: 'Created',
-  202: 'Accepted',
-  203: 'None-Authoritive Information',
-  204: 'No Content',
-  205: 'Reset Content',
-  206: 'Partial Content',
-  207: 'Multi-Status',
+  /** @type {Object} */
+  this.xml_ = goog.dom.xml.loadXml(
+      goog.dom.xml.serialize(xml).split('\n').join('')).documentElement;
+  /** @type {Object} */
+  this.handler_ = handler;
 
-  // Redirection 3xx
-  300: 'Multiple Choices',
-  301: 'Moved Permanently',
-  302: 'Found',
-  303: 'See Other',
-  304: 'Not Modified',
-  305: 'Use Proxy',
-  307: 'Redirect',
+  if (!goog.isDefAndNotNull(options)) options = {};
+  /** @type {string} */
+  this.nsSeparator_ = options.nsSeparator || '$';
+  /** @type {string} */
+  this.textNodeName_ = options.textNodeName || '$t';
+  /** @type {string} */
+  this.attributePrefix_ = options.attributePrefix || '';
 
-  // Client Error 4xx
-  400: 'Bad Request',
-  401: 'Unauthorized',
-  402: 'Payment Required',
-  403: 'Forbidden',
-  404: 'Not Found',
-  405: 'Method Not Allowed',
-  406: 'Not Acceptable',
-  407: 'Proxy Authentication Required',
-  408: 'Request Time-out',
-  409: 'Conflict',
-  410: 'Gone',
-  411: 'Length Required',
-  412: 'Precondition Failed',
-  413: 'Request Entity Too Large',
-  414: 'Request-URI Too Large',
-  415: 'Unsupported Media Type',
-  416: 'Requested range not satisfiable',
-  417: 'Expectation Failed',
-  422: 'Unprocessable Entity',
-  423: 'Locked',
-  424: 'Failed Dependency',
+  return this;
+};
 
-  // Server Error 5xx
-  500: 'Internal Server Error',
-  501: 'Not Implemented',
-  502: 'Bad Gateway',
-  503: 'Service Unavailable',
-  504: 'Gateway Time-out',
-  505: 'HTTP Version not supported',
-  507: 'Insufficient Storage',
+/**
+ * Parse XML to Javascript Object
+ *
+ * @return {xhrdav.DomParser} self object.
+ */
+xhrdav.parser.DomParser.prototype.parse = function() {
+  var xml = this.xml_;
+  this.handler_.startDocument();
+  this.handler_.execute(this, xml);
+  this.handler_.endDocument();
+  return this;
+};
 
-  /*
-   * IE returns this code for 204 due to its use of URLMon, which returns this
-   * code for 'Operation Aborted'. The status text is 'Unknown', the response
-   * headers are ''. Known to occur on IE 6 on XP through IE9 on Win7.
-   */
-  1223: 'Unknown'
+/**
+ * Execute parse XML Document to Javascript Object
+ *
+ * @param {Object} xml  parsing xml.
+ * @return {Object} parsed object for xml.
+ */
+xhrdav.parser.DomParser.prototype.parseDocument = function(xml) {
+  var obj = {};
+
+  // get nodeValue
+  if (xml.nodeType == goog.dom.NodeType.ELEMENT) { // element
+    // do attributes
+    goog.array.forEach(xml.attributes, function(attr, index) {
+      var attrKey = this.parseAttributeName_(attr.nodeName);
+      obj[attrKey] = attr.nodeValue;
+    }, this);
+  } else if (xml.nodeType == goog.dom.NodeType.TEXT) { // text
+    obj = xml.nodeValue;
+  }
+
+  // do children
+  if (xml.hasChildNodes()) {
+    goog.array.forEach(xml.childNodes, function(node, index) {
+      var key = this.parseNodeName_(node.nodeName);
+      if (goog.isDefAndNotNull(obj[key])) {
+        if (goog.typeOf(obj[key]) != 'array') {
+          var old = obj[key];
+          obj[key] = [];
+          obj[key].push(old);
+        }
+        obj[key].push(this.parseDocument(node));
+      } else {
+        obj[key] = this.parseDocument(node);
+      }
+    }, this);
+  }
+  return obj;
+};
+
+/**
+ * XML attribute nodename to Javascript object key
+ *
+ * @private
+ * @param {string} nodeName Xml attribute nodename.
+ * @return {string} converted object key for XML attribute nodename.
+ */
+xhrdav.parser.DomParser.prototype.parseAttributeName_ = function(nodeName) {
+  return this.attributePrefix_ + nodeName.replace(/:/, this.nsSeparator_);
+};
+
+/**
+ * XML nodename to Javascript object key
+ *
+ * @private
+ * @param {string} nodeName Xml nodename.
+ * @return {string} converted nodename.
+ */
+xhrdav.parser.DomParser.prototype.parseNodeName_ = function(nodeName) {
+  return nodeName
+    .replace(/:/, this.nsSeparator_)
+    .replace(/#text/, this.textNodeName_);
 };
 
 /* Entry Point for closure compiler */
-goog.exportSymbol('xhrdav.HttpStatus', xhrdav.HttpStatus);
-goog.exportSymbol('xhrdav.HttpStatus.text', xhrdav.HttpStatus.text);
+goog.exportSymbol('xhrdav.parser.DomParser', xhrdav.parser.DomParser);
+goog.exportProperty(xhrdav.parser.DomParser.prototype, 'initialize',
+  xhrdav.parser.DomParser.prototype.initialize);
+goog.exportProperty(xhrdav.parser.DomParser.prototype, 'parse',
+  xhrdav.parser.DomParser.prototype.parse);
+goog.exportProperty(xhrdav.parser.DomParser.prototype, 'parseDocument',
+  xhrdav.parser.DomParser.prototype.parseDocument);
 
 			</pre>
 		</div>

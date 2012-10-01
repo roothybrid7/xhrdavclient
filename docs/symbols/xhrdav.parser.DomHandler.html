@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="generator" content="JsDoc Toolkit" />
-	<title>JsDoc Reference - xhrdav.Errors</title>
+	<title>JsDoc Reference - xhrdav.parser.DomHandler</title>
 
 	<link media="all" rel="stylesheet" href="../css/common.css" type="text/css" />
 	<link media="all" rel="stylesheet" href="../css/prettify.css" type="text/css" />
@@ -75,7 +75,7 @@
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				<img src="../img/class.png" alt="Class " class="jsdoc-large-icon" />xhrdav.Errors
+				<img src="../img/class.png" alt="Class " class="jsdoc-large-icon" />xhrdav.parser.DomHandler
 				
 				
 				
@@ -90,7 +90,7 @@
 					
 						<li class="jsdoc-hierarchy-caption">Inheritance</li>
 							
-						<li class="active">Errors</li>
+						<li class="active">DomHandler</li>
 					
 				</ul>
 			</div>
@@ -101,7 +101,7 @@
 				<div class="jsdoc-members">
 					<div class="jsdoc-member">
 						<div class="jsdoc-member-definition">
-							<b><a id="Errors" href="../symbols/xhrdav.Errors.html">Errors</a></b>
+							<b><a id="DomHandler" href="../symbols/xhrdav.parser.DomHandler.html">DomHandler</a></b>
 							(  )
 							
 							
@@ -114,15 +114,8 @@
 						<div class="jsdoc-member-description">
 							<div class="jsdoc-member-content">
 								<div class="jsdoc-member-summary">
-									xhrdavclient error object
-
-Structure: Json/Hash repr
-   {request: {message: 'Forbidden', path: '/mydav/foo/'},
-    props: [
-      {message: 'Not Found', path: '/mydav/foo/a.png'},
-      {message: 'Locked', path: '/mydav/foo/b.txt'}
-    ]}
-									<span class="pull-right"><a href="../symbols/src/src_errors.js.html">code »</a></span>
+									XML Dom handler
+									<span class="pull-right"><a href="../symbols/src/src_parser_domhandler.js.html">code »</a></span>
 								</div>
 								
 								
@@ -145,27 +138,23 @@ Structure: Json/Hash repr
 					<h4>Instance Methods<span class="jsdoc-inherits-caption pull-right">Defined By</span></h4>
 					<div class="jsdoc-members">
 						
-							<div class="jsdoc-member accordion-button">
+							<div class="jsdoc-member">
 								<div class="jsdoc-member-definition">
 									<div class="jsdoc-member-content">
-										<b><a id="addProps" href="../symbols/xhrdav.Errors.html#addProps">addProps</a></b>
-										<span class="signature">( <span class="jsdoc-typedesc">Object</span> propsErr )</span>
+										<b><a id="disposeInternal" href="../symbols/xhrdav.parser.DomHandler.html#disposeInternal">disposeInternal</a></b>
+										<span class="signature">(  )</span>
 										
 										
 										
 										
-										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.parser.DomHandler.html">xhrdav.parser.DomHandler</a></span>
 									</div>
 								</div>
 								<div class="jsdoc-member-description">
 									<div class="jsdoc-member-content">
 										<div class="jsdoc-member-summary">
-											Add property error.
-
-Structure:
-    [{status: 404, message: 'Not Found', path: '/mydav/foo/a.png'},
-     {status: 423, message: 'Locked', path: '/mydav/foo/b.txt'}]
-											<span class="pull-right"><a href="../symbols/src/src_errors.js.html">code »</a></span>
+											No description.
+											<span class="pull-right"><a href="../symbols/src/src_parser_domhandler.js.html">code »</a></span>
 										</div>
 										
 										
@@ -173,19 +162,6 @@ Structure:
 										
 										
 										
-										
-											<div class="jsdoc-member-detail accordion-content">
-												
-													<b>Parameters</b>
-													<dl>
-														
-															<dt>propsErr : <span class="jsdoc-typedesc">Object</span></dt>
-															<dd>property error.</dd>
-														
-													</dl>
-												
-												
-											</div>
 										
 									</div>
 								</div>
@@ -194,20 +170,20 @@ Structure:
 							<div class="jsdoc-member">
 								<div class="jsdoc-member-definition">
 									<div class="jsdoc-member-content">
-										<b><a id="clear" href="../symbols/xhrdav.Errors.html#clear">clear</a></b>
+										<b><a id="endDocument" href="../symbols/xhrdav.parser.DomHandler.html#endDocument">endDocument</a></b>
 										<span class="signature">(  )</span>
 										
 										
 										
 										
-										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.parser.DomHandler.html">xhrdav.parser.DomHandler</a></span>
 									</div>
 								</div>
 								<div class="jsdoc-member-description">
 									<div class="jsdoc-member-content">
 										<div class="jsdoc-member-summary">
-											Clear all errors.
-											<span class="pull-right"><a href="../symbols/src/src_errors.js.html">code »</a></span>
+											Handle end document
+											<span class="pull-right"><a href="../symbols/src/src_parser_domhandler.js.html">code »</a></span>
 										</div>
 										
 										
@@ -223,38 +199,48 @@ Structure:
 							<div class="jsdoc-member accordion-button">
 								<div class="jsdoc-member-definition">
 									<div class="jsdoc-member-content">
-										<b><a id="hasProps" href="../symbols/xhrdav.Errors.html#hasProps">hasProps</a></b>
-										<span class="signature">(  )</span>
-										 : <span class="jsdoc-typedesc">boolean</span>
+										<b><a id="execute" href="../symbols/xhrdav.parser.DomHandler.html#execute">execute</a></b>
+										<span class="signature">( <span class="jsdoc-typedesc">xhrdav.DomParser</span> parser, <span class="jsdoc-typedesc">Object</span> xml )</span>
 										
 										
 										
-										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
+										
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.parser.DomHandler.html">xhrdav.parser.DomHandler</a></span>
 									</div>
 								</div>
 								<div class="jsdoc-member-description">
 									<div class="jsdoc-member-content">
 										<div class="jsdoc-member-summary">
-											Has property errors?(Multi-status response content, etc.)
-											<span class="pull-right"><a href="../symbols/src/src_errors.js.html">code »</a></span>
+											Execute parse Document
+											<span class="pull-right"><a href="../symbols/src/src_parser_domhandler.js.html">code »</a></span>
 										</div>
 										
 										
 										
 										
 										
+											<div class="jsdoc-member-see jsdoc-member-info">
+												<span class="label label-jsdoc label-jsdoc-see">See</span>
+												
+													<span class="jsdoc-symbol-enum">xhrdav.DomParser</span>
+												
+											</div>
+										
 										
 										
 											<div class="jsdoc-member-detail accordion-content">
 												
-												
-													<b>Returns</b>
+													<b>Parameters</b>
 													<dl>
 														
-															<dt><span class="jsdoc-typedesc">boolean</span></dt>
-															<dd>has request error.</dd>
+															<dt>parser : <span class="jsdoc-typedesc">xhrdav.DomParser</span></dt>
+															<dd>Xml dom parser object.</dd>
+														
+															<dt>xml : <span class="jsdoc-typedesc">Object</span></dt>
+															<dd>parsing xml.</dd>
 														
 													</dl>
+												
 												
 											</div>
 										
@@ -265,62 +251,20 @@ Structure:
 							<div class="jsdoc-member accordion-button">
 								<div class="jsdoc-member-definition">
 									<div class="jsdoc-member-content">
-										<b><a id="hasRequest" href="../symbols/xhrdav.Errors.html#hasRequest">hasRequest</a></b>
-										<span class="signature">(  )</span>
-										 : <span class="jsdoc-typedesc">boolean</span>
-										
-										
-										
-										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
-									</div>
-								</div>
-								<div class="jsdoc-member-description">
-									<div class="jsdoc-member-content">
-										<div class="jsdoc-member-summary">
-											Has request error?
-											<span class="pull-right"><a href="../symbols/src/src_errors.js.html">code »</a></span>
-										</div>
-										
-										
-										
-										
-										
-										
-										
-											<div class="jsdoc-member-detail accordion-content">
-												
-												
-													<b>Returns</b>
-													<dl>
-														
-															<dt><span class="jsdoc-typedesc">boolean</span></dt>
-															<dd>has request error.</dd>
-														
-													</dl>
-												
-											</div>
-										
-									</div>
-								</div>
-							</div>
-						
-							<div class="jsdoc-member accordion-button">
-								<div class="jsdoc-member-definition">
-									<div class="jsdoc-member-content">
-										<b><a id="serialize" href="../symbols/xhrdav.Errors.html#serialize">serialize</a></b>
+										<b><a id="getObject" href="../symbols/xhrdav.parser.DomHandler.html#getObject">getObject</a></b>
 										<span class="signature">(  )</span>
 										 : <span class="jsdoc-typedesc">Object</span>
 										
 										
 										
-										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.parser.DomHandler.html">xhrdav.parser.DomHandler</a></span>
 									</div>
 								</div>
 								<div class="jsdoc-member-description">
 									<div class="jsdoc-member-content">
 										<div class="jsdoc-member-summary">
-											Serialize errors object.
-											<span class="pull-right"><a href="../symbols/src/src_errors.js.html">code »</a></span>
+											Get object
+											<span class="pull-right"><a href="../symbols/src/src_parser_domhandler.js.html">code »</a></span>
 										</div>
 										
 										
@@ -336,7 +280,7 @@ Structure:
 													<dl>
 														
 															<dt><span class="jsdoc-typedesc">Object</span></dt>
-															<dd>serialized object(associated array).</dd>
+															<dd>converted response xml to object.</dd>
 														
 													</dl>
 												
@@ -346,27 +290,23 @@ Structure:
 								</div>
 							</div>
 						
-							<div class="jsdoc-member accordion-button">
+							<div class="jsdoc-member">
 								<div class="jsdoc-member-definition">
 									<div class="jsdoc-member-content">
-										<b><a id="setRequest" href="../symbols/xhrdav.Errors.html#setRequest">setRequest</a></b>
-										<span class="signature">( <span class="jsdoc-typedesc">Object=</span> requestErr )</span>
+										<b><a id="startDocument" href="../symbols/xhrdav.parser.DomHandler.html#startDocument">startDocument</a></b>
+										<span class="signature">(  )</span>
 										
 										
 										
 										
-										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
+										<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.parser.DomHandler.html">xhrdav.parser.DomHandler</a></span>
 									</div>
 								</div>
 								<div class="jsdoc-member-description">
 									<div class="jsdoc-member-content">
 										<div class="jsdoc-member-summary">
-											Set request error.
-
-Structure:
-   {status: 403,
-    message: 'Forbidden', path: '/mydav/foo/'}
-											<span class="pull-right"><a href="../symbols/src/src_errors.js.html">code »</a></span>
+											Handle start document
+											<span class="pull-right"><a href="../symbols/src/src_parser_domhandler.js.html">code »</a></span>
 										</div>
 										
 										
@@ -374,19 +314,6 @@ Structure:
 										
 										
 										
-										
-											<div class="jsdoc-member-detail accordion-content">
-												
-													<b>Parameters</b>
-													<dl>
-														
-															<dt>requestErr : <span class="jsdoc-typedesc">Object=</span></dt>
-															<dd>Request error object(associate array).</dd>
-														
-													</dl>
-												
-												
-											</div>
 										
 									</div>
 								</div>
@@ -398,48 +325,21 @@ Structure:
 					<h4>Instance Properties<span class="jsdoc-inherits-caption pull-right">Defined By</span></h4>
 					<div class="jsdoc-members">
 						
-							<div class="jsdoc-member">
+							<div class="jsdoc-member container-jsdoc-private">
 								<div class="jsdoc-member-definition">
-									<b><a id="props" href="../symbols/xhrdav.Errors.html#props">props</a></b>
+									<b><a id="resources_" href="../symbols/xhrdav.parser.DomHandler.html#resources_">resources_</a></b>
 									
 									
+									<span class="label label-jsdoc label-jsdoc-private">Private</span>
 									
 									
-									
-									<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
+									<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.parser.DomHandler.html">xhrdav.parser.DomHandler</a></span>
 								</div>
 								<div class="jsdoc-member-description">
 									<div class="jsdoc-member-content">
 										<div class="jsdoc-member-summary">
 											No description.
-											<span class="pull-right"><a href="../symbols/src/src_errors.js.html">code »</a></span>
-										</div>
-										
-										
-										
-										
-										
-										
-										
-									</div>
-								</div>
-							</div>
-						
-							<div class="jsdoc-member">
-								<div class="jsdoc-member-definition">
-									<b><a id="request" href="../symbols/xhrdav.Errors.html#request">request</a></b>
-									
-									
-									
-									
-									
-									<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
-								</div>
-								<div class="jsdoc-member-description">
-									<div class="jsdoc-member-content">
-										<div class="jsdoc-member-summary">
-											No description.
-											<span class="pull-right"><a href="../symbols/src/src_errors.js.html">code »</a></span>
+											<span class="pull-right"><a href="../symbols/src/src_parser_domhandler.js.html">code »</a></span>
 										</div>
 										
 										
@@ -458,67 +358,6 @@ Structure:
 
 <!-- ============================== static members summary ======================== -->
 			
-			
-				<h3>Static members</h3>
-				
-				
-				
-					<h4>Static Methods<span class="jsdoc-inherits-caption pull-right">Defined By</span></h4>
-					<div class="jsdoc-members">
-						
-							<div class="jsdoc-member accordion-button">
-								<div class="jsdoc-member-definition">
-									<b><a id="serialize" href="../symbols/xhrdav.Errors.html#.serialize">serialize</a></b>
-									<span class="signature">( <span class="jsdoc-typedesc"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span> errs )</span>
-									 : Object
-									
-									
-									
-									
-									<span class="label label-jsdoc label-jsdoc-static">Static</span>
-									<span class="jsdoc-inherits-from pull-right"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span>
-								</div>
-								<div class="jsdoc-member-description">
-									<div class="jsdoc-member-content">
-										<div class="jsdoc-member-summary">
-											Serialize errors object.
-											<span class="pull-right"><a href="../symbols/src/src_errors.js.html">code »</a></span>
-										</div>
-										
-										
-										
-										
-										
-										
-										
-											<div class="jsdoc-member-detail accordion-content">
-												
-													<b>Parameters</b>
-													<dl>
-														
-															<dt>errs : <span class="jsdoc-typedesc"><a href="../symbols/xhrdav.Errors.html">xhrdav.Errors</a></span></dt>
-															<dd>Errors object.</dd>
-														
-													</dl>
-												
-												
-													<b>Returns</b>
-													<dl>
-														
-															<dt><span class="jsdoc-typedesc">Object</span></dt>
-															<dd>serialized object(associated array).</dd>
-														
-													</dl>
-												
-											</div>
-										
-									</div>
-								</div>
-							</div>
-						
-					</div>
-				
-				
 			
 
 <!-- ============================== footer ================================= -->
