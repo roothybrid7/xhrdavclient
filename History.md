@@ -1,4 +1,13 @@
 
+0.4.1 / 2013-07-17 
+==================
+
+ * Add Lisence text.
+ * Update jsdoc
+ * update submodule
+ * Add gh-pages as submodule
+ * Merge branch 'release/v0.4.0' into develop
+
 0.4.0 / 2012-09-30 
 ==================
 
