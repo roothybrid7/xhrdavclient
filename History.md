@@ -1,4 +1,10 @@
 
+0.4.2 / 2013-07-19 
+==================
+
+ * fix typo LICENSE.
+ * Merge branch 'release/v0.4.1' into develop
+
 0.4.1 / 2013-07-17 
 ==================
 
