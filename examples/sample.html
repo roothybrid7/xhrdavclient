@@ -10,8 +10,16 @@
 <body>
   <div id="sample"></div>
   <script type="text/javascript">
+  
+    // set remote dir
     var dir = '/mydav/'
-    var dav = new xhrdav.Client();
+    
+    // set remote server config
+    var dav = new xhrdav.Client({
+        scheme: 'http',
+        domain: 'localhost',
+        port: 8000
+        });
     var httpStatus = xhrdav.HttpStatus;
     var httpStatusText = xhrdav.HttpStatus.text;
 
