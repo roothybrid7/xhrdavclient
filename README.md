@@ -70,9 +70,17 @@ Write code
 <body>
   <div id="runner"></div>
   <script type="text/javascript">
+  
+    // set remote dir
     var dir = '/mydav/'
-    var dav = new xhrdav.lib.Client();
-    var httpStatus = xhrdav.HttpStatus;
+    
+    // set remote webdav server config
+    var dav = new xhrdav.Client({
+            scheme: 'http',
+            domain: 'localhost',
+            port: 8000
+            });
+   var httpStatus = xhrdav.HttpStatus;
     var httpStatusText = xhrdav.HttpStatus.text;
 
     var callback = function(status, content, headers) {
